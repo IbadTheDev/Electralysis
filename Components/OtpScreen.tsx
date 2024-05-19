@@ -26,6 +26,12 @@ export default function OtpScreen() {
         }
       };
 
+      const getInputBoxStyle = (value: string) => {
+        return {
+            borderColor: value.length === 1 ? 'transparent' : 'lightgrey',
+            borderWidth: value.length === 1 ? 0 : 1
+        };
+    };
     useEffect(() => {
       // Check if all input boxes have a value
       if (inp1 && inp2 && inp3 && inp4 && inp5 && inp6) {
@@ -66,7 +72,7 @@ export default function OtpScreen() {
       <TextInput
           ref={et1}
           value={inp1}
-          style={[styles.inputBox, {borderColor: inp1.length === 1 ? '#135D66': 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp1)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {
@@ -79,7 +85,7 @@ export default function OtpScreen() {
     <TextInput
           ref={et2}
           value={inp2}
-          style={[styles.inputBox, { borderColor: inp2.length === 1 ? '#135D66' : 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp2)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {
@@ -94,7 +100,7 @@ export default function OtpScreen() {
         <TextInput
           ref={et3}
           value={inp3}
-          style={[styles.inputBox, { borderColor: inp3.length === 1 ? '#135D66' : 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp3)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {
@@ -109,7 +115,7 @@ export default function OtpScreen() {
         <TextInput
           ref={et4}
           value={inp4}
-          style={[styles.inputBox, { borderColor: inp4.length === 1 ? '#135D66' : 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp4)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {
@@ -124,7 +130,7 @@ export default function OtpScreen() {
         <TextInput
           ref={et5}
           value={inp5}
-          style={[styles.inputBox, { borderColor: inp5.length === 1 ? '#135D66' : 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp5)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {
@@ -139,7 +145,7 @@ export default function OtpScreen() {
         <TextInput
           ref={et6}
           value={inp6}
-          style={[styles.inputBox, { borderColor: inp6.length === 1 ? '#135D66' : 'lightgrey' }]}
+          style={[styles.inputBox, getInputBoxStyle(inp6)]}
           keyboardType="number-pad"
           maxLength={1}
           onChangeText={(txt) => {

@@ -13,6 +13,7 @@ import SplashScreen from './Components/SplashScreen'
 import SignIn from './Components/SignIn'
 import SignUp from './Components/SignUp'
 import OtpScreen from './Components/OtpScreen'
+import HomeScreen from './Components/HomeScreen'
 
 
 function App(): JSX.Element{
@@ -20,7 +21,7 @@ function App(): JSX.Element{
   return (
     
     <>
-     <OtpScreen/>
+     <HomeScreen/>
     </>
   
   )
