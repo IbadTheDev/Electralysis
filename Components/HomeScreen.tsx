@@ -1,6 +1,10 @@
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
+import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/Foundation';
+import Icon3 from 'react-native-vector-icons/Ionicons';
+import Icon4 from 'react-native-vector-icons/Octicons';
 
 interface MonthlyData {
     uid: number;
@@ -27,7 +31,37 @@ interface DailyData {
 }[]
 
 export default function HomeScreen() {
- 
+
+    const [isPeakHours, setIsPeakHours] = useState(false);
+        useEffect(() => {
+                const checkPeakHours = () => {
+                    const now = moment();
+                    const month = now.month(); // 0-11, where 0 is January and 11 is December
+                    const currentHour = now.hour();
+                    const currentMinute = now.minute();
+
+                    let peakStart, peakEnd;
+
+                    if (month >= 3 && month <= 9) { // April to October
+                        peakStart = moment().set({ hour: 18, minute: 30 }); // 6:30 PM
+                        peakEnd = moment().set({ hour: 22, minute: 30 }); // 10:30 PM
+                    } else { // November to March
+                        peakStart = moment().set({ hour: 18, minute: 0 }); // 6:00 PM
+                        peakEnd = moment().set({ hour: 22, minute: 0 }); // 10:00 PM
+                    }
+
+                    if (now.isBetween(peakStart, peakEnd)) {
+                        setIsPeakHours(true);
+                    } else {
+                        setIsPeakHours(false);
+                    }
+                };
+
+                checkPeakHours(); // Initial check
+                const intervalId = setInterval(checkPeakHours, 60000); // Check every minute
+
+                return () => clearInterval(intervalId); // Clean up on unmount
+            }, []);
 
     const monthlyData = [
         {
@@ -172,10 +206,18 @@ export default function HomeScreen() {
                     <Image source={require('../Assets/ibad.png')} style={[styles.profileImage, styles.elevatedLogo]} />
                 </View>
             </View>
-            <View style={[styles.mainCard, styles.elevatedLogo]}>
+
+
+            
+            <View style={[styles.mainCard,  isPeakHours? styles.peakMainCard : styles.elevatedLogo   ]}>
+            <View style={styles.peakHoursContainer}>
+                    <Text style={[styles.elevatedText, isPeakHours ? styles.peakHoursTextOn: styles.peakHoursTextOff]}>
+                        {isPeakHours ? "Peak-Hours: ON" : "Peak-Hours: OFF"}
+                    </Text>
+                </View>
                 <View style={styles.dataCard}>
                     <TouchableOpacity>
-                        <Icon style={[styles.plugIcon, styles.elevatedText]} name="plug" />
+                        <Icon style={[styles.elevatedText, isPeakHours? styles.plugIconPeakhours:  styles.plugIcon ]} name="plug" />
                         <Text style={[styles.realTimeText, styles.elevatedText]}>
                             9.98 kWh
                         </Text>
@@ -237,6 +279,19 @@ export default function HomeScreen() {
                 </View>
             ))}
             </ScrollView>
+            <View style={styles.bottomButtonContainer}>
+                <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
+                <Icon4 name="graph" style={[styles.iconGraph, styles.elevatedText]} />
+                    <Text style={styles.bottomButtonText}>Bill Estimate</Text>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
+                <Icon3 name="time-outline" style={[styles.iconPeak, styles.elevatedText]} />
+                    <Text style={styles.bottomButtonText}>Peak-Hours</Text>
+                </TouchableOpacity>
+            </View>
+
+
+
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.footerButton}>
                     <Icon name="home" style={styles.footerIcon} />
@@ -255,6 +310,8 @@ export default function HomeScreen() {
                     <Text style={styles.footerText}>Profile</Text>
                 </TouchableOpacity>
             </View>
+
+         
            
 
 
@@ -301,7 +358,7 @@ const styles = StyleSheet.create({
         borderRadius: 22
     },
     mainCard: {
-        backgroundColor: 'white',
+        backgroundColor: '#EEF7FF',
         marginTop: 20,
         justifyContent: 'center',
         alignSelf: 'center',
@@ -311,19 +368,58 @@ const styles = StyleSheet.create({
         borderWidth: 18,
         borderColor: '#135D66'
     },
+    peakMainCard: {
+        borderColor: '#BB5A5A',
+        shadowColor: '#EF4B4B',
+        shadowOffset: {
+            width: 20,
+            height: 30,
+        },
+        shadowOpacity: 0.9,
+        shadowRadius: 26,
+        elevation: 30,
+    },
+    peakHoursContainer: {
+        alignSelf:'center',
+        justifyContent:'center',
+        marginBottom:30,     
+    },
+    peakHoursTextOn: { 
+        color: '#EF4B4B',
+        fontWeight: '600',
+        fontSize:18,
+        width:160,
+        height:34,
+        textAlign:'center',
+        padding:4,
+        borderRadius: 12,
+       
+    },
+    peakHoursTextOff: {
+        color: 'grey',
+        fontWeight: '600',
+        fontSize:16,
+        width:160,
+        height:34,
+        textAlign:'center',
+        padding:4,
+        borderRadius: 12,
+    },
+    plugIconPeakhours: {
+        color: '#BB5A5A',
+        fontWeight: '600',
+        fontSize: 34,
+        justifyContent: 'center',
+        alignSelf: 'center',
+    },
     cardTitleContainer: {
     },
-    dataTitle: {
-        color: '#135D66',
-        fontSize: 16,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
+   
     dataCard: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignContent: 'center',
-        paddingRight: 10
+        
     },
     realTimeText: {
         color: '#003C43',
@@ -338,6 +434,14 @@ const styles = StyleSheet.create({
         fontSize: 34,
         justifyContent: 'center',
         alignSelf: 'center',
+    },
+   
+    dataTitle: {
+        color: '#135D66',
+        fontSize: 16,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginBottom:10
     },
     scrollContentContainer:{
     },
@@ -464,7 +568,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        marginTop: 28,
+        marginTop: 18,
         justifyContent: 'space-around',
         marginHorizontal:10
     },
@@ -474,21 +578,19 @@ const styles = StyleSheet.create({
         height:46,
         width:108,
         borderRadius: 10,
-        borderWidth:2,
-        borderColor:'#135D66'
     },
     buttonText: {
-        color: '#135D66',
+        color: '#003C43',
         fontSize: 16,
         fontWeight: '800',
         textAlign:'center',
         
     },
     buttonSelected:{
-        backgroundColor:'white'
+        backgroundColor:'#77B0AA'
     },
     buttonUnselected:{ 
-         backgroundColor: '#77B0AA',
+         backgroundColor: '#EEF7FF',
     },
     footer: {
         flexDirection: 'row',
@@ -509,5 +611,38 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#FFF',
         marginTop: 4,
+    },
+    bottomButtonContainer:{
+        flexDirection:'row',
+        justifyContent: 'space-evenly',
+        marginBottom:30,
+        
+    },
+    bottomButton:{
+        backgroundColor: '#77B0AA',
+        paddingVertical: 10,
+        height:100,
+        width:150,
+        borderRadius: 10,
+        justifyContent:'center'
+    },
+    bottomButtonText: {
+        color: '#003C43',
+        fontSize: 18,
+        fontWeight: '800',
+        textAlign:'center', 
+        margin:2
+    },
+    iconPeak:{
+        fontSize: 42,
+        color: '#003C43',
+        textAlign:'center',
+    },
+    iconGraph:{
+        fontSize: 36,
+        color: '#003C43',
+        textAlign:'center',
+        marginBottom:3
+
     },
 });
