@@ -446,10 +446,10 @@ const styles = StyleSheet.create({
     scrollContentContainer:{
     },
     midLayerContainer: {
-        backgroundColor: '#77B0AA', // Adjust the margin as needed
+        backgroundColor: '#77B0AA', 
         flexDirection: 'row',
         marginHorizontal:4,
-        height: 80, // Adjust this height as necessary
+        height: 80, 
         width: 384, // Adjust this width as necessary to match snapToInterval
         borderRadius: 10,
         
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     cardMonthContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 8, // Space between month and other data
+        margin: 8, 
         padding:14,
         borderRightWidth:0.2,
         borderColor:'lightgrey',
@@ -527,14 +527,14 @@ const styles = StyleSheet.create({
     },
     elevatedText: {
         textShadowColor: 'rgba(0, 0, 0, 0.25)',  // Reduced opacity for a subtler shadow
-        textShadowOffset: { width: 1, height: 2 },  // Slightly smaller offset for subtle depth
+        textShadowOffset: { width: 1, height: 2 },  
         textShadowRadius: 10,  // Smaller radius for a less blurred effect
     },
     elevatedLogo: {
         shadowColor: 'black',
         shadowOffset: {
-            width: 30,    // No horizontal offset, shadow only at the bottom
-            height: 20,  // Higher vertical offset for a more pronounced bottom shadow
+            width: 30,    
+            height: 20,  
         },
         shadowOpacity: 0.8,  // Increase the opacity for a darker shadow
         shadowRadius: 15,    // Increase the radius for a more blurred effect
@@ -543,8 +543,8 @@ const styles = StyleSheet.create({
     elevatedMidLayer: {
         shadowColor: 'black',
         shadowOffset: {
-            width: 20,    // No horizontal offset, shadow only at the bottom
-            height: 10,  // Higher vertical offset for a more pronounced bottom shadow
+            width: 20,   
+            height: 10, 
         },
         shadowOpacity: 0.8,  // Increase the opacity for a darker shadow
         shadowRadius: 16,    // Increase the radius for a more blurred effect
