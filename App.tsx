@@ -14,6 +14,7 @@ import SignIn from './Components/SignIn'
 import SignUp from './Components/SignUp'
 import OtpScreen from './Components/OtpScreen'
 import HomeScreen from './Components/HomeScreen'
+import StateChange from './Components/StateChange'
 
 
 function App(): JSX.Element{
@@ -21,7 +22,7 @@ function App(): JSX.Element{
   return (
     
     <>
-     <HomeScreen/>
+     <SignUp/>
     </>
   
   )

@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     },
     mainCard: {
         backgroundColor: '#EEF7FF',
-        marginTop: 20,
+        marginTop: height*0.04,
         justifyContent: 'center',
         alignSelf: 'center',
         height: '40%',
@@ -438,15 +438,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#77B0AA', 
         flexDirection: 'row',
         marginHorizontal:4,
-        height: 80, 
-        width: '15.9%', // Adjust this width as necessary to match snapToInterval
+        height: height*0.106, 
+        width: width*0.98, // Adjust this width as necessary to match snapToInterval
         borderRadius: 10,
     },
     cardMonthContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 8, 
-        padding:14,
+        width: width*0.3,
         borderRightWidth:0.2,
         borderColor:'lightgrey',
     },
@@ -460,8 +459,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRightWidth:0.2,
         borderColor:'lightgrey',
-        margin: 8,
-        paddingRight:6,
+        width:width*0.3,
+        paddingRight:width*0.01
     },
     timeTitleText: {
         color: '#135D66',
@@ -539,39 +538,28 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     scrollContainer: {
-        marginTop: 20,
+        marginTop: height*0.026,
     },
-    subsContainer: {
-        backgroundColor: '#77B0AA',
-        height: '30%',
-        width: '30%',
-        borderRadius: 16,
-        margin:10,
-        alignItems:'center'
-    },
-    subsText: {
-        fontSize: 14,
-        fontWeight: '700',
-        color: '#003C43'
-    },
+   
     buttonContainer: {
         flexDirection: 'row',
-        marginTop: 18,
+        marginTop: height*0.024,
         justifyContent: 'space-around',
-        marginHorizontal:10
+        marginHorizontal:width*0.04
     },
     button: {
         backgroundColor: '#77B0AA',
-        paddingVertical: 10,
-        height:46,
+        height:height*0.062,
         width:'30%',
         borderRadius: 10,
+        justifyContent:'center'
     },
     buttonText: {
         color: '#003C43',
         fontSize: 16,
         fontWeight: '800',
         textAlign:'center',
+        
         
     },
     buttonSelected:{
@@ -583,7 +571,7 @@ const styles = StyleSheet.create({
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        paddingVertical: 16,
+        paddingVertical: height*0.014,
         backgroundColor: '#003C43',
         borderTopLeftRadius: 34,
         borderTopRightRadius: 34
@@ -603,13 +591,12 @@ const styles = StyleSheet.create({
     bottomButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginBottom: 30,
+        marginBottom: height*0.04,
     },
     bottomButton: {
         backgroundColor: '#77B0AA',
-        paddingVertical: 10,
-        height: 100,
-        width: '40%',
+        height: height*0.12,
+        width: width*0.36,
         borderRadius: 10,
         justifyContent: 'center'
     },
