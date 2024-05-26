@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState, useEffect  } from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,13 +6,16 @@ import Icon2 from 'react-native-vector-icons/Foundation';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
 
+const { width, height } = Dimensions.get('window');
+
+
 interface MonthlyData {
     uid: number;
     month: string;
     unitsUsed: number;
     bill: number;
     time: string;
-}[]
+}
 
 interface WeeklyData {
     uid: number;
@@ -20,7 +23,7 @@ interface WeeklyData {
     unitsUsed: number;
     bill: number;
     time: string;
-}[]
+}
 
 interface DailyData {
     uid: number;
@@ -28,42 +31,44 @@ interface DailyData {
     unitsUsed: number;
     bill: number;
     time: string;
-}[]
+}
 
 export default function HomeScreen() {
 
+    const { width, height } = Dimensions.get('window');
+
     const [isPeakHours, setIsPeakHours] = useState(false);
-        useEffect(() => {
-                const checkPeakHours = () => {
-                    const now = moment();
-                    const month = now.month(); // 0-11, where 0 is January and 11 is December
-                    const currentHour = now.hour();
-                    const currentMinute = now.minute();
+    useEffect(() => {
+        const checkPeakHours = () => {
+            const now = moment();
+            const month = now.month(); // 0-11, where 0 is January and 11 is December
+            const currentHour = now.hour();
+            const currentMinute = now.minute();
 
-                    let peakStart, peakEnd;
+            let peakStart, peakEnd;
 
-                    if (month >= 3 && month <= 9) { // April to October
-                        peakStart = moment().set({ hour: 18, minute: 30 }); // 6:30 PM
-                        peakEnd = moment().set({ hour: 22, minute: 30 }); // 10:30 PM
-                    } else { // November to March
-                        peakStart = moment().set({ hour: 18, minute: 0 }); // 6:00 PM
-                        peakEnd = moment().set({ hour: 22, minute: 0 }); // 10:00 PM
-                    }
+            if (month >= 3 && month <= 9) { // April to October
+                peakStart = moment().set({ hour: 18, minute: 30 }); // 6:30 PM
+                peakEnd = moment().set({ hour: 22, minute: 30 }); // 10:30 PM
+            } else { // November to March
+                peakStart = moment().set({ hour: 18, minute: 0 }); // 6:00 PM
+                peakEnd = moment().set({ hour: 22, minute: 0 }); // 10:00 PM
+            }
 
-                    if (now.isBetween(peakStart, peakEnd)) {
-                        setIsPeakHours(true);
-                    } else {
-                        setIsPeakHours(false);
-                    }
-                };
+            if (now.isBetween(peakStart, peakEnd)) {
+                setIsPeakHours(true);
+            } else {
+                setIsPeakHours(false);
+            }
+        };
 
-                checkPeakHours(); // Initial check
-                const intervalId = setInterval(checkPeakHours, 60000); // Check every minute
+        checkPeakHours(); // Initial check
+        const intervalId = setInterval(checkPeakHours, 60000); // Check every minute
 
-                return () => clearInterval(intervalId); // Clean up on unmount
-            }, []);
+        return () => clearInterval(intervalId); // Clean up on unmount
+    }, []);
 
-    const monthlyData = [
+    const monthlyData: MonthlyData[] = [
         {
             uid: 1,
             month: "March",
@@ -93,8 +98,8 @@ export default function HomeScreen() {
             time: "\u221E"  // Infinite symbol
         },
     ];
-    
-    const weeklyData = [
+
+    const weeklyData: WeeklyData[] = [
         {
             uid: 1,
             week: "Week 1",
@@ -124,8 +129,8 @@ export default function HomeScreen() {
             time: "\u221E"  // Infinite symbol
         },
     ];
-    
-    const dailyData = [
+
+    const dailyData: DailyData[] = [
         {
             uid: 1,
             day: "Monday",
@@ -177,9 +182,8 @@ export default function HomeScreen() {
         },
     ];
 
-
     const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily'>('daily');
-    
+
     const handleMonthlyPress = () => {
         setSelectedDataType('monthly');
     };
@@ -193,7 +197,6 @@ export default function HomeScreen() {
     };
 
     const selectedData = selectedDataType === 'monthly' ? monthlyData : selectedDataType === 'weekly' ? weeklyData : dailyData;
-    
 
     return (
         <View style={styles.container}>
@@ -207,17 +210,15 @@ export default function HomeScreen() {
                 </View>
             </View>
 
-
-            
-            <View style={[styles.mainCard,  isPeakHours? styles.peakMainCard : styles.elevatedLogo   ]}>
-            <View style={styles.peakHoursContainer}>
-                    <Text style={[styles.elevatedText, isPeakHours ? styles.peakHoursTextOn: styles.peakHoursTextOff]}>
+            <View style={[styles.mainCard, isPeakHours ? styles.peakMainCard : styles.elevatedLogo]}>
+                <View style={styles.peakHoursContainer}>
+                    <Text style={[styles.elevatedText, isPeakHours ? styles.peakHoursTextOn : styles.peakHoursTextOff]}>
                         {isPeakHours ? "Peak-Hours: ON" : "Peak-Hours: OFF"}
                     </Text>
                 </View>
                 <View style={styles.dataCard}>
                     <TouchableOpacity>
-                        <Icon style={[styles.elevatedText, isPeakHours? styles.plugIconPeakhours:  styles.plugIcon ]} name="plug" />
+                        <Icon style={[styles.elevatedText, isPeakHours ? styles.plugIconPeakhours : styles.plugIcon]} name="plug" />
                         <Text style={[styles.realTimeText, styles.elevatedText]}>
                             9.98 kWh
                         </Text>
@@ -230,28 +231,27 @@ export default function HomeScreen() {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity activeOpacity={0.8} onPress={handleMonthlyPress} style={[styles.button, styles.elevatedMidLayer, selectedDataType === 'monthly'? styles.buttonSelected : styles.buttonUnselected]}>
+                <TouchableOpacity activeOpacity={0.8} onPress={handleMonthlyPress} style={[styles.button, styles.elevatedMidLayer, selectedDataType === 'monthly' ? styles.buttonSelected : styles.buttonUnselected]}>
                     <Text style={styles.buttonText}>Monthly</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8} onPress={handleWeeklyPress} style={[styles.button, styles.elevatedMidLayer , selectedDataType === 'weekly'? styles.buttonSelected : styles.buttonUnselected]}>
+                <TouchableOpacity activeOpacity={0.8} onPress={handleWeeklyPress} style={[styles.button, styles.elevatedMidLayer, selectedDataType === 'weekly' ? styles.buttonSelected : styles.buttonUnselected]}>
                     <Text style={styles.buttonText}>Weekly</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8} onPress={handleDailyPress} style={[styles.button,  styles.elevatedMidLayer , selectedDataType === 'daily'? styles.buttonSelected : styles.buttonUnselected]}>
+                <TouchableOpacity activeOpacity={0.8} onPress={handleDailyPress} style={[styles.button, styles.elevatedMidLayer, selectedDataType === 'daily' ? styles.buttonSelected : styles.buttonUnselected]}>
                     <Text style={styles.buttonText}>Daily</Text>
                 </TouchableOpacity>
             </View>
-
 
             <ScrollView
                 style={styles.scrollContainer}
                 contentContainerStyle={styles.scrollContentContainer}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                snapToInterval={392} // Adjust this value to match the width of the card + margin
+                snapToInterval={width * 1.0} // Adjust this value to match the width of the card + margin
                 decelerationRate="fast"
                 snapToAlignment="start"
-            > 
-            {selectedData.map(data => (
+            >
+                 {selectedData.map(data => (
                 <View key={data.uid} style={[styles.midLayerContainer, styles.elevatedMidLayer]}>
                     <View style={styles.cardMonthContainer}>
                         <Text style={[styles.monthText, styles.elevatedText]}>
@@ -277,7 +277,7 @@ export default function HomeScreen() {
                         <Text style={styles.unitsTitleText}>Units Used</Text>
                     </View>
                 </View>
-            ))}
+                ))}
             </ScrollView>
             <View style={styles.bottomButtonContainer}>
                 <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
@@ -289,8 +289,6 @@ export default function HomeScreen() {
                     <Text style={styles.bottomButtonText}>Peak-Hours</Text>
                 </TouchableOpacity>
             </View>
-
-
 
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.footerButton}>
@@ -310,13 +308,8 @@ export default function HomeScreen() {
                     <Text style={styles.footerText}>Profile</Text>
                 </TouchableOpacity>
             </View>
-
-         
-           
-
-
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -380,31 +373,30 @@ const styles = StyleSheet.create({
         elevation: 30,
     },
     peakHoursContainer: {
-        alignSelf:'center',
-        justifyContent:'center',
-        marginBottom:30,     
+        alignContent:'center',
+        marginBottom:'5%',
+        
     },
     peakHoursTextOn: { 
         color: '#EF4B4B',
         fontWeight: '600',
-        fontSize:18,
-        width:160,
-        height:34,
-        textAlign:'center',
-        padding:4,
+        fontSize: 18,
+        height: 34,
+        textAlign: 'center',
+        justifyContent:'center',
+        padding: 4,
         borderRadius: 12,
-       
     },
     peakHoursTextOff: {
         color: 'grey',
         fontWeight: '600',
-        fontSize:16,
-        width:160,
-        height:34,
-        textAlign:'center',
-        padding:4,
+        fontSize: 16, // Adjust this percentage as needed
+        height: 34,
+        textAlign: 'center',
+        padding: 4,
         borderRadius: 12,
     },
+    
     plugIconPeakhours: {
         color: '#BB5A5A',
         fontWeight: '600',
@@ -414,12 +406,10 @@ const styles = StyleSheet.create({
     },
     cardTitleContainer: {
     },
-   
     dataCard: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignContent: 'center',
-        
     },
     realTimeText: {
         color: '#003C43',
@@ -435,7 +425,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
     },
-   
     dataTitle: {
         color: '#135D66',
         fontSize: 16,
@@ -450,9 +439,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginHorizontal:4,
         height: 80, 
-        width: 384, // Adjust this width as necessary to match snapToInterval
+        width: '15.9%', // Adjust this width as necessary to match snapToInterval
         borderRadius: 10,
-        
     },
     cardMonthContainer: {
         justifyContent: 'center',
@@ -526,29 +514,29 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     elevatedText: {
-        textShadowColor: 'rgba(0, 0, 0, 0.25)',  // Reduced opacity for a subtler shadow
-        textShadowOffset: { width: 1, height: 2 },  
-        textShadowRadius: 10,  // Smaller radius for a less blurred effect
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 1, height: 2 },
+        textShadowRadius: 10,
     },
     elevatedLogo: {
         shadowColor: 'black',
         shadowOffset: {
-            width: 30,    
-            height: 20,  
+            width: 30,
+            height: 20,
         },
-        shadowOpacity: 0.8,  // Increase the opacity for a darker shadow
-        shadowRadius: 15,    // Increase the radius for a more blurred effect
-        elevation: 20,       // Increase elevation for a stronger shadow on Android
+        shadowOpacity: 0.8,
+        shadowRadius: 15,
+        elevation: 20,
     },
     elevatedMidLayer: {
         shadowColor: 'black',
         shadowOffset: {
-            width: 20,   
-            height: 10, 
+            width: 20,
+            height: 10,
         },
-        shadowOpacity: 0.8,  // Increase the opacity for a darker shadow
-        shadowRadius: 16,    // Increase the radius for a more blurred effect
-        elevation: 8,       // Increase elevation for a stronger shadow on Android
+        shadowOpacity: 0.8,
+        shadowRadius: 16,
+        elevation: 8,
     },
     scrollContainer: {
         marginTop: 20,
@@ -576,7 +564,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#77B0AA',
         paddingVertical: 10,
         height:46,
-        width:108,
+        width:'30%',
         borderRadius: 10,
     },
     buttonText: {
@@ -589,16 +577,16 @@ const styles = StyleSheet.create({
     buttonSelected:{
         backgroundColor:'#77B0AA'
     },
-    buttonUnselected:{ 
-         backgroundColor: '#EEF7FF',
+    buttonUnselected: { 
+        backgroundColor: '#EEF7FF',
     },
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         paddingVertical: 16,
         backgroundColor: '#003C43',
-        borderTopLeftRadius:34,
-        borderTopRightRadius:34
+        borderTopLeftRadius: 34,
+        borderTopRightRadius: 34
     },
     footerButton: {
         alignItems: 'center',
@@ -612,37 +600,37 @@ const styles = StyleSheet.create({
         color: '#FFF',
         marginTop: 4,
     },
-    bottomButtonContainer:{
-        flexDirection:'row',
+    bottomButtonContainer: {
+        flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginBottom:30,
-        
+        marginBottom: 30,
     },
-    bottomButton:{
+    bottomButton: {
         backgroundColor: '#77B0AA',
         paddingVertical: 10,
-        height:100,
-        width:150,
+        height: 100,
+        width: '40%',
         borderRadius: 10,
-        justifyContent:'center'
+        justifyContent: 'center'
     },
     bottomButtonText: {
         color: '#003C43',
         fontSize: 18,
         fontWeight: '800',
-        textAlign:'center', 
-        margin:2
+        textAlign: 'center', 
+        margin: 2
     },
-    iconPeak:{
+    iconPeak: {
         fontSize: 42,
         color: '#003C43',
-        textAlign:'center',
+        textAlign: 'center',
     },
-    iconGraph:{
+    iconGraph: {
         fontSize: 36,
         color: '#003C43',
-        textAlign:'center',
-        marginBottom:3
-
+        textAlign: 'center',
+        marginBottom: 3
     },
 });
+
+
