@@ -9,13 +9,13 @@ import {
    ScrollView
   } from 'react-native'
 import Home from './Screens/Home'
-import SplashScreen from './Components/SplashScreen'
-import SignIn from './Components/SignIn'
-import SignUp from './Components/SignUp'
-import OtpScreen from './Components/OtpScreen'
-import HomeScreen from './Components/HomeScreen'
+import SplashScreen from './Screens/SplashScreen'
+import SignIn from './Screens/SignIn'
+import SignUp from './Screens/SignUp'
+import OtpScreen from './Screens/OtpScreen'
+import HomeScreen from './Screens/HomeScreen'
 import StateChange from './Components/StateChange'
-import GraphScreen from './Components/GraphScreen'
+import GraphScreen from './Screens/GraphScreen'
 
 
 function App(): JSX.Element{

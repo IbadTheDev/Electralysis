@@ -4,7 +4,7 @@ import FlatCards from '../Components/FlatCards'
 import ElevatedCards from '../Components/ElevatedCards'
 import FancyCard from '../Components/FancyCard'
 import ActionCard from '../Components/ActionCard'
-import SplashScreen from '../Components/SplashScreen'
+import SplashScreen from './SplashScreen'
 
 const Home = () => {
   return (

@@ -5,8 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Foundation';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
-import Header from './Header';
-import FooterNav from './FooterNav';
+import Header from '../Components/Header';
+import FooterNav from '../Components/FooterNav';
 
 const { width, height } = Dimensions.get('window');
 

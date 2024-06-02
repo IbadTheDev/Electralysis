@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import {LineChart, BarChart} from "react-native-chart-kit";
-import { AbstractChartProps } from 'react-native-chart-kit/dist/AbstractChart';
 import { GraphData } from './types';
 
 

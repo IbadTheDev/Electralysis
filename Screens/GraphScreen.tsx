@@ -1,18 +1,17 @@
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import Header from './Header'
-import Graph from './Graph';
-import { GraphData } from './types';
-import FooterNav from './FooterNav';
+import Header from '../Components/Header'
+import Graph from '../Components/Graph';
+import { GraphData } from '../Components/types';
+import FooterNav from '../Components/FooterNav';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
+import PeriodSelector from '../Components/PeriodSelector';
 
 
 const { width, height } = Dimensions.get('window');
 
-interface GraphProps {
-  data: GraphData;
-}
+
 
 const dailyData: GraphData = {
   labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -110,6 +109,11 @@ const GraphScreen = () => {
           <Text style={styles.buttonText}>Daily</Text>
       </TouchableOpacity>
     </View>
+    
+    <View>
+      <PeriodSelector/>
+    </View>
+
     <View style={styles.footerContainer}>
       <FooterNav/>
     </View>
@@ -124,19 +128,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#E3FEF7",
-        flexDirection:'column'
+        flexDirection:'column',
+       
+      
     },
     
     graphContainer:{},
+
     buttonContainer: {
       flexDirection: 'row',
-      marginTop: height*0.024,
+      marginTop: height*0.002,
       justifyContent: 'space-around',
       marginHorizontal:width*0.04
   },
   toggleChartContainer:{
     flexDirection: 'row',
-    marginTop: height*0.024,
+    marginTop: height*0.01,
     justifyContent: 'space-around',
     marginHorizontal:width*0.04
   },
@@ -172,7 +179,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#EEF7FF',
   },
   footerContainer:{
-    marginVertical:height*0.2
+    marginTop:height*0.01
   },
   iconGraph: {
     fontSize: 24,
