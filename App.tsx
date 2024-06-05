@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   Text,
    View,
@@ -15,17 +16,29 @@ import SignUp from './Components/SignUp'
 import OtpScreen from './Components/OtpScreen'
 import HomeScreen from './Components/HomeScreen'
 import StateChange from './Components/StateChange'
+import { FormValues } from './Components/SignUp';
 
+const Stack = createStackNavigator<RootStackParamList>();
+
+type RootStackParamList = {
+  SignUp:undefined;
+  SignIn:undefined;
+  OtpScreen: { verificationId: string | null;userData: FormValues };
+  HomeScreen:undefined;
+}
 
 function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
-    
-    <>
-     <SignUp/>
-    </>
-  
-  )
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+        <Stack.Screen name="SignIn" component={SignIn}/>
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="OtpScreen" component={OtpScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
   
 }
 

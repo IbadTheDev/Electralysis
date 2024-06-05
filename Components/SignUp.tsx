@@ -5,10 +5,15 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon2 from 'react-native-vector-icons/FontAwesome5'
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'; 
+import { useNavigation } from '@react-navigation/native';
+import ConfirmationResult from '@react-native-firebase/auth';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const { width, height } = Dimensions.get('window');
 
-interface FormValues {
+export interface FormValues {
     fullName: string;
     password: string;
     confirmPassword: string;
@@ -27,11 +32,36 @@ const SignupSchema = Yup.object().shape({
     .required('Confirm Password is required'),
     Mobile: Yup.string()
     .required('Mobile No. is required')
-    .test('is-11-digits', 'Invalid Mobile Number', val => val?.length === 11),
+    .test('is-13-digits', 'Invalid Mobile Number', val => val?.length === 13),
 });
+
+type RootStackParamList = {
+  OtpScreen: { verificationId: string | null; userData: FormValues };
+};
+
+type OtpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OtpScreen'>;
+
 
 export default function SignUp() {
     const [isSelected, setSelection] = useState(false);
+    const navigation = useNavigation<OtpScreenNavigationProp>(); 
+
+    const sendVerificationCode = (phoneNumber: string,values: FormValues) => {
+      auth()
+        .signInWithPhoneNumber(phoneNumber)
+        .then((confirmation: FirebaseAuthTypes.ConfirmationResult) => {
+          console.log('Confirmation sent:', confirmation);
+          // Get the verification ID from the confirmation object
+          const verificationId = confirmation.verificationId;
+          // Navigate to OtpScreen and pass the verificationId
+          navigation.navigate('OtpScreen', { verificationId,userData:values});
+        })
+        .catch((error) => {
+          console.error('Error sending confirmation:', error);
+        });
+    };
+    
+
     function alert(arg0: string) {
         throw new Error('Function not implemented.');
     }
@@ -49,10 +79,9 @@ export default function SignUp() {
      }}
     validationSchema={SignupSchema}
     onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-        }, 400);
+      setSubmitting(false);
+      const phoneNumber = `${values.Mobile}`;
+      sendVerificationCode(phoneNumber,values);
     }}
 >
 {({ 
@@ -308,6 +337,3 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
 });
-
-
-
