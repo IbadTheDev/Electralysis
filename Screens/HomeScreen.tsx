@@ -7,6 +7,7 @@ import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
 import Header from '../Components/Header';
 import FooterNav from '../Components/FooterNav';
+import { getLatestUnit } from '../Apis/getLatestUnit';
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,6 +39,21 @@ interface DailyData {
 export default function HomeScreen() {
 
     const { width, height } = Dimensions.get('window');
+    const [unit, setUnit] = useState<number | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const fetchUnit = async () => {
+            const latestUnit = await getLatestUnit();
+            setUnit(latestUnit);
+            setLoading(false);
+        };
+
+        fetchUnit();
+        const interval = setInterval(fetchUnit, 5000); // Fetch every 5 seconds
+
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
 
     const [isPeakHours, setIsPeakHours] = useState(false);
     useEffect(() => {
@@ -214,7 +230,7 @@ export default function HomeScreen() {
                     <TouchableOpacity>
                         <Icon style={[styles.elevatedText, isPeakHours ? styles.plugIconPeakhours : styles.plugIcon]} name="plug" />
                         <Text style={[styles.realTimeText, styles.elevatedText]}>
-                            9.98 kWh
+                        {unit !== null ? `${unit} kWh` : 'Loading...'}
                         </Text>
                     </TouchableOpacity>
                 </View>

@@ -1,8 +1,24 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import auth from '@react-native-firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+import SignIn from './SignIn';
+import { RouteProp } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import signUpUser from '../Apis/SignUpApi';
+import { FormValues } from './SignUp';
 
-export default function OtpScreen() {
+
+export type RootStackParamList = {
+  OtpScreen: { verificationId: string | null;userData: FormValues };
+};
+
+type OtpScreenProps = StackScreenProps<RootStackParamList, 'OtpScreen'>;
+
+
+export default function OtpScreen({ route }: OtpScreenProps) {
+  const { verificationId,userData } = route.params;
     const et1 = useRef<TextInput>(null);
     const et2 = useRef<TextInput>(null);
     const et3 = useRef<TextInput>(null);
@@ -19,6 +35,39 @@ export default function OtpScreen() {
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [timer, setTimer] = useState(5);
+    const navigation = useNavigation();
+
+    const handleVerificationCodeInput = () => {
+      const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
+      console.log('Verification code entered:', code);
+
+      if (verificationId) {
+          console.log('Verification ID exists:', verificationId);
+          const credential = auth.PhoneAuthProvider.credential(verificationId, code);
+          console.log('Credential created:', credential);
+
+          auth().signInWithCredential(credential)
+              .then(async(userCredential) => {
+                  const user = userCredential.user;
+                  console.log('User signed up:', user);
+                  try {
+                    const response = await signUpUser({
+                        fullName: userData.fullName,
+                        password: userData.password,
+                        Mobile: userData.Mobile
+                    });
+                    console.log('Sign up successful:', response);
+                } catch (error) {
+                    console.error('Error signing up:', error);
+                }
+              })
+              .catch((error) => {
+                  console.error('Error signing up:', error);
+              });
+      } else {
+          console.error('Verification ID is missing');
+      }
+  };
 
     const handleResendOTP = () => {
         if (timer === 0) {
@@ -161,8 +210,11 @@ export default function OtpScreen() {
       <Icon name="clock-o" style={styles.icon}/>
         <Text style={styles.timerText}>{timer === 0 ? 'Resend OTP now' : `Resend OTP in ${timer} seconds`}</Text>
       </View>
-        <TouchableOpacity 
-        activeOpacity={isButtonDisabled ? 1 : 0.7}
+        <TouchableOpacity  
+        activeOpacity={isButtonDisabled ? 1 : 0.7} onPress={() => {
+          console.log('Verify button pressed');
+          handleVerificationCodeInput();
+      }}
         style={[styles.footerContainer, styles.elevatedLogo, { backgroundColor: isButtonDisabled ? 'lightgrey' : '#77B0AA' }]} >
              <Text style={[styles.buttonText, styles.elevatedText,  { color: isButtonDisabled ? 'white' : '#003C43' }]}>Verify</Text>
         </TouchableOpacity>

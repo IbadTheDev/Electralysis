@@ -1,12 +1,32 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {signInUser} from '../Apis/SignInApi'; 
 
 const { width, height } = Dimensions.get('window');
 
 export default function SignIn() {
     const [isSelected, setSelection] = useState(false);
+    const [Mobile, setMobile] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSignIn = async () => {
+        const userData = {
+          Mobile:Mobile, 
+          password: password,
+        };
+      
+        try {
+          const response = await signInUser(userData);
+          console.log('Sign in successful:', response);
+          Alert.alert('Sign In Successful')
+
+        } catch (error) {
+            console.error('Error signing in');
+            Alert.alert(`Sign in failed:`);
+          }
+      };
 
     return (
         <View style={styles.container}>
@@ -19,9 +39,11 @@ export default function SignIn() {
             <View style={styles.inputContainer}>
                 <Icon style={styles.icon} name="user" />
                 <TextInput
-                    placeholder='Email or Mobile No.'
+                    placeholder='Mobile No.'
                     placeholderTextColor={'#a9a9a9'}
                     style={styles.inputBox}
+                    value={Mobile}
+                    onChangeText={setMobile}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -30,13 +52,16 @@ export default function SignIn() {
                     placeholder='Password'
                     placeholderTextColor={'#a9a9a9'}
                     style={styles.inputBox}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
                 />
             </View>
             <View>
                 <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
             </View>
             <View style={[styles.footerContainer, styles.elevatedLogo]}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleSignIn}>
                     <Text style={[styles.buttonText, styles.elevatedText]}>Sign In</Text>
                 </TouchableOpacity>
             </View>
