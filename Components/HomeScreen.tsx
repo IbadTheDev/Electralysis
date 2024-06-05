@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Foundation';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
+import Header from './Header';
+import FooterNav from './FooterNav';
 import { getLatestUnit } from '../Apis/getLatestUnit';
 
 const { width, height } = Dimensions.get('window');
@@ -216,15 +218,7 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.headContainer}>
-                <View style={styles.titleContainer}>
-                    <Text style={[styles.headText, styles.elevatedText]}>Electralysis</Text>
-                </View>
-                <View style={styles.profileContainer}>
-                    <Icon name="bell" style={[styles.iconBell, styles.elevatedText]} />
-                    <Image source={require('../Assets/ibad.png')} style={[styles.profileImage, styles.elevatedLogo]} />
-                </View>
-            </View>
+         <Header/>
 
             <View style={[styles.mainCard, isPeakHours ? styles.peakMainCard : styles.elevatedLogo]}>
                 <View style={styles.peakHoursContainer}>
@@ -306,24 +300,7 @@ export default function HomeScreen() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Icon name="home" style={styles.footerIcon} />
-                    <Text style={styles.footerText}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Icon name="bar-chart" style={styles.footerIcon} />
-                    <Text style={styles.footerText}>Stats</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Icon name="cog" style={styles.footerIcon} />
-                    <Text style={styles.footerText}>Settings</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
-                    <Icon name="user" style={styles.footerIcon} />
-                    <Text style={styles.footerText}>Profile</Text>
-                </TouchableOpacity>
-            </View>
+            <FooterNav/>
         </View>
     );
 }
@@ -333,39 +310,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#E3FEF7"
     },
-    headContainer: {
-        flexDirection: "row",
-        marginTop: 20,
-    },
-    titleContainer: {
-        width: '50%',
-        paddingLeft: 20
-    },
-    headText: {
-        color: '#135D66',
-        textAlign: 'left',
-        fontWeight: '600',
-        fontSize: 20,
-    },
-    profileContainer: {
-        flexDirection: "row",
-        width: '50%',
-        alignContent: 'space-evenly',
-        justifyContent: 'flex-end',
-        paddingRight: 10
-    },
-    iconBell: {
-        color: '#135D66',
-        fontWeight: '600',
-        fontSize: 20,
-        verticalAlign: 'middle',
-        paddingRight: 14
-    },
-    profileImage: {
-        height: 32,
-        width: 32,
-        borderRadius: 22
-    },
+   
     mainCard: {
         backgroundColor: '#EEF7FF',
         marginTop: height*0.04,
@@ -390,8 +335,7 @@ const styles = StyleSheet.create({
     },
     peakHoursContainer: {
         alignContent:'center',
-        marginBottom:'5%',
-        
+        marginBottom:'5%',  
     },
     peakHoursTextOn: { 
         color: '#EF4B4B',
@@ -412,7 +356,6 @@ const styles = StyleSheet.create({
         padding: 4,
         borderRadius: 12,
     },
-    
     plugIconPeakhours: {
         color: '#BB5A5A',
         fontWeight: '600',
@@ -420,8 +363,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
     },
-    cardTitleContainer: {
-    },
+
+    cardTitleContainer: {},
     dataCard: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -448,6 +391,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom:10
     },
+
     scrollContentContainer:{
     },
     midLayerContainer: {
@@ -528,35 +472,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '700'
     },
-    elevatedText: {
-        textShadowColor: 'rgba(0, 0, 0, 0.25)',
-        textShadowOffset: { width: 1, height: 2 },
-        textShadowRadius: 10,
-    },
-    elevatedLogo: {
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 30,
-            height: 20,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 15,
-        elevation: 20,
-    },
-    elevatedMidLayer: {
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 20,
-            height: 10,
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 16,
-        elevation: 8,
-    },
+
     scrollContainer: {
         marginTop: height*0.026,
     },
-   
     buttonContainer: {
         flexDirection: 'row',
         marginTop: height*0.024,
@@ -574,9 +493,7 @@ const styles = StyleSheet.create({
         color: '#003C43',
         fontSize: 16,
         fontWeight: '800',
-        textAlign:'center',
-        
-        
+        textAlign:'center',  
     },
     buttonSelected:{
         backgroundColor:'#77B0AA'
@@ -584,26 +501,7 @@ const styles = StyleSheet.create({
     buttonUnselected: { 
         backgroundColor: '#EEF7FF',
     },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: height*0.014,
-        backgroundColor: '#003C43',
-        borderTopLeftRadius: 34,
-        borderTopRightRadius: 34
-    },
-    footerButton: {
-        alignItems: 'center',
-    },
-    footerIcon: {
-        fontSize: 24,
-        color: '#FFF',
-    },
-    footerText: {
-        fontSize: 12,
-        color: '#FFF',
-        marginTop: 4,
-    },
+
     bottomButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -633,6 +531,33 @@ const styles = StyleSheet.create({
         color: '#003C43',
         textAlign: 'center',
         marginBottom: 3
+    },
+
+    elevatedLogo: {
+        shadowColor: 'black',
+        shadowOffset: {
+            width: 30,
+            height: 20,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 15,
+        elevation: 20,
+    },
+    elevatedText: {
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 1, height: 2 },
+        textShadowRadius: 10,
+    },
+   
+    elevatedMidLayer: {
+        shadowColor: 'black',
+        shadowOffset: {
+            width: 20,
+            height: 10,
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 16,
+        elevation: 8,
     },
 });
 

@@ -16,6 +16,7 @@ import SignUp from './Components/SignUp'
 import OtpScreen from './Components/OtpScreen'
 import HomeScreen from './Components/HomeScreen'
 import StateChange from './Components/StateChange'
+import GraphScreen from './Components/GraphScreen'
 import { FormValues } from './Components/SignUp';
 
 const Stack = createStackNavigator<RootStackParamList>();
