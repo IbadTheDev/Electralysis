@@ -33,10 +33,10 @@ function App(): JSX.Element{
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HomeScreen">
-      <Stack.Screen name="HomeScreen" component={HomeScreen}/>
-        <Stack.Screen name="SignIn" component={SignIn}/>
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="OtpScreen" component={OtpScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
+        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+        <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

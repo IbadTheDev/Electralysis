@@ -7,7 +7,7 @@ import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
 import Header from '../Components/Header';
 import FooterNav from '../Components/FooterNav';
-import { getLatestUnit } from '../Apis/getLatestUnit';
+// import { getLatestUnit } from '../Apis/getLatestUnit';
 
 const { width, height } = Dimensions.get('window');
 
@@ -42,18 +42,18 @@ export default function HomeScreen() {
     const [unit, setUnit] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const fetchUnit = async () => {
-            const latestUnit = await getLatestUnit();
-            setUnit(latestUnit);
-            setLoading(false);
-        };
+    // useEffect(() => {
+    //     const fetchUnit = async () => {
+    //         const latestUnit = await getLatestUnit();
+    //         setUnit(latestUnit);
+    //         setLoading(false);
+    //     };
 
-        fetchUnit();
-        const interval = setInterval(fetchUnit, 5000); // Fetch every 5 seconds
+    //     fetchUnit();
+    //     const interval = setInterval(fetchUnit, 5000); // Fetch every 5 seconds
 
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
+    //     return () => clearInterval(interval); // Cleanup on unmount
+    // }, []);
 
     const [isPeakHours, setIsPeakHours] = useState(false);
     useEffect(() => {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
    
     mainCard: {
         backgroundColor: '#EEF7FF',
-        marginTop: height*0.04,
+        marginTop: height*0.030,
         justifyContent: 'center',
         alignSelf: 'center',
         height: '40%',
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        marginTop: height*0.024,
+        marginTop: height*0.022,
         justifyContent: 'space-around',
         marginHorizontal:width*0.04
     },
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
     bottomButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginBottom: height*0.04,
+        marginBottom: height*0.03,
     },
     bottomButton: {
         backgroundColor: '#77B0AA',
