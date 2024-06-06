@@ -31,15 +31,18 @@ type RootStackParamList = {
 function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
-      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
-        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-        <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    <>
+    <GraphScreen/>
+    </>
+  //   <NavigationContainer>
+  //     <Stack.Navigator initialRouteName="HomeScreen">
+  //     <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+  //       <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
+  //       <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+  //       <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }}/>
+  //     </Stack.Navigator>
+  //   </NavigationContainer>
+ );
   
 }
 

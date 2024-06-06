@@ -111,7 +111,7 @@ const GraphScreen = () => {
     </View>
     
     <View>
-      <PeriodSelector/>
+    <PeriodSelector setStartTime={() => {}} setEndTime={() => {}} />
     </View>
 
     <View style={styles.footerContainer}>

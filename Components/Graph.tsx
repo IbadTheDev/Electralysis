@@ -19,7 +19,7 @@ const { width, height } = Dimensions.get('window');
     y: number;
   }
 
-  const Graph: React.FC<GraphProps> = ({ data , chartType, dataType }) => {
+  const Graph: React.FC<GraphProps> = ({ data, chartType = 'line', dataType = 'monthly' }) => {
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0, visible: false, value: 0 });
   
   const getChartConfig = () => {
