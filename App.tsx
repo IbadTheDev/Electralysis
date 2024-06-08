@@ -18,6 +18,7 @@ import HomeScreen from './Screens/HomeScreen'
 import StateChange from './Components/StateChange'
 import GraphScreen from './Screens/GraphScreen'
 import { FormValues } from './Screens/SignUp';
+import AddDevice from './Screens/AddDevice';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -32,7 +33,7 @@ function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
     <>
-    <GraphScreen/>
+    <AddDevice/>
     </>
   //   <NavigationContainer>
   //     <Stack.Navigator initialRouteName="HomeScreen">
