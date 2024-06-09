@@ -31,11 +31,13 @@ import { RootStackParamList } from '../ReactApp/android/app/src/type';
 //   HomeScreen:undefined;
 // }
 
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
+
 
     <NavigationContainer>
     <Stack.Navigator initialRouteName="AddDevice">
@@ -44,6 +46,7 @@ function App(): JSX.Element{
     </Stack.Navigator>
   </NavigationContainer>
   );
+ 
 }
 
 

@@ -6,6 +6,7 @@ import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { useNavigation } from '@react-navigation/native';
 import { AddDeviceNavigationProp } from '../android/app/src/type';
 
+
 const { width, height } = Dimensions.get('window');
 
 const AddDevice = () => {
@@ -170,10 +171,7 @@ const styles = StyleSheet.create({
         width:width*0.96,
         alignSelf:'center',
         marginRight:width*0.06,
-        opacity:0.96
-
-        
-       
+        opacity:0.96     
     },
 
     elevatedText: {
