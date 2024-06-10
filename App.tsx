@@ -21,6 +21,8 @@ import { FormValues } from './Screens/SignUp';
 import AddDevice from './Screens/AddDevice';
 import ConnectDevice from './Screens/ConnectDevice';
 import { RootStackParamList } from '../ReactApp/android/app/src/type';
+import SendCredentials from './Screens/SendCredentials';
+import { useNavigation } from '@react-navigation/native';
 
 // const Stack = createStackNavigator<RootStackParamList>();
 
@@ -37,7 +39,6 @@ const Stack = createStackNavigator<RootStackParamList>();
 function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
-
 
     <NavigationContainer>
     <Stack.Navigator initialRouteName="AddDevice">

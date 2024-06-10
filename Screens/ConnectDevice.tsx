@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import * as Progress from 'react-native-progress';
 import BleManager from 'react-native-ble-manager';
 import { NativeEventEmitter, NativeModules } from 'react-native';
+import SendCredentials from './SendCredentials';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,13 +22,14 @@ interface Device {
     };
   }
 
-const ConnectDevice= () => {
+  const ConnectDevice: React.FC<ConnectDeviceProps> = ({ navigation }) => {
     const [progress, setProgress] = useState(0);
     const [connecting, setConnecting] = useState(false);
+    const [connectedDevice, setConnectedDevice] = useState<Device | null>(null); // State to store the discovered device
 
     useEffect(() => {
         BleManager.start({ showAlert: false });
-    
+    //add esp ka name yahan par
         const handleDiscoverPeripheral = (peripheral: Device)=> {
           console.log('Discovered peripheral:', peripheral);
           if (peripheral.name === 'YourESP32DeviceName') {
@@ -56,7 +59,7 @@ const ConnectDevice= () => {
           console.log('Scanning...');
         });
       };
-    
+    // check kitna time lag raha hai then yahan par change karna interval progress bar ka
       const connectToDevice = (device: Device) => {
         const interval = setInterval(() => {
           setProgress((prev) => {
@@ -74,6 +77,13 @@ const ConnectDevice= () => {
             setProgress(1);
             setConnecting(false);
             console.log('Connected to', device.id);
+            Alert.alert('Success', 'Connected to Electralysis Device');
+
+            // Set the connected device
+            setConnectedDevice(device);
+            
+            // navigation to wifi credentials input jub connect ho jaye bluetooth
+
             // navigation.navigate('SendWifiCredentials', { device });
           })
           .catch((error: any) => {
@@ -85,6 +95,11 @@ const ConnectDevice= () => {
           });
       };
 
+      useEffect(() => {
+        if (connectedDevice) {
+            navigation.navigate('SendCredentials', { device: connectedDevice });
+        }
+    }, [connectedDevice, navigation]);
     
   return (
     <View style={styles.container}>
