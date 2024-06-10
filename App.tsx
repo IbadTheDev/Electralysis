@@ -26,6 +26,7 @@ type RootStackParamList = {
   SignIn:undefined;
   OtpScreen: { verificationId: string | null;userData: FormValues };
   HomeScreen:undefined;
+  GraphScreen:undefined;
 }
 
 function App(): JSX.Element{
@@ -33,9 +34,10 @@ function App(): JSX.Element{
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HomeScreen">
-      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="GraphScreen" component={GraphScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
-        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
         <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>

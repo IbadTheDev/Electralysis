@@ -1,5 +1,5 @@
 import { Image, ScrollView, StyleSheet, Dimensions, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Foundation';
@@ -7,34 +7,11 @@ import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
 import Header from '../Components/Header';
 import FooterNav from '../Components/FooterNav';
-// import { getLatestUnit } from '../Apis/getLatestUnit';
+import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, MonthlyData } from '../Apis/getUnits';
+// import { getLatestUnit } from '../Apis/getLatestUnit';'
+import { v4 as uuidv4 } from 'uuid';
 
 const { width, height } = Dimensions.get('window');
-
-
-interface MonthlyData {
-    uid: number;
-    month: string;
-    unitsUsed: number;
-    bill: number;
-    time: string;
-}
-
-interface WeeklyData {
-    uid: number;
-    week: string;
-    unitsUsed: number;
-    bill: number;
-    time: string;
-}
-
-interface DailyData {
-    uid: number;
-    day: string;
-    unitsUsed: number;
-    bill: number;
-    time: string;
-}
 
 export default function HomeScreen() {
 
@@ -42,6 +19,39 @@ export default function HomeScreen() {
     const [unit, setUnit] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
+    const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily'>('daily');
+    const [dailyData, setDailyData] = useState<DailyData[]>([]);
+    const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
+    const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                let data;
+                if (selectedDataType === 'daily') {
+                    data = await getDailyData();
+                    setDailyData(data);
+                } else if (selectedDataType === 'weekly') {
+                    data = await getWeeklyData();
+                    setWeeklyData(data);
+                } else if (selectedDataType === 'monthly') {
+                    data = await getMonthlyData();
+                    setMonthlyData(data);
+                }
+                console.log(data); // Log the fetched data
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, [selectedDataType]);
+
+    useEffect(() => {
+        // Scroll to the initial position whenever selectedDataType changes
+        scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+      }, [selectedDataType]);
+      
     // useEffect(() => {
     //     const fetchUnit = async () => {
     //         const latestUnit = await getLatestUnit();
@@ -86,121 +96,6 @@ export default function HomeScreen() {
         return () => clearInterval(intervalId); // Clean up on unmount
     }, []);
 
-    const monthlyData: MonthlyData[] = [
-        {
-            uid: 1,
-            month: "March",
-            unitsUsed: 300,
-            bill: 25000,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 2,
-            month: "April",
-            unitsUsed: 400,
-            bill: 35000,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 3,
-            month: "May",
-            unitsUsed: 500,
-            bill: 45000,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 4,
-            month: "June",
-            unitsUsed: 600,
-            bill: 55000,
-            time: "\u221E"  // Infinite symbol
-        },
-    ];
-
-    const weeklyData: WeeklyData[] = [
-        {
-            uid: 1,
-            week: "Week 1",
-            unitsUsed: 75,
-            bill: 6250,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 2,
-            week: "Week 2",
-            unitsUsed: 100,
-            bill: 8750,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 3,
-            week: "Week 3",
-            unitsUsed: 125,
-            bill: 11250,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 4,
-            week: "Week 4",
-            unitsUsed: 150,
-            bill: 13750,
-            time: "\u221E"  // Infinite symbol
-        },
-    ];
-
-    const dailyData: DailyData[] = [
-        {
-            uid: 1,
-            day: "Monday",
-            unitsUsed: 10,
-            bill: 833,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 2,
-            day: "Tuesday",
-            unitsUsed: 15,
-            bill: 1250,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 3,
-            day: "Wednesday",
-            unitsUsed: 20,
-            bill: 1666,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 4,
-            day: "Thursday",
-            unitsUsed: 25,
-            bill: 2083,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 5,
-            day: "Friday",
-            unitsUsed: 30,
-            bill: 2500,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 6,
-            day: "Saturday",
-            unitsUsed: 35,
-            bill: 2916,
-            time: "\u221E"  // Infinite symbol
-        },
-        {
-            uid: 7,
-            day: "Sunday",
-            unitsUsed: 40,
-            bill: 3333,
-            time: "\u221E"  // Infinite symbol
-        },
-    ];
-
-    const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily'>('daily');
 
     const handleMonthlyPress = () => {
         setSelectedDataType('monthly');
@@ -215,7 +110,6 @@ export default function HomeScreen() {
     };
 
     const selectedData = selectedDataType === 'monthly' ? monthlyData : selectedDataType === 'weekly' ? weeklyData : dailyData;
-
     return (
         <View style={styles.container}>
          <Header/>
@@ -253,6 +147,7 @@ export default function HomeScreen() {
             </View>
 
             <ScrollView
+                ref={scrollViewRef}
                 style={styles.scrollContainer}
                 contentContainerStyle={styles.scrollContentContainer}
                 horizontal={true}
@@ -261,28 +156,31 @@ export default function HomeScreen() {
                 decelerationRate="fast"
                 snapToAlignment="start"
             >
-                 {selectedData.map(data => (
+                {Array.isArray(selectedData) && selectedData.map(data => (
                 <View key={data.uid} style={[styles.midLayerContainer, styles.elevatedMidLayer]}>
                     <View style={styles.cardMonthContainer}>
-                        <Text style={[styles.monthText, styles.elevatedText]}>
-                            {(data as MonthlyData).month ?? (data as WeeklyData).week ?? (data as DailyData).day ?? ''}
-                        </Text>
+                    <Text style={[styles.monthText, styles.elevatedText]}>
+                {selectedDataType === 'monthly' ? moment((data as MonthlyData).month).format('MMMM YYYY') : selectedDataType === 'weekly' ? `Week of ${(moment((data as WeeklyData).weekStart)).format('YYYY-MM-DD')}` : (data as DailyData).dayOfWeek}
+              </Text>
+              {data.time ? (
+                                <Text>{String(data.time)}</Text>
+                            ) : null}
                     </View>
                     <View style={[styles.cardTimeContainer]}>
                         <Text style={[styles.timeDataText, styles.elevatedText]}>
-                            {data.time}
+                         ∞
                         </Text>
                         <Text style={styles.timeTitleText}>Time</Text>
                     </View>
                     <View style={styles.cardCostContainer}>
                         <Text style={[styles.costDataText, styles.elevatedText]}>
-                            {data.bill}
+                        {data.cost !== undefined ? String(data.cost.toFixed(1)) : 'N/A'}
                         </Text>
                         <Text style={styles.costTitleText}>Cost</Text>
                     </View>
                     <View style={styles.cardUnitsContainer}>
                         <Text style={[styles.unitsDataText, styles.elevatedText]}>
-                            {data.unitsUsed}
+                        {data.unitsUsed !== undefined ? String(data.unitsUsed.toFixed(1)) : 'N/A'}
                         </Text>
                         <Text style={styles.unitsTitleText}>Units Used</Text>
                     </View>
