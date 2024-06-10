@@ -18,32 +18,37 @@ import HomeScreen from './Screens/HomeScreen'
 import StateChange from './Components/StateChange'
 import GraphScreen from './Screens/GraphScreen'
 import { FormValues } from './Screens/SignUp';
+import AddDevice from './Screens/AddDevice';
+import ConnectDevice from './Screens/ConnectDevice';
+import { RootStackParamList } from '../ReactApp/android/app/src/type';
+
+// const Stack = createStackNavigator<RootStackParamList>();
+
+// type RootStackParamList = {
+//   SignUp:undefined;
+//   SignIn:undefined;
+//   OtpScreen: { verificationId: string | null;userData: FormValues };
+//   HomeScreen:undefined;
+// }
+
 
 const Stack = createStackNavigator<RootStackParamList>();
-
-type RootStackParamList = {
-  SignUp:undefined;
-  SignIn:undefined;
-  OtpScreen: { verificationId: string | null;userData: FormValues };
-  HomeScreen:undefined;
-  GraphScreen:undefined;
-}
 
 function App(): JSX.Element{
   const isDarkMode = useColorScheme() === 'dark'
   return (
+
+
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
-        <Stack.Screen name="GraphScreen" component={GraphScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }}/>
-        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
-        <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="AddDevice">
+      <Stack.Screen name="AddDevice" component={AddDevice} options={{ headerShown: false }} />
+      <Stack.Screen name="ConnectDevice" component={ConnectDevice} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  </NavigationContainer>
   );
-  
+ 
 }
+
 
 
 const styles = StyleSheet.create({

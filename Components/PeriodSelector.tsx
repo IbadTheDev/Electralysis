@@ -9,11 +9,11 @@ const { width, height } = Dimensions.get('window');
 const transparent = 'rgba(0, 0, 0, 0.5)';
 
 interface PeriodSelectorProps {
-  setStartTime: (time: string) => void;
-  setEndTime: (time: string) => void;
+  setStartTime?: (time: string) => void;
+  setEndTime?: (time: string) => void;
 }
 
-const PeriodSelector = () => {
+const PeriodSelector: React.FC<PeriodSelectorProps> = ({ setStartTime = () => {}, setEndTime = () => {} }) => {
     const [openModal, setopenModal] = useState(false);
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -78,7 +78,7 @@ const PeriodSelector = () => {
         return(
         <Modal 
             visible={openModal}
-            animationType='fade'
+            animationType='slide'
             transparent={true}
             onRequestClose={() => setopenModal(false)}
             >
@@ -88,11 +88,11 @@ const PeriodSelector = () => {
                         <View style={styles.containerStartEnd}>
                             <Text style={styles.textStartEnd}>Start of usage</Text>
                             <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showDatePicker('startDate')}>
-                            <Icon name="calendar-alt" size={18} color="#003C43" />
+                            <Icon name="calendar-alt" style={styles.icons} />
                             <Text style={styles.textDateTimeButton}>{selectedStartDate}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showTimePicker('startTime')}>
-                            <Icon2 name="clock-outline" size={18} color="#003C43" />
+                            <Icon2 name="clock-outline" style={styles.icons}  />
                             <Text style={styles.textDateTimeButton}>{selectedStartTime}</Text>
                             </TouchableOpacity>
                         </View>
@@ -100,11 +100,11 @@ const PeriodSelector = () => {
                         <View style={styles.containerStartEnd}>
                         <Text style={styles.textStartEnd}>End of usage</Text>
                             <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showDatePicker('endDate')}>
-                            <Icon name="calendar-alt" size={18} color="#003C43" />
+                            <Icon name="calendar-alt" style={styles.icons}  />
                             <Text style={styles.textDateTimeButton}>{selectedEndDate}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showTimePicker('endTime')}>
-                            <Icon2 name="clock-outline" size={18} color="#003C43" />
+                            <Icon2 name="clock-outline" style={styles.icons}  />
                             <Text style={styles.textDateTimeButton}>{selectedEndTime}</Text>
                             </TouchableOpacity>
                         </View>
@@ -202,6 +202,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         backgroundColor:transparent,
     },
+    
     container:{
         backgroundColor: 'white',
         padding:'3%',
@@ -245,6 +246,14 @@ const styles = StyleSheet.create({
       textAlign:'center', 
       padding:4,
       justifyContent:'center'
+    },
+    icons: {
+      fontSize: 20,
+      color: '#003C43',
+      textAlign: 'center',
+      justifyContent:'center',
+      marginTop:height*0.006,
+      marginRight:width*0.008,
     },
     
     doneButton:{
