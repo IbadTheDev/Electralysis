@@ -1,8 +1,7 @@
-import { Image, ScrollView, StyleSheet, Dimensions, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState, useEffect,useRef  } from 'react';
+import { Image, ScrollView, StyleSheet, Dimensions, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import React, { useState, useEffect,useRef, useContext  } from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Foundation';
 import Icon3 from 'react-native-vector-icons/Ionicons';
 import Icon4 from 'react-native-vector-icons/Octicons';
 import Header from '../Components/Header';
@@ -10,6 +9,18 @@ import FooterNav from '../Components/FooterNav';
 import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, MonthlyData } from '../Apis/getUnits';
 // import { getLatestUnit } from '../Apis/getLatestUnit';'
 import { v4 as uuidv4 } from 'uuid';
+import Snackbar from 'react-native-snackbar';
+
+//appwrite Session
+import { Context } from '../src/appwrite/Context';
+
+type UserObj = {
+    name: String;
+    email: String;
+}
+
+
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,6 +35,36 @@ export default function HomeScreen() {
     const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
     const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
     const scrollViewRef = useRef<ScrollView>(null);
+
+
+    //Session
+    const [userData, setUserData] = useState<UserObj>()
+    const {appwrite, setIsLoggedIn} = useContext(Context)
+    const handleLoogOut = () => {
+        appwrite.logout()
+        .then(() => {
+            setIsLoggedIn(false);
+            Snackbar.show({
+                text: 'Logging Out',
+                duration: Snackbar.LENGTH_SHORT
+            })
+        })
+    }
+
+    useEffect(() => {
+      appwrite.getCurrentUser()
+      .then(response => {
+        if(response){
+            const user: UserObj = {
+                name: response.name,
+                email: response.email
+            }
+            setUserData(user)
+        }
+      })
+    }, [appwrite])
+    
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -111,7 +152,7 @@ export default function HomeScreen() {
 
     const selectedData = selectedDataType === 'monthly' ? monthlyData : selectedDataType === 'weekly' ? weeklyData : dailyData;
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
          <Header/>
 
             <View style={[styles.mainCard, isPeakHours ? styles.peakMainCard : styles.elevatedLogo]}>
@@ -199,7 +240,7 @@ export default function HomeScreen() {
             </View>
 
             <FooterNav/>
-        </View>
+        </SafeAreaView>
     );
 }
 
