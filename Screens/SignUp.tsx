@@ -1,20 +1,31 @@
 import { StyleSheet, Text, TextInput, Dimensions, View, TouchableOpacity, ScrollView } from 'react-native'
 import CheckBox from '@react-native-community/checkbox';
-import React , {useState} from 'react'
+import React , {useContext, useState} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon2 from 'react-native-vector-icons/FontAwesome5'
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'; 
-import { useNavigation } from '@react-navigation/native';
 import ConfirmationResult from '@react-native-firebase/auth';
-import { RouteProp } from '@react-navigation/native';
+import Snackbar from 'react-native-snackbar';
+import { ChangeEvent } from 'react';
+import { FormikHandlers } from 'formik';
+
+//Navigation
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import {AuthStackParamList} from '../src/routes/AuthStack';
+
+//appwrite Session
+import { Context } from '../src/appwrite/Context';
+
+type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'>
 
 const { width, height } = Dimensions.get('window');
 
 export interface FormValues {
-    fullName: string;
+    name: string;
     password: string;
     confirmPassword: string;
     Mobile: string;
@@ -22,7 +33,7 @@ export interface FormValues {
   }
 
 const SignupSchema = Yup.object().shape({
-    fullName: Yup.string()
+    name: Yup.string()
     .required('Full Name is required'),
     password: Yup.string()
     .min(6, 'Password is too short - should be 6 chars minimum.')
@@ -43,35 +54,98 @@ type OtpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OtpScree
 
 
 export default function SignUp() {
+
     const [isSelected, setSelection] = useState(false);
     const navigation = useNavigation<OtpScreenNavigationProp>(); 
 
-    const sendVerificationCode = (phoneNumber: string,values: FormValues) => {
-      auth()
-        .signInWithPhoneNumber(phoneNumber)
-        .then((confirmation: FirebaseAuthTypes.ConfirmationResult) => {
-          console.log('Confirmation sent:', confirmation);
-          // Get the verification ID from the confirmation object
-          const verificationId = confirmation.verificationId;
-          // Navigate to OtpScreen and pass the verificationId
-          navigation.navigate('OtpScreen', { verificationId,userData:values});
-        })
-        .catch((error) => {
-          console.error('Error sending confirmation:', error);
-        });
+    // appwrite session
+    const {appwrite, setIsLoggedIn} = useContext(Context)
+
+    const [error, setError] = useState<string>('')
+    const [name, setName] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [confrimPassword, setConfirmPassword] = useState<string>('')
+    const [mobile, setMobile] = useState<string>('')
+
+    const createHandleChange = (
+      fieldName: string,
+      formikHandleChange: (e: string | ChangeEvent<any>) => void,
+      customHandlers: Array<(text: string) => void>
+    ) => (text: string) => {
+      formikHandleChange(text); // Call Formik's handleChange directly with text
+      customHandlers.forEach((handler) => handler(text)); // Call custom functions
     };
+
+    // const handleSignUp = () => {
+    //   if (
+    //     name.length < 1 ||
+    //     password.length <1 ||
+    //     confrimPassword.length < 1 ||
+    //     mobile.length <1 
+    //     ){
+    //       setError('Fill all fields');
+    //     } else if (password ! == confrimPassword){
+    //       setError('Passwords do not match');
+    //     } else {
+    //       const user = {
+    //         name,
+    //         password,
+    //         mobile,
+    //       };
+    //     appwrite
+    //     .createAccount(user)
+    //     .then((response: any) => {
+    //       if(response){
+    //         setIsLoggedIn(true)
+    //         Snackbar.show({
+    //           text: 'Sign Up Succesful',
+    //           duration: Snackbar.LENGTH_SHORT
+    //         })
+    //       }
+    //     })
+    //     .catch(e => {
+    //       console.log(e);
+    //       setError(e.message)
+    //     })
+    //   }
+    // }
+
+    const handleSignUp = async (values: FormValues) => {
+      try {
+          const phoneNumber = `+92${values.Mobile}`; // Assuming it's an Indian number
+          const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+          const verificationId = confirmation.verificationId;
+          navigation.navigate('OtpScreen', { verificationId, userData: values });
+      } catch (error) {
+          console.error('Error sending verification code:', error);
+          setError('Error sending verification code');
+      }
+  };
+  
+
+    // const sendVerificationCode = (phoneNumber: string,values: FormValues) => {
+    //   auth()
+    //     .signInWithPhoneNumber(phoneNumber)
+    //     .then((confirmation: FirebaseAuthTypes.ConfirmationResult) => {
+    //       console.log('Confirmation sent:', confirmation);
+    //       // Get the verification ID from the confirmation object
+    //       const verificationId = confirmation.verificationId;
+    //       // Navigate to OtpScreen and pass the verificationId
+    //       navigation.navigate('OtpScreen', { verificationId, userData:values});
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error sending confirmation:', error);
+    //     });
+    // };
     
 
-    function alert(arg0: string) {
-        throw new Error('Function not implemented.');
-    }
 
   return (
     <ScrollView style={styles.container}>
     <Formik
     
     initialValues={{ 
-        fullName: '',
+        name: '',
         password: '', 
         confirmPassword: '', 
         Mobile: '', 
@@ -80,8 +154,9 @@ export default function SignUp() {
     validationSchema={SignupSchema}
     onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
       setSubmitting(false);
-      const phoneNumber = `${values.Mobile}`;
-      sendVerificationCode(phoneNumber,values);
+      handleSignUp(values);
+      // const phoneNumber = `${values.Mobile}`;
+      // sendVerificationCode(phoneNumber,values);
     }}
 >
 {({ 
@@ -107,12 +182,12 @@ export default function SignUp() {
         placeholder='Full Name' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={handleChange('fullName')}
-        onBlur={handleBlur('fullName')}
-        value={values.fullName}
+        onChangeText={createHandleChange('name', handleChange("name"), [setError, setName])}
+        onBlur={handleBlur('name')}
+        value={values.name}
         />
     </View>
-    {errors.fullName && touched.fullName ? (<Text style={styles.error}>{errors.fullName}</Text>) : null}
+    {errors.name && touched.name ? (<Text style={styles.error}>{errors.name}</Text>) : null}
                     
     <View style={styles.inputContainer}>
         <Icon style={styles.icon} name="lock"></Icon>
@@ -120,7 +195,10 @@ export default function SignUp() {
         placeholder='Password'
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={handleChange('password')}
+        onChangeText={createHandleChange(
+                      'password',
+                       handleChange("password"),
+                       [setError, setPassword])}
         onBlur={handleBlur('password')}
         value={values.password}
         secureTextEntry
@@ -134,7 +212,11 @@ export default function SignUp() {
         placeholder='Confirm Password' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={handleChange('confirmPassword')}
+        onChangeText={createHandleChange(
+                      "confirmPassword",
+                      handleChange("confirmPassword"),
+                      [setError, setConfirmPassword]
+        )}
         onBlur={handleBlur('confirmPassword')}
         value={values.confirmPassword}
         secureTextEntry
@@ -148,7 +230,10 @@ export default function SignUp() {
         placeholder='Mobile No.' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={handleChange('Mobile')}
+        onChangeText={createHandleChange("Mobile", handleChange("Mobile"), [
+                      setError,
+                      setMobile,
+        ])}
         onBlur={handleBlur('Mobile')}
         value={values.Mobile}
         />

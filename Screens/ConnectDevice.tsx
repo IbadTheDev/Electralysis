@@ -84,7 +84,7 @@ interface Device {
             
             // navigation to wifi credentials input jub connect ho jaye bluetooth
 
-            // navigation.navigate('SendWifiCredentials', { device });
+           navigation.navigate('SendWifiCredentials', { device });
           })
           .catch((error: any) => {
             clearInterval(interval);

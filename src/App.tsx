@@ -9,19 +9,19 @@ import {
    useColorScheme,
    ScrollView
   } from 'react-native'
-import Home from './Screens/Home'
-import SplashScreen from './Screens/SplashScreen'
-import SignIn from './Screens/SignIn'
-import SignUp from './Screens/SignUp'
-import OtpScreen from './Screens/OtpScreen'
-import HomeScreen from './Screens/HomeScreen'
-import StateChange from './Components/StateChange'
-import GraphScreen from './Screens/GraphScreen'
-import { FormValues } from './Screens/SignUp';
-import AddDevice from './Screens/AddDevice';
-import ConnectDevice from './Screens/ConnectDevice';
-import { RootStackParamList } from './android/app/src/type';
-import SendCredentials from './Screens/SendCredentials';
+import Home from '../Screens/Home'
+import SplashScreen from '../Screens/SplashScreen'
+import SignIn from '../Screens/SignIn'
+import SignUp from '../Screens/SignUp'
+import OtpScreen from '../Screens/OtpScreen'
+import HomeScreen from '../Screens/HomeScreen'
+import StateChange from '../Components/StateChange'
+import GraphScreen from '../Screens/GraphScreen'
+import { FormValues } from '../Screens/SignUp';
+import AddDevice from '../Screens/AddDevice';
+import ConnectDevice from '../Screens/ConnectDevice';
+import { RootStackParamList } from '../android/app/src/type';
+import SendCredentials from '../Screens/SendCredentials';
 import { useNavigation } from '@react-navigation/native';
 
 // const Stack = createStackNavigator<RootStackParamList>();
@@ -41,9 +41,7 @@ function App(): JSX.Element{
   return (
 
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="GraphScreen">
-    <Stack.Screen name="GraphScreen" component={GraphScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+    <Stack.Navigator initialRouteName="AddDevice">
       <Stack.Screen name="AddDevice" component={AddDevice} options={{ headerShown: false }} />
       <Stack.Screen name="ConnectDevice" component={ConnectDevice} options={{ headerShown: false }} />
     </Stack.Navigator>

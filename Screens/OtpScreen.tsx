@@ -52,7 +52,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                   console.log('User signed up:', user);
                   try {
                     const response = await signUpUser({
-                        fullName: userData.fullName,
+                        fullName: userData.name,
                         password: userData.password,
                         Mobile: userData.Mobile
                     });
