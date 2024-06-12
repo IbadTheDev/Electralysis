@@ -20,7 +20,7 @@ import GraphScreen from './Screens/GraphScreen'
 import { FormValues } from './Screens/SignUp';
 import AddDevice from './Screens/AddDevice';
 import ConnectDevice from './Screens/ConnectDevice';
-import { RootStackParamList } from '../ReactApp/android/app/src/type';
+import { RootStackParamList } from './android/app/src/type';
 import SendCredentials from './Screens/SendCredentials';
 import { useNavigation } from '@react-navigation/native';
 
@@ -41,7 +41,9 @@ function App(): JSX.Element{
   return (
 
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="AddDevice">
+    <Stack.Navigator initialRouteName="GraphScreen">
+    <Stack.Screen name="GraphScreen" component={GraphScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="AddDevice" component={AddDevice} options={{ headerShown: false }} />
       <Stack.Screen name="ConnectDevice" component={ConnectDevice} options={{ headerShown: false }} />
     </Stack.Navigator>
