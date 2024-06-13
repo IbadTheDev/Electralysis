@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BleManager, { PeripheralInfo } from 'react-native-ble-manager';
 import { Buffer } from 'buffer';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import { AuthStackParamList, SendCredentialsRouteProp } from '../src/types/navigation';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,16 +22,14 @@ interface Device {
     uuid: string;
   }
 
-  interface MyService {
-    uuid: string;
-    characteristics: {
-      uuid: string;
-    }[];
-  }
-  
+  type SendCredentialsProps = {
+    route: SendCredentialsRouteProp;
+  };
 
 
-  const SendCredentials: React.FC<{ device: Device }> = ({ device }) => {
+
+  const SendCredentials = ({ route }: SendCredentialsProps) => {
+    const { device } = route.params;
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
     const [isSending, setIsSending] = useState(false);
@@ -129,7 +129,7 @@ interface Device {
         </View>
     );
 }
-export default SendCredentials
+
 
 const styles = StyleSheet.create({
     container: {
@@ -244,3 +244,5 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
 });
+
+export default SendCredentials

@@ -1,32 +1,77 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {signInUser} from '../Apis/SignInApi'; 
 
+
+//Navigation
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import {AuthStackParamList} from '../src/routes/AuthStack';
+import { RouteProp } from '@react-navigation/native';
+
+//appwrite Session
+import { Context } from '../src/appwrite/Context';
+import Snackbar from 'react-native-snackbar';
+
+type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
+
 const { width, height } = Dimensions.get('window');
 
-export default function SignIn() {
+const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
     const [isSelected, setSelection] = useState(false);
-    const [Mobile, setMobile] = useState('');
+    const [mobile, setMobile] = useState('');
     const [password, setPassword] = useState('');
 
+    const [error, setError] = useState<string>('');
+    const {appwrite, setIsLoggedIn} = useContext(Context);
+
+
     const handleSignIn = async () => {
+        if (mobile.length <1 || password.length <1){
+            setError('All firleds are required')
+        } else {
         const userData = {
-          Mobile:Mobile, 
+          Mobile:mobile, 
           password: password,
         };
-      
-        try {
-          const response = await signInUser(userData);
-          console.log('Sign in successful:', response);
-          Alert.alert('Sign In Successful')
+        const user = {
+            mobile,
+            password,
+        }
+        appwrite
+        .login(user)
+        .then(
+            (response) => {
+                if (response){
+                    setIsLoggedIn(true);
+                    Snackbar.show({
+                        text: 'Logged in',
+                        duration: Snackbar.LENGTH_SHORT
+                    })
+                }
+            }
+        )
+        .catch(e=> {
+            console.log(e)
+            setError('Incoorect email or password')
+        })
 
-        } catch (error) {
-            console.error('Error signing in');
-            Alert.alert(`Sign in failed:`);
-          }
-      };
+        try {
+            const response = await signInUser(userData);
+            console.log('Sign in successful:', response);
+            Alert.alert('Sign In Successful')
+  
+          } catch (error) {
+              console.error('Error signing in');
+              Alert.alert(`Sign in failed:`);
+            }
+        };
+    }
+      
+        
 
     return (
         <View style={styles.container}>
@@ -42,8 +87,8 @@ export default function SignIn() {
                     placeholder='Mobile No.'
                     placeholderTextColor={'#a9a9a9'}
                     style={styles.inputBox}
-                    value={Mobile}
-                    onChangeText={setMobile}
+                    value={mobile}
+                    onChangeText={text => setMobile(text)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -53,7 +98,7 @@ export default function SignIn() {
                     placeholderTextColor={'#a9a9a9'}
                     style={styles.inputBox}
                     value={password}
-                    onChangeText={setPassword}
+                    onChangeText={text => setPassword(text)}
                     secureTextEntry
                 />
             </View>
@@ -77,7 +122,7 @@ export default function SignIn() {
             </View>
             <View style={styles.noAccountContainer}>
                 <Text style={styles.noAccountText}>Don't have an account?</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
                     <Text style={[styles.signUpText, styles.elevatedText]}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
@@ -210,3 +255,5 @@ const styles = StyleSheet.create({
         marginLeft: width * 0.02,
     },
 });
+
+export default SignIn;

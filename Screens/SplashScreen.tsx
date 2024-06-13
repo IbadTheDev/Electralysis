@@ -1,8 +1,20 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../src/App';
 
+type SplashScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SplashScreen'>;
 
-export default function SplashScreen() {
+const SplashScreen: React.FC = () => {
+    const navigation = useNavigation<SplashScreenNavigationProp>();
+
+    useEffect(() => {
+        setTimeout(() => {
+          navigation.navigate('Router');
+        }, 3000);
+      }, [navigation]);
+      
   return (
    
         <View style={styles.container} >
@@ -97,3 +109,5 @@ const styles = StyleSheet.create({
    }
     
 })
+
+export default SplashScreen;

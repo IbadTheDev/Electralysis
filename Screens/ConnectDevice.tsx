@@ -4,9 +4,15 @@ import * as Progress from 'react-native-progress';
 import BleManager from 'react-native-ble-manager';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import SendCredentials from './SendCredentials';
-
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import { AuthStackParamList, ConnectDeviceNavigationProp, ConnectDeviceRouteProp } from '../src/types/navigation'
 
 const { width, height } = Dimensions.get('window');
+
+type ConnectDeviceProps = {
+  route: ConnectDeviceRouteProp;
+  navigation: ConnectDeviceNavigationProp;
+};
 
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -16,13 +22,8 @@ interface Device {
     name: string;
   }
   
-  interface ConnectDeviceProps {
-    navigation: {
-      navigate: (screen: string, params?: object) => void;
-    };
-  }
 
-  const ConnectDevice: React.FC<ConnectDeviceProps> = ({ navigation }) => {
+const ConnectDevice = ({ route, navigation }: ConnectDeviceProps) => {
     const [progress, setProgress] = useState(0);
     const [connecting, setConnecting] = useState(false);
     const [connectedDevice, setConnectedDevice] = useState<Device | null>(null); // State to store the discovered device
@@ -84,7 +85,7 @@ interface Device {
             
             // navigation to wifi credentials input jub connect ho jaye bluetooth
 
-           navigation.navigate('SendWifiCredentials', { device });
+           navigation.navigate('SendCredentials', { device });
           })
           .catch((error: any) => {
             clearInterval(interval);

@@ -2,11 +2,9 @@ import { View, Text } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {Context} from '../appwrite/Context'
-import Loading from '../../Components/Loading'
-
-//Routes
-import { AppStack } from './AppStack'
-import { AuthStack } from './AuthStack'
+import Loading from '../../Components/Loading';
+import { AuthStack } from '../routes/AuthStack';
+import { AppStack } from '../routes/AppStack';
 
 
 
@@ -36,5 +34,5 @@ export const Router = () => {
     {isLoggedIn? <AppStack/> : <AuthStack/>}
    </NavigationContainer>
   )
-}
+};
 

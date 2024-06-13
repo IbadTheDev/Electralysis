@@ -15,12 +15,12 @@ import { FormikHandlers } from 'formik';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import {AuthStackParamList} from '../src/routes/AuthStack';
-
+import { RouteProp } from '@react-navigation/native';
+import {AuthStackParamList} from '../src/types/navigation'
 //appwrite Session
 import { Context } from '../src/appwrite/Context';
 
-type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'>
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -46,6 +46,10 @@ const SignupSchema = Yup.object().shape({
     .test('is-13-digits', 'Invalid Mobile Number', val => val?.length === 13),
 });
 
+type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'> & {
+  navigation: OtpScreenNavigationProp;
+};
+
 type RootStackParamList = {
   OtpScreen: { verificationId: string | null; userData: FormValues };
 };
@@ -53,10 +57,10 @@ type RootStackParamList = {
 type OtpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'OtpScreen'>;
 
 
-export default function SignUp() {
+const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
 
     const [isSelected, setSelection] = useState(false);
-    const navigation = useNavigation<OtpScreenNavigationProp>(); 
+
 
     // appwrite session
     const {appwrite, setIsLoggedIn} = useContext(Context)
@@ -112,7 +116,7 @@ export default function SignUp() {
 
     const handleSignUp = async (values: FormValues) => {
       try {
-          const phoneNumber = `+92${values.Mobile}`; // Assuming it's an Indian number
+          const phoneNumber = `+92${values.Mobile}`; 
           const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
           const verificationId = confirmation.verificationId;
           navigation.navigate('OtpScreen', { verificationId, userData: values });
@@ -159,16 +163,7 @@ export default function SignUp() {
       // sendVerificationCode(phoneNumber,values);
     }}
 >
-{({ 
-    handleChange, 
-    handleBlur, 
-    handleSubmit, 
-    values, 
-    errors, 
-    touched, 
-    isSubmitting, 
-    setFieldValue
-     }) => (
+    {({ handleChange,  handleBlur, handleSubmit, values, errors, touched, isSubmitting, setFieldValue}) => (
 <View >
     <View style={styles.topTextContainer}>
       <Text style={styles.topText}>Sign Up</Text>
@@ -266,7 +261,7 @@ export default function SignUp() {
    
     <View style={styles.noAccountContainer}>
         <Text style={styles.noAccountText}>Already have an account?</Text>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
              <Text style={[styles.signInText, styles.elevatedText]}>Sign In</Text>
         </TouchableOpacity>
     </View>
@@ -422,3 +417,5 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
 });
+
+export default SignUp;

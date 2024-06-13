@@ -3,16 +3,19 @@ import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PERMISSIONS, request, check, RESULTS } from 'react-native-permissions';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
-import { useNavigation } from '@react-navigation/native';
-import { AddDeviceNavigationProp } from '../android/app/src/type';
-
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import { AuthStackParamList, AddDeviceNavigationProp, AddDeviceRouteProp } from '../src/types/navigation';
 
 const { width, height } = Dimensions.get('window');
 
-const AddDevice = () => {
+type AddDeviceProps = {
+    route: AddDeviceRouteProp;
+    navigation: AddDeviceNavigationProp;
+  };
 
+  const AddDevice = ({ route, navigation }: AddDeviceProps) => {
+    const { userData } = route.params;
     const [isBluetoothEnabled, setIsBluetoothEnabled] = useState(false);
-    const navigation = useNavigation<AddDeviceNavigationProp>();
 
     useEffect(() => {
         checkBluetoothState();
@@ -67,7 +70,7 @@ const AddDevice = () => {
         try {
             await BluetoothStateManager.requestToEnable();
             setIsBluetoothEnabled(true);
-            navigation.navigate('ConnectDevice');
+            navigation.navigate('ConnectDevice', { device: null });
         } catch (error) {
             console.error('Failed to enable Bluetooth:', error);
             Alert.alert('Bluetooth Error', 'Failed to enable Bluetooth.');
@@ -83,7 +86,7 @@ const AddDevice = () => {
                     await enableBluetooth();
                 } else {
                     setIsBluetoothEnabled(true);
-                    navigation.navigate('ConnectDevice');   // Additional logic if Bluetooth is already enabled
+                    navigation.navigate('ConnectDevice', { device: null });   // Additional logic if Bluetooth is already enabled
                 }
             } else {
                 Alert.alert('Permission Denied', 'Bluetooth functionality requires permission to enable.');

@@ -1,24 +1,23 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import auth from '@react-native-firebase/auth';
-import { useNavigation } from '@react-navigation/native';
-import SignIn from './SignIn';
-import { RouteProp } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import signUpUser from '../Apis/SignUpApi';
+import { useNavigation, RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import { FormValues } from './SignUp';
+import { Context } from '../src/appwrite/Context';
+import Snackbar from 'react-native-snackbar';
+import {AuthStackParamList, OtpScreenRouteProp} from '../src/types/navigation';
 
-
-export type RootStackParamList = {
-  OtpScreen: { verificationId: string | null;userData: FormValues };
-};
-
-type OtpScreenProps = StackScreenProps<RootStackParamList, 'OtpScreen'>;
+type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
 
 export default function OtpScreen({ route }: OtpScreenProps) {
   const { verificationId,userData } = route.params;
+  const { appwrite, setIsLoggedIn } = useContext(Context);
+
     const et1 = useRef<TextInput>(null);
     const et2 = useRef<TextInput>(null);
     const et3 = useRef<TextInput>(null);
@@ -35,9 +34,11 @@ export default function OtpScreen({ route }: OtpScreenProps) {
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [timer, setTimer] = useState(5);
-    const navigation = useNavigation();
+    const [error, setError] = useState<string>('');
+    const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+   
 
-    const handleVerificationCodeInput = () => {
+    const handleVerificationCodeInput = async () => {
       const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
       console.log('Verification code entered:', code);
 
@@ -47,25 +48,50 @@ export default function OtpScreen({ route }: OtpScreenProps) {
           console.log('Credential created:', credential);
 
           auth().signInWithCredential(credential)
-              .then(async(userCredential) => {
-                  const user = userCredential.user;
-                  console.log('User signed up:', user);
+          .then(async (userCredential) => {
+            const user = userCredential.user;
+            console.log('User signed up:', user);
                   try {
-                    const response = await signUpUser({
-                        fullName: userData.name,
-                        password: userData.password,
-                        Mobile: userData.Mobile
+                    const response = await appwrite.createAccount({
+                      name: userData.name,
+                      password: userData.password,
+                      mobile: userData.Mobile,
                     });
-                    console.log('Sign up successful:', response);
+                    if (response) {
+                      setIsLoggedIn(true);
+                      console.log('Sign up successful:', response);
+                      Snackbar.show({
+                        text: 'Sign Up Successful',
+                        duration: Snackbar.LENGTH_SHORT
+                      });
+                      navigation.navigate('AddDevice', { userData }); // Navigate to AddDevice
+                    } else {
+                      console.error('User account creation failed');
+                      Snackbar.show({
+                        text: 'User account creation failed',
+                        duration: Snackbar.LENGTH_SHORT
+                      });
+                    }
+                    
                 } catch (error) {
                     console.error('Error signing up:', error);
+                    Snackbar.show({
+                      text: String(error),
+                      duration: Snackbar.LENGTH_SHORT
+                    });
                 }
               })
+              
               .catch((error) => {
-                  console.error('Error signing up:', error);
+                console.error('Error during sign in with credential:', error);
+                Snackbar.show({
+                  text: String(error),
+                  duration: Snackbar.LENGTH_SHORT
+                });
               });
       } else {
           console.error('Verification ID is missing');
+          setError('Verification ID is missing');
       }
   };
 

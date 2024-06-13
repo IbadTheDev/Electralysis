@@ -11,6 +11,12 @@ import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, Mon
 import { v4 as uuidv4 } from 'uuid';
 import Snackbar from 'react-native-snackbar';
 
+//Navigation
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {AppStackParamList} from '../src/routes/AppStack'
+
+type HomeProps = NativeStackScreenProps<AppStackParamList, 'HomeScreen'>
+
 //appwrite Session
 import { Context } from '../src/appwrite/Context';
 
@@ -20,11 +26,9 @@ type UserObj = {
 }
 
 
-
-
 const { width, height } = Dimensions.get('window');
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}: HomeProps) {
 
     const { width, height } = Dimensions.get('window');
     const [unit, setUnit] = useState<number | null>(null);
@@ -40,6 +44,8 @@ export default function HomeScreen() {
     //Session
     const [userData, setUserData] = useState<UserObj>()
     const {appwrite, setIsLoggedIn} = useContext(Context)
+
+    //appwrite logout code
     const handleLoogOut = () => {
         appwrite.logout()
         .then(() => {
