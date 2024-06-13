@@ -4,6 +4,7 @@ import { createNativeStackNavigator} from '@react-navigation/native-stack'
 import SplashScreen from '../Screens/SplashScreen'
 import { Router } from './routes/Router';
 import {AppwriteProvider} from '../src/appwrite/Context'
+import PredictScreen from '../Screens/PredictScreen';
 
 
 export type RootStackParamList = {
@@ -16,6 +17,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
     const App: React.FC = () => (
+   
       <AppwriteProvider>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>

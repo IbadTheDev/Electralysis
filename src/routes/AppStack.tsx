@@ -6,11 +6,13 @@ import AddDevice from '../../Screens/AddDevice';
 import ConnectDevice from '../../Screens/ConnectDevice';
 import SendCredentials from '../../Screens/SendCredentials';
 import { Context } from '../appwrite/Context';
+import PredictScreen from '../../Screens/PredictScreen';
 
 
 export type AppStackParamList = {
   HomeScreen: undefined;
   GraphScreen: undefined;
+  PredictScreen: undefined;
   AddDevice: undefined;
   ConnectDevice: { device: any };
   SendCredentials: { device: any };
@@ -35,6 +37,7 @@ export const AppStack: React.FC = () => {
         <>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="GraphScreen" component={GraphScreen} />
+          <Stack.Screen name="PredictScreen" component={PredictScreen} />
         </>
       )}
     </Stack.Navigator>
