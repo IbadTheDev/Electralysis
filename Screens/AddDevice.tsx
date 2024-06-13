@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { PERMISSIONS, request, check, RESULTS } from 'react-native-permissions';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { useNavigation, RouteProp } from '@react-navigation/native';
-import { AuthStackParamList, AddDeviceNavigationProp, AddDeviceRouteProp } from '../src/types/navigation';
+import { AppStackParamList, AddDeviceNavigationProp, AddDeviceRouteProp } from '../src/types/navigation';
 
 const { width, height } = Dimensions.get('window');
 

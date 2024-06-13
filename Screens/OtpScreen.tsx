@@ -10,6 +10,7 @@ import { FormValues } from './SignUp';
 import { Context } from '../src/appwrite/Context';
 import Snackbar from 'react-native-snackbar';
 import {AuthStackParamList, OtpScreenRouteProp} from '../src/types/navigation';
+import { AppStackParamList } from '../src/routes/AppStack';
 
 type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
@@ -35,7 +36,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [timer, setTimer] = useState(5);
     const [error, setError] = useState<string>('');
-    const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+    const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
    
 
     const handleVerificationCodeInput = async () => {

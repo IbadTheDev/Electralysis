@@ -8,29 +8,34 @@ import { AppStack } from '../routes/AppStack';
 
 export const Router = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const {appwrite, isLoggedIn, setIsLoggedIn } = useContext(Context)
+    const {appwrite, isLoggedIn, setIsLoggedIn, setIsInitialSetupComplete } = useContext(Context)
 
     useEffect(() => {
-     appwrite.getCurrentUser()
-     .then(response=>{
-        setIsLoading(false)
-        if(response) {
-            setIsLoggedIn(true)
-        }
-     })
-     .catch(_ => {
-        setIsLoading(false)
-        setIsLoggedIn(false)
-     })
-    }, [appwrite, setIsLoggedIn])
+        const checkUserStatus = async () => {
+            try {
+                const user = await appwrite.getCurrentUser();
+                setIsLoading(false);
+                if (user) {
+                    setIsLoggedIn(true);
+                    const setupComplete = await appwrite.isInitialSetupComplete(user.$id);
+                    setIsInitialSetupComplete(setupComplete);
+                } else {
+                    setIsLoggedIn(false);
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                setIsLoading(false);
+                setIsLoggedIn(false);
+            }
+        };
+
+        checkUserStatus();
+    }, [appwrite, setIsLoggedIn, setIsInitialSetupComplete]);
     
     if(isLoading) {
         return <Loading/>
     }
-  return (
-   <>
-    {isLoggedIn? <AppStack/> : <AuthStack/>}
-   </>
-  )
+  return isLoggedIn? <AppStack/> : <AuthStack/>
+  
 };
 
