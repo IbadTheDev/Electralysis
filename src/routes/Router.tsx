@@ -1,6 +1,4 @@
-import { View, Text } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import {NavigationContainer} from '@react-navigation/native'
 import {Context} from '../appwrite/Context'
 import Loading from '../../Components/Loading';
 import { AuthStack } from '../routes/AuthStack';
@@ -30,9 +28,9 @@ export const Router = () => {
         return <Loading/>
     }
   return (
-   <NavigationContainer>
+   <>
     {isLoggedIn? <AppStack/> : <AuthStack/>}
-   </NavigationContainer>
+   </>
   )
 };
 

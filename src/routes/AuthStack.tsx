@@ -1,6 +1,6 @@
 import React from 'react'
 import { createNativeStackNavigator} from '@react-navigation/native-stack'
-import SignUp, { FormValues } from '../../Screens/SignUp'
+import SignUp from '../../Screens/SignUp'
 import SignIn from '../../Screens/SignIn'
 import OtpScreen from '../../Screens/OtpScreen'
 import AddDevice from '../../Screens/AddDevice';
