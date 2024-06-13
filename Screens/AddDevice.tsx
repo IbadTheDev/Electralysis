@@ -5,6 +5,7 @@ import { PERMISSIONS, request, check, RESULTS } from 'react-native-permissions';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { AddDeviceNavigationProp} from '../src/types/navigation';
+import Snackbar from 'react-native-snackbar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -68,10 +69,17 @@ type AddDeviceProps = {
         try {
             await BluetoothStateManager.requestToEnable();
             setIsBluetoothEnabled(true);
+            Snackbar.show({
+                text: 'Bluetooth Connected',
+                duration: Snackbar.LENGTH_SHORT
+            })
             navigation.navigate('ConnectDevice', { device: null });
         } catch (error) {
             console.error('Failed to enable Bluetooth:', error);
-            Alert.alert('Bluetooth Error', 'Failed to enable Bluetooth.');
+            Snackbar.show({
+                text: 'Bluetooth Error: Failed to enable Bluetooth.',
+                duration: Snackbar.LENGTH_LONG
+            })
         }
     };
 
@@ -84,14 +92,26 @@ type AddDeviceProps = {
                     await enableBluetooth();
                 } else {
                     setIsBluetoothEnabled(true);
+                    Snackbar.show({
+                        text: 'Bluetooth Connected',
+                        duration: Snackbar.LENGTH_SHORT
+                    })
                     navigation.navigate('ConnectDevice', { device: null });   // Additional logic if Bluetooth is already enabled
                 }
             } else {
-                Alert.alert('Permission Denied', 'Bluetooth functionality requires permission to enable.');
+                Snackbar.show({
+                    text: 'Permission Denied: Bluetooth requires permission',
+                    duration: Snackbar.LENGTH_LONG
+                })
+                
             }
         } catch (error) {
             console.error('Error handling permissions:', error);
-            Alert.alert('Permission Error', 'Failed to handle permissions.');
+            Snackbar.show({
+                text: 'Permission Error: Failed to handle permissions.',
+                duration: Snackbar.LENGTH_LONG
+            })
+            
         }
     };
     
