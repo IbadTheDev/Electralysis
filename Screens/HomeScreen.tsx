@@ -239,9 +239,9 @@ export default function HomeScreen({navigation}: HomeProps) {
                 <Icon4 name="graph" style={[styles.iconGraph, styles.elevatedText]} />
                     <Text style={styles.bottomButtonText}>Bill Estimate</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
+                <TouchableOpacity onPress={() => navigation.navigate('GraphScreen')} activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
                 <Icon3 name="time-outline" style={[styles.iconPeak, styles.elevatedText]} />
-                    <Text style={styles.bottomButtonText}>Peak-Hours</Text>
+                    <Text style={styles.bottomButtonText}>Graph Screen</Text>
                 </TouchableOpacity>
             </View>
 

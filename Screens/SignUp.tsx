@@ -28,7 +28,7 @@ export interface FormValues {
     name: string;
     password: string;
     confirmPassword: string;
-    Mobile: string;
+    mobile: string;
     agreeToTerms: boolean;
   }
 
@@ -41,7 +41,7 @@ const SignupSchema = Yup.object().shape({
     confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
     .required('Confirm Password is required'),
-    Mobile: Yup.string()
+    mobile: Yup.string()
     .required('Mobile No. is required')
     .test('is-10-digits', 'Invalid Mobile Number', val => val?.length === 10),
 });
@@ -116,7 +116,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
 
     const handleSignUp = async (values: FormValues) => {
       try {
-          const phoneNumber = `+92${values.Mobile}`; 
+          const phoneNumber = `+92${values.mobile}`; 
           const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
           const verificationId = confirmation.verificationId;
           navigation.navigate('OtpScreen', { verificationId, userData: values });
@@ -152,7 +152,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
         name: '',
         password: '', 
         confirmPassword: '', 
-        Mobile: '', 
+        mobile: '', 
         agreeToTerms: false
      }}
     validationSchema={SignupSchema}
@@ -225,15 +225,15 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
         placeholder='Mobile No.' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange("Mobile", handleChange("Mobile"), [
+        onChangeText={createHandleChange("mobile", handleChange("mobile"), [
                       setError,
                       setMobile,
         ])}
-        onBlur={handleBlur('Mobile')}
-        value={values.Mobile}
+        onBlur={handleBlur('mobile')}
+        value={values.mobile}
         />
     </View>
-    {errors.Mobile && touched.Mobile ? (<Text style={styles.error}>{errors.Mobile}</Text>) : null}
+    {errors.mobile && touched.mobile ? (<Text style={styles.error}>{errors.mobile}</Text>) : null}
 
     <View style={styles.checkBoxContainer}>
     <CheckBox

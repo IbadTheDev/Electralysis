@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 
 const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
     const [isSelected, setSelection] = useState(false);
-    const [mobile, setMobile] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [error, setError] = useState<string>('');
@@ -30,15 +30,15 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
 
 
     const handleSignIn = async () => {
-        if (mobile.length <1 || password.length <1){
+        if (email.length <1 || password.length <1){
             setError('All firleds are required')
         } else {
         const userData = {
-          Mobile:mobile, 
+          email:email, 
           password: password,
         };
         const user = {
-            mobile,
+            email,
             password,
         }
         appwrite
@@ -84,11 +84,11 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
             <View style={styles.inputContainer}>
                 <Icon style={styles.icon} name="user" />
                 <TextInput
-                    placeholder='Mobile No.'
+                    placeholder='Email.'
                     placeholderTextColor={'#a9a9a9'}
                     style={styles.inputBox}
-                    value={mobile}
-                    onChangeText={text => setMobile(text)}
+                    value={email}
+                    onChangeText={text => setEmail(text)}
                 />
             </View>
             <View style={styles.inputContainer}>

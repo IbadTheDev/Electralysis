@@ -53,7 +53,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
             console.log('User signed up:', user);
                   try {
                     const response = await appwrite.createAccount({
-                      name: userData.name,
+                      email: userData.email,
                       password: userData.password,
                       mobile: userData.mobile,
                     });
