@@ -1,5 +1,3 @@
 Electralysis 
 
-git add .
-git commit -m "Add Device UI"
-git pull
+An innovative Real-Time electricty meter reader, with prediction, peak-hours, and analytics capabilities.
