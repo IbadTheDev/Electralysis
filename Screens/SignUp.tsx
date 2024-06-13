@@ -25,7 +25,7 @@ import { Context } from '../src/appwrite/Context';
 const { width, height } = Dimensions.get('window');
 
 export interface FormValues {
-    name: string;
+    email: string;
     password: string;
     confirmPassword: string;
     mobile: string;
@@ -33,8 +33,8 @@ export interface FormValues {
   }
 
 const SignupSchema = Yup.object().shape({
-    name: Yup.string()
-    .required('Full Name is required'),
+    email: Yup.string()
+    .required('Email is required'),
     password: Yup.string()
     .min(6, 'Password is too short - should be 6 chars minimum.')
     .required('Password is required'),
@@ -66,7 +66,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     const {appwrite, setIsLoggedIn} = useContext(Context)
 
     const [error, setError] = useState<string>('')
-    const [name, setName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [confrimPassword, setConfirmPassword] = useState<string>('')
     const [mobile, setMobile] = useState<string>('')
@@ -149,7 +149,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     <Formik
     
     initialValues={{ 
-        name: '',
+        email: '',
         password: '', 
         confirmPassword: '', 
         mobile: '', 
@@ -174,15 +174,15 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     <View style={styles.inputContainer}>
         <Icon style={styles.icon} name="user"></Icon>
         <TextInput 
-        placeholder='Full Name' 
+        placeholder='Email' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange('name', handleChange("name"), [setError, setName])}
-        onBlur={handleBlur('name')}
-        value={values.name}
+        onChangeText={createHandleChange('email', handleChange("email"), [setError, setEmail])}
+        onBlur={handleBlur('email')}
+        value={values.email}
         />
     </View>
-    {errors.name && touched.name ? (<Text style={styles.error}>{errors.name}</Text>) : null}
+    {errors.email && touched.email ? (<Text style={styles.error}>{errors.email}</Text>) : null}
                     
     <View style={styles.inputContainer}>
         <Icon style={styles.icon} name="lock"></Icon>
