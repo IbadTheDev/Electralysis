@@ -1,9 +1,9 @@
 import axiosInstance from './axiosInstance'; 
 
 interface SignUpRequest {
-  fullName: string;
+  email: string;
   password: string;
-  Mobile: string;
+  mobile: string;
 }
 
 interface SignUpResponse {

@@ -66,7 +66,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     const {appwrite, setIsLoggedIn} = useContext(Context)
 
     const [error, setError] = useState<string>('')
-    const [name, setName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [confrimPassword, setConfirmPassword] = useState<string>('')
     const [mobile, setMobile] = useState<string>('')
@@ -177,7 +177,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
         placeholder='Email' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange('email', handleChange("email"), [setError, setName])}
+        onChangeText={createHandleChange('email', handleChange("email"), [setError, setEmail])}
         onBlur={handleBlur('email')}
         value={values.email}
         />
