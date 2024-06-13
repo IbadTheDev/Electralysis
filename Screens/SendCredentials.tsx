@@ -8,6 +8,7 @@ import { SendCredentialsRouteProp, HomeScreenNavigationProp } from '../src/types
 import {AppStackParamList} from '../src/types/navigation'
 import { Context } from '../src/appwrite/Context';
 import HomeScreen from '../Screens/HomeScreen';
+import Snackbar from 'react-native-snackbar';
 
 
 
@@ -56,11 +57,19 @@ interface Device {
                     break;
                   }}}
         if (!serviceUUID || !characteristicUUID) {
-          Alert.alert('Error', 'No suitable service found on device');
+            Snackbar.show({
+                text: 'Error: No suitable service found on device',
+                duration: Snackbar.LENGTH_LONG
+            })
+          
         }
       } catch (error) {
         console.error('Error retrieving services:', error);
-        Alert.alert('Error', 'Failed to retrieve services. Please try again.');
+        Snackbar.show({
+            text: 'Error: Failed to retrieve services. Please try again.',
+            duration: Snackbar.LENGTH_LONG
+        })
+        
       }
     };
 
@@ -69,7 +78,11 @@ interface Device {
         
   const sendCredentials = async () => {
     if (!ssid || !password) {
-      Alert.alert('Error', 'Please enter both SSID and Password');
+        Snackbar.show({
+            text: 'Error: Please enter both SSID and Password',
+            duration: Snackbar.LENGTH_LONG
+        })
+      
       return;
     }
 
@@ -83,7 +96,11 @@ interface Device {
         await BleManager.write(device.id, serviceUUID, characteristicUUID, encodedData);
   
         setIsSending(false);
-        Alert.alert('Success', 'Credentials sent successfully!');
+        Snackbar.show({
+            text: 'Success: Credentials sent successfully!',
+            duration: Snackbar.LENGTH_LONG
+        })
+        
          // Mark initial setup as complete
       await appwrite.markInitialSetupComplete();
       setIsInitialSetupComplete(true);
@@ -92,7 +109,11 @@ interface Device {
       } catch (error) {
         setIsSending(false);
         console.error('Error sending credentials:', error);
-        Alert.alert('Error', 'Failed to send credentials. Please try again.');
+        Snackbar.show({
+            text: 'Error: Failed to send credentials. Please try again.',
+            duration: Snackbar.LENGTH_LONG
+        })
+        
       }
     };
     return (
