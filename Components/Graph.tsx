@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('window');
   interface GraphProps {
     data: GraphData;
     chartType: 'line' | 'bar';
-    dataType: 'monthly' | 'weekly' | 'daily';
+    dataType: 'monthly' | 'weekly' | 'daily' | 'custom';
   }
 
   interface DataPointClickEvent {
