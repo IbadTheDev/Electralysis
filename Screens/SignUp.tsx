@@ -43,7 +43,7 @@ const SignupSchema = Yup.object().shape({
     .required('Confirm Password is required'),
     Mobile: Yup.string()
     .required('Mobile No. is required')
-    .test('is-13-digits', 'Invalid Mobile Number', val => val?.length === 13),
+    .test('is-10-digits', 'Invalid Mobile Number', val => val?.length === 10),
 });
 
 type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'> & {

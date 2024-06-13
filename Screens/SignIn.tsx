@@ -9,7 +9,7 @@ import {signInUser} from '../Apis/SignInApi';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
-import {AuthStackParamList} from '../src/routes/AuthStack';
+import {AuthStackParamList} from '../src/types/navigation';
 import { RouteProp } from '@react-navigation/native';
 
 //appwrite Session

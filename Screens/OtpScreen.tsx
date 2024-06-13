@@ -55,7 +55,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                     const response = await appwrite.createAccount({
                       name: userData.name,
                       password: userData.password,
-                      mobile: userData.Mobile,
+                      mobile: userData.mobile,
                     });
                     if (response) {
                       setIsLoggedIn(true);
@@ -79,6 +79,18 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                       text: String(error),
                       duration: Snackbar.LENGTH_SHORT
                     });
+                }
+                try {
+                  // Sending data to your backend
+                  const respone = await signUpUser({
+                    fullName: userData.name,
+                    password: userData.password,
+                    Mobile: userData.Mobile,
+                  });
+          
+                  console.log('Backend sign up successful:', respone);
+                } catch (error) {
+                  console.error('Error signing up with backend:', error);
                 }
               })
               
