@@ -24,6 +24,12 @@ export interface MonthlyData {
   time:string;
 }
 
+export interface UnitData {
+  uid: string;
+  dateTime: string;
+  unitsUsed: number;
+}
+
 export const getDailyData = async (): Promise<DailyData[]> => {
     const response = await axios.get('/ElectricityUsage/Daily?date=' + new Date().toISOString());
     return response.data;
@@ -38,3 +44,13 @@ export const getDailyData = async (): Promise<DailyData[]> => {
     const response = await axios.get('/ElectricityUsage/Monthly');
     return response.data;
   };
+
+  export const getUnitsByDateTimeRange = async (startDateTime: string, endDateTime: string): Promise<UnitData[]> => {
+    const response = await axios.get('/ElectricityUsage/UnitsByDateTimeRange', {
+        params: {
+            startDateTime,
+            endDateTime
+        }
+    });
+    return response.data;
+};
