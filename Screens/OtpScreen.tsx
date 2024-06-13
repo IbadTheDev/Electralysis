@@ -83,9 +83,9 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                 try {
                   // Sending data to your backend
                   const respone = await signUpUser({
-                    fullName: userData.name,
+                    email: userData.email,
                     password: userData.password,
-                    Mobile: userData.Mobile,
+                    mobile: userData.mobile,
                   });
           
                   console.log('Backend sign up successful:', respone);
