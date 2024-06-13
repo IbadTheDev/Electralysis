@@ -8,13 +8,13 @@ const APPWRITE_ENDPOINT: string = Config.APPWRITE_ENDPOINT!;
 const APPWRITE_PROJECT_ID:string = Config.APPWRITE_PROJECT_ID!;
 
 type CreateUserAccount = {
+    email: string;
     password: string;
-    name: string;
     mobile: string;
 }
 
 type LoginUserAccount = {
-    mobile: string;
+    email: string;
     password: string;
 }
 
@@ -31,18 +31,18 @@ class AppwriteService {
 
     //create a new record of user on appwrite
 
-    async createAccount({ name, password, mobile}:
+    async createAccount({ email, password, mobile}:
         CreateUserAccount){
             try{
                 const userAccount = await this.account.create(
                     ID.unique(),
+                    email,
                     password,
-                    name,
                     mobile,
                 )
                 if (userAccount){
                     // create login
-                    return this.login({mobile, password})
+                    return this.login({email, password})
                 } else {
                     return userAccount
                 }
@@ -55,11 +55,11 @@ class AppwriteService {
             }
         }
     
-    async login({mobile, password}: LoginUserAccount){
+    async login({email, password}: LoginUserAccount){
         try {
            return await this.account.createEmailPasswordSession(
-                mobile, 
-                password
+                email, 
+                password,
             )
             
         } catch (error) {

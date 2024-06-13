@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance'; 
 
 interface SignInRequest {
-  Mobile: string;
+  email: string;
   password: string;
 }
 
