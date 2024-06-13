@@ -62,11 +62,17 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
         try {
             const response = await signInUser(userData);
             console.log('Sign in successful:', response);
-            Alert.alert('Sign In Successful')
+            Snackbar.show({
+                text: 'Sign In Successful',
+                duration: Snackbar.LENGTH_SHORT
+            })
   
           } catch (error) {
               console.error('Error signing in');
-              Alert.alert(`Sign in failed:`);
+              Snackbar.show({
+                text: 'Sign in failed',
+                duration: Snackbar.LENGTH_SHORT
+            })
             }
         };
     }
