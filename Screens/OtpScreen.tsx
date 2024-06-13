@@ -16,7 +16,7 @@ type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
 
 export default function OtpScreen({ route }: OtpScreenProps) {
-  const { verificationId,userData } = route.params;
+  const { verificationId, userData } = route.params;
   const { appwrite, setIsLoggedIn } = useContext(Context);
 
     const et1 = useRef<TextInput>(null);
@@ -65,7 +65,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                         text: 'Sign Up Successful',
                         duration: Snackbar.LENGTH_SHORT
                       });
-                      navigation.navigate('AddDevice', { userData }); // Navigate to AddDevice
+                      navigation.navigate('AddDevice'); // Navigate to AddDevice
                     } else {
                       console.error('User account creation failed');
                       Snackbar.show({

@@ -11,7 +11,7 @@ import { Context } from '../appwrite/Context';
 export type AppStackParamList = {
   HomeScreen: undefined;
   GraphScreen: undefined;
-  AddDevice: { userData: any };
+  AddDevice: undefined;
   ConnectDevice: { device: any };
   SendCredentials: { device: any };
 };
