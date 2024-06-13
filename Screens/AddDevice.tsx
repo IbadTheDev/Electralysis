@@ -4,17 +4,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { PERMISSIONS, request, check, RESULTS } from 'react-native-permissions';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { useNavigation, RouteProp } from '@react-navigation/native';
-import { AuthStackParamList, AddDeviceNavigationProp, AddDeviceRouteProp } from '../src/types/navigation';
+import { AddDeviceNavigationProp} from '../src/types/navigation';
 
 const { width, height } = Dimensions.get('window');
 
 type AddDeviceProps = {
-    route: AddDeviceRouteProp;
     navigation: AddDeviceNavigationProp;
   };
 
-  const AddDevice = ({ route, navigation }: AddDeviceProps) => {
-    const { userData } = route.params;
+  const AddDevice = ({navigation }: AddDeviceProps) => {
     const [isBluetoothEnabled, setIsBluetoothEnabled] = useState(false);
 
     useEffect(() => {

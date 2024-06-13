@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E3FEF7"
   },
   topTextContainer: {
-    height: height * 0.12,
+    height: height * 0.10,
     marginTop: height * 0.05,
   },
   topText: {
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     fontSize: height * 0.06,
   },
   subTextContainer: {
-    height: height * 0.033,
+    height: height * 0.043,
   },
   subText: {
     textAlign: 'center',
@@ -307,13 +307,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 8,
     height: height * 0.070,
-    width: width * 0.8,
-    marginVertical: height * 0.018,
+    width: width * 0.85,
+    marginVertical: height * 0.022,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   inputBox: {
-    marginLeft: width * 0.02,
+    marginLeft: width * 0.025,
     fontSize: height * 0.022,
     color: '#135D66',
   },
@@ -395,14 +395,14 @@ const styles = StyleSheet.create({
   },
   noAccountText: {
     color: '#135D66',
-    fontSize: height * 0.025,
+    fontSize: height * 0.02,
     fontWeight: '800',
-    paddingTop: height * 0.004,
+    paddingTop: height * 0.006,
   },
   signInText: {
-    paddingLeft: width * 0.02,
+    paddingLeft: width * 0.014,
     color: '#003C43',
-    fontSize: height * 0.03,
+    fontSize: height * 0.025,
     fontWeight: '700',
   },
   error: {

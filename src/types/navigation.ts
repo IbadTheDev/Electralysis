@@ -6,24 +6,32 @@ export type AuthStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   OtpScreen: { verificationId: string | null; userData: any };
+};
+
+export type AppStackParamList = {
+  HomeScreen: undefined;
+  GraphScreen: undefined;
   AddDevice: { userData: any };
   ConnectDevice: { device: any };
   SendCredentials: { device: any };
 };
 
+
 export type OtpScreenRouteProp = RouteProp<AuthStackParamList, 'OtpScreen'>;
-export type AddDeviceRouteProp = RouteProp<AuthStackParamList, 'AddDevice'>;
-export type ConnectDeviceRouteProp = RouteProp<AuthStackParamList, 'ConnectDevice'>;
-export type SendCredentialsRouteProp = RouteProp<AuthStackParamList, 'SendCredentials'>;
+export type AddDeviceRouteProp = RouteProp<AppStackParamList, 'AddDevice'>;
+export type ConnectDeviceRouteProp = RouteProp<AppStackParamList, 'ConnectDevice'>;
+export type SendCredentialsRouteProp = RouteProp<AppStackParamList, 'SendCredentials'>;
 
 
 export type AddDeviceNavigationProp = NativeStackNavigationProp<
-  AuthStackParamList,
+  AppStackParamList,
   'AddDevice'
 >;
 
 export type ConnectDeviceNavigationProp = NativeStackNavigationProp<
-  AuthStackParamList,
+  AppStackParamList,
   'ConnectDevice'
 
 >;
+
+export type HomeScreenNavigationProp = NativeStackNavigationProp<AppStackParamList, 'HomeScreen'>;

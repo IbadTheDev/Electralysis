@@ -21,6 +21,8 @@ type LoginUserAccount = {
 class AppwriteService {
     account;
 
+    
+
     constructor(){
         appwriteClient
         .setEndpoint(APPWRITE_ENDPOINT)
@@ -28,6 +30,7 @@ class AppwriteService {
 
         this.account = new Account(appwriteClient)
     }
+    
 
     //create a new record of user on appwrite
 
@@ -89,6 +92,25 @@ class AppwriteService {
             
         }
     }
+    async isInitialSetupComplete(userId: string): Promise<boolean> {
+        try {
+            const user = await this.account.get();
+            return user?.prefs?.initialSetupComplete || false;
+        } catch (error) {
+            console.error('Error checking initial setup:', error);
+            return false;
+        }
+    }
+
+    async markInitialSetupComplete(): Promise<void> {
+        try {
+            await this.account.updatePrefs({ initialSetupComplete: true });
+        } catch (error) {
+            console.error('Error marking initial setup as complete:', error);
+        }
+    }
+
+
 }
 
 export default AppwriteService

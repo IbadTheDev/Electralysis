@@ -1,10 +1,14 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BleManager, { PeripheralInfo } from 'react-native-ble-manager';
 import { Buffer } from 'buffer';
 import { useNavigation, RouteProp } from '@react-navigation/native';
-import { AuthStackParamList, SendCredentialsRouteProp } from '../src/types/navigation';
+import { SendCredentialsRouteProp, HomeScreenNavigationProp } from '../src/types/navigation';
+import {AppStackParamList} from '../src/types/navigation'
+import { Context } from '../src/appwrite/Context';
+import HomeScreen from '../Screens/HomeScreen';
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -24,17 +28,19 @@ interface Device {
 
   type SendCredentialsProps = {
     route: SendCredentialsRouteProp;
+    navigation: HomeScreenNavigationProp;
   };
 
 
 
-  const SendCredentials = ({ route }: SendCredentialsProps) => {
+  const SendCredentials = ({ route, navigation }: SendCredentialsProps) => {
     const { device } = route.params;
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [serviceUUID, setServiceUUID] = useState('');
     const [characteristicUUID, setCharacteristicUUID] = useState('');
+    const { appwrite, setIsInitialSetupComplete } = useContext(Context);
 
     useEffect(() => {
         const fetchUUIDs = async () => {
@@ -78,6 +84,11 @@ interface Device {
   
         setIsSending(false);
         Alert.alert('Success', 'Credentials sent successfully!');
+         // Mark initial setup as complete
+      await appwrite.markInitialSetupComplete();
+      setIsInitialSetupComplete(true);
+      navigation.navigate('HomeScreen');
+
       } catch (error) {
         setIsSending(false);
         console.error('Error sending credentials:', error);

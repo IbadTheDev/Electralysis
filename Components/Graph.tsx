@@ -59,9 +59,9 @@ const { width, height } = Dimensions.get('window');
         transform: [{ translateX: -10 }],
       },
       propsForHorizontalLabels: {
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: 'bold',
-        transform: [{ translateX: -2 }, { translateY:4 }],
+        transform: [{ translateX: -2 }, { translateY:2 }],
       },
     };
   };

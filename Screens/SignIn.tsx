@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert, ScrollView } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import React, { useContext, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -74,7 +74,7 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
         
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.topTextContainer}>
                 <Text style={styles.topText}>Sign In</Text>
             </View>
@@ -126,7 +126,7 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
                     <Text style={[styles.signUpText, styles.elevatedText]}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
         marginLeft: width * 0.02,
         fontSize: width * 0.04,
         flex: 1,
+        color: '#135D66',
     },
     icon: {
         fontSize: width * 0.06,

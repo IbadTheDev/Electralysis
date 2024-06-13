@@ -10,12 +10,13 @@ import { FormValues } from './SignUp';
 import { Context } from '../src/appwrite/Context';
 import Snackbar from 'react-native-snackbar';
 import {AuthStackParamList, OtpScreenRouteProp} from '../src/types/navigation';
+import { AppStackParamList } from '../src/routes/AppStack';
 
 type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
 
 export default function OtpScreen({ route }: OtpScreenProps) {
-  const { verificationId,userData } = route.params;
+  const { verificationId, userData } = route.params;
   const { appwrite, setIsLoggedIn } = useContext(Context);
 
     const et1 = useRef<TextInput>(null);
@@ -35,7 +36,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [timer, setTimer] = useState(5);
     const [error, setError] = useState<string>('');
-    const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+    const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
    
 
     const handleVerificationCodeInput = async () => {
@@ -64,7 +65,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                         text: 'Sign Up Successful',
                         duration: Snackbar.LENGTH_SHORT
                       });
-                      navigation.navigate('AddDevice', { userData }); // Navigate to AddDevice
+                      navigation.navigate('AddDevice'); // Navigate to AddDevice
                     } else {
                       console.error('User account creation failed');
                       Snackbar.show({
