@@ -1,17 +1,35 @@
 import { StyleSheet, Text, View,Image, Dimensions,TouchableOpacity } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
-const { width, height } = Dimensions.get('window');
+import { useNavigation } from '@react-navigation/native';
+import { HomeScreenNavigationProp, GraphScreenNavigationProp } from '../src/types/navigation'; 
+import { AppStackParamList } from '../src/routes/AppStack';
 
-const FooterNav = () => {
+const { width, height } = Dimensions.get('window');
+type FooterNavProps = {
+    navigation: any; // or use NavigationProp<AppStackParamList>
+};
+
+
+
+
+const FooterNav: React.FC<FooterNavProps> = ({ navigation }) => {
+    const navigateToHome = () => {
+        navigation.navigate('HomeScreen');
+      };
+    
+      const navigateToGraph = () => {
+        navigation.navigate('GraphScreen');
+      };
+
   return (
     <>
      <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton}>
+                <TouchableOpacity onPress={navigateToHome}  style={styles.footerButton}>
                     <Icon name="home" style={styles.footerIcon} />
                     <Text style={styles.footerText}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton}>
+                <TouchableOpacity onPress={navigateToGraph} style={styles.footerButton}>
                     <Icon name="bar-chart" style={styles.footerIcon} />
                     <Text style={styles.footerText}>Stats</Text>
                 </TouchableOpacity>
@@ -28,7 +46,6 @@ const FooterNav = () => {
   )
 }
 
-export default FooterNav
 
 const styles = StyleSheet.create({
     footer: {
@@ -51,4 +68,6 @@ const styles = StyleSheet.create({
         color: '#FFF',
         marginTop: 4,
     },
-})
+});
+
+export default FooterNav;

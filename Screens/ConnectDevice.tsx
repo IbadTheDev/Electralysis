@@ -34,7 +34,7 @@ const ConnectDevice = ({ route, navigation }: ConnectDeviceProps) => {
     //add esp ka name yahan par
         const handleDiscoverPeripheral = (peripheral: Device)=> {
           console.log('Discovered peripheral:', peripheral);
-          if (peripheral.name === 'YourESP32DeviceName') {
+          if (peripheral.name === 'ESP32_WiFi_Setup') {
             connectToDevice(peripheral);
           }
         };

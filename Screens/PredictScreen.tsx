@@ -6,6 +6,7 @@ import Icon3 from 'react-native-vector-icons/Ionicons';
 import Header from '../Components/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {AppStackParamList} from '../src/routes/AppStack'
+import FooterNav from '../Components/FooterNav';
 
 
 const { width, height } = Dimensions.get('window');
@@ -352,6 +353,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             </TouchableOpacity>
         </View>  
     </View> 
+    <FooterNav navigation={navigation}/>
     </ScrollView>
     </KeyboardAvoidingView>
     {renderModal()}

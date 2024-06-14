@@ -10,6 +10,7 @@ import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, Mon
 // import { getLatestUnit } from '../Apis/getLatestUnit';'
 import { v4 as uuidv4 } from 'uuid';
 import Snackbar from 'react-native-snackbar';
+import { useNavigation } from '@react-navigation/native'; 
 
 //Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -158,7 +159,8 @@ export default function HomeScreen({navigation}: HomeProps) {
 
     const selectedData = selectedDataType === 'monthly' ? monthlyData : selectedDataType === 'weekly' ? weeklyData : dailyData;
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
          <Header/>
 
             <View style={[styles.mainCard, isPeakHours ? styles.peakMainCard : styles.elevatedLogo]}>
@@ -237,7 +239,7 @@ export default function HomeScreen({navigation}: HomeProps) {
             <View style={styles.bottomButtonContainer}>
                 <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
                 <Icon4 name="graph" style={[styles.iconGraph, styles.elevatedText]} />
-                    <Text style={styles.bottomButtonText}>Bill Estimate</Text>
+                    <Text style={styles.bottomButtonText}>Unit Estimate</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('GraphScreen')} activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
                 <Icon3 name="time-outline" style={[styles.iconPeak, styles.elevatedText]} />
@@ -245,7 +247,8 @@ export default function HomeScreen({navigation}: HomeProps) {
                 </TouchableOpacity>
             </View>
 
-            <FooterNav/>
+            <FooterNav navigation={navigation}  />
+        </View>
         </SafeAreaView>
     );
 }

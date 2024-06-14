@@ -38,3 +38,4 @@ export type ConnectDeviceNavigationProp = NativeStackNavigationProp<
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<AppStackParamList, 'HomeScreen'>;
 export type PredictScreenNavigationProp = NativeStackNavigationProp<AppStackParamList, 'PredictScreen'>;
+export type GraphScreenNavigationProp = NativeStackNavigationProp<AppStackParamList, 'GraphScreen'>;
