@@ -222,13 +222,16 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     <View style={styles.inputContainer}>
         <Icon2 style={styles.icon} name="mobile-alt"></Icon2>
         <TextInput 
-        placeholder='Mobile No.' 
+        placeholder='example: 03474769188' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange("mobile", handleChange("mobile"), [
-                      setError,
-                      setMobile,
-        ])}
+        onChangeText={(text) => {
+          const formattedText = text.replace(/^0+/, ''); // Remove leading zeros
+          createHandleChange("mobile", handleChange("mobile"), [
+              setError,
+              setMobile,
+            ])(formattedText); // Pass formatted text to handleChange
+          }} 
         onBlur={handleBlur('mobile')}
         value={values.mobile}
         />
