@@ -6,6 +6,7 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 import SendCredentials from './SendCredentials';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { AuthStackParamList, ConnectDeviceNavigationProp, ConnectDeviceRouteProp } from '../src/types/navigation'
+import Snackbar from 'react-native-snackbar';
 
 const { width, height } = Dimensions.get('window');
 
@@ -78,7 +79,11 @@ const ConnectDevice = ({ route, navigation }: ConnectDeviceProps) => {
             setProgress(1);
             setConnecting(false);
             console.log('Connected to', device.id);
-            Alert.alert('Success', 'Connected to Electralysis Device');
+            Snackbar.show({
+              text: 'Success: Connected to Electralysis Device',
+              duration: Snackbar.LENGTH_LONG
+          })
+
 
             // Set the connected device
             setConnectedDevice(device);
@@ -92,7 +97,11 @@ const ConnectDevice = ({ route, navigation }: ConnectDeviceProps) => {
             setConnecting(false);
             setProgress(0);
             console.log('Connection error', error);
-            Alert.alert('Connection Error', 'Failed to connect to device. Please try again.');
+            Snackbar.show({
+              text: 'Connection Error: Failed to connect to device. Please try again.',
+              duration: Snackbar.LENGTH_LONG
+          })
+      
           });
       };
 
