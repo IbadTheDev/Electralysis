@@ -43,7 +43,7 @@ const SignupSchema = Yup.object().shape({
     .required('Confirm Password is required'),
     mobile: Yup.string()
     .required('Mobile No. is required')
-    .test('is-10-digits', 'Invalid Mobile Number', val => val?.length === 10),
+    .test('is-11-digits', 'Invalid Mobile Number', val => val?.length === 10),
 });
 
 type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'> & {
@@ -222,13 +222,15 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     <View style={styles.inputContainer}>
         <Icon2 style={styles.icon} name="mobile-alt"></Icon2>
         <TextInput 
-        placeholder='Mobile No.' 
+        placeholder='example: 3474769188' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange("mobile", handleChange("mobile"), [
-                      setError,
-                      setMobile,
-        ])}
+        onChangeText= {
+          createHandleChange("mobile", handleChange("mobile"), [
+              setError,
+              setMobile,
+            ])
+          }
         onBlur={handleBlur('mobile')}
         value={values.mobile}
         />

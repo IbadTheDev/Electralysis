@@ -67,7 +67,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
       const predictData = async () => {
         try {
             console.log('Attempting to send request...');
-            const apiUrl = 'https://aa68-34-147-111-57.ngrok-free.app/predict';
+            const apiUrl = 'https://5deb-35-247-24-105.ngrok-free.app/';
     
             console.log('Sending request to:', apiUrl);
             console.log('Request data:', data);
@@ -75,11 +75,11 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             const response = await axios.post(apiUrl, data);
     
             console.log('Prediction response:', response.data);
-            setPrediction(response.data.prediction); // Assuming response.data.prediction is an array of predictions
-            setopenModal(true); // Open modal after receiving response
+            setPrediction(response.data.prediction); 
+            setopenModal(true); 
         } catch (error) {
             console.error('Prediction error:', error);
-            // Handle error (e.g., show error message to user)
+        
         }
     };
     
@@ -111,7 +111,6 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
                 {/* <View style={styles.infoContainer}> */}
                 <View style={[styles.predictionContainer, styles.elevatedLogo]}>
                     <Text style={styles.units}> Prediction for {nextMonthName}: {formattedPrediction} units </Text>
-                    <Text style={styles.bill}>Bill: </Text>
                 </View>
                 <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
                   <Text style={styles.doneButtonText}>Seen</Text>
