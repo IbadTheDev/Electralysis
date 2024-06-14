@@ -54,7 +54,7 @@ interface Device {
                   if (service.characteristics.length > 0) {
                     setServiceUUID(service.uuid);
                     setCharacteristicUUID(service.characteristics[0].uuid);
-                    break;
+                    return;
                   }
                 }
             
@@ -118,7 +118,15 @@ interface Device {
         const data = JSON.stringify({ ssid, password });
         const encodedData: number[] = Array.from(Buffer.from(data, 'utf-8'));
 
-  
+        if (!serviceUUID || !characteristicUUID) {
+            Snackbar.show({
+                text: 'Error: No suitable service found on device',
+                duration: Snackbar.LENGTH_LONG
+            });
+            setIsSending(false);
+            return;
+        }
+        
         await BleManager.write(device.id, serviceUUID, characteristicUUID, encodedData);
   
         setIsSending(false);
