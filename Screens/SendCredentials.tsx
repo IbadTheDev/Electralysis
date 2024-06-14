@@ -125,7 +125,7 @@ interface Device {
             const { peripheral, reason } = data;
           if (peripheral === device.id) {
             Snackbar.show({
-              text: 'Disconnected from device: ${reason}',
+              text: `Disconnected from device: ${reason}`,
               duration: Snackbar.LENGTH_LONG
             });
             BleManager.connect(device.id)
