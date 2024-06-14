@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert, Image, NativeModules, NativeEventEmitter } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BleManager, { PeripheralInfo } from 'react-native-ble-manager';
@@ -32,7 +32,8 @@ interface Device {
     navigation: HomeScreenNavigationProp;
   };
 
-
+  const BleManagerModule = NativeModules.BleManager;
+  const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
   const SendCredentials = ({ route, navigation }: SendCredentialsProps) => {
     const { device } = route.params;
@@ -47,9 +48,10 @@ interface Device {
         const fetchUUIDs = async () => {
             try {
               const peripheralInfo: PeripheralInfo = await BleManager.retrieveServices(device.id);
+              console.log('Peripheral Info:', peripheralInfo); // Log peripheral info
+
               if (peripheralInfo.services) {
                 const services: Service[] = peripheralInfo.services as Service[];
-
                 for (const service of services) {
                   if (service.characteristics.length > 0) {
                     setServiceUUID(service.uuid);
@@ -63,11 +65,12 @@ interface Device {
             })
           
         }
+        //error araha hai yahan
       } catch (error) {
         console.error('Error retrieving services:', error);
         Snackbar.show({
             text: 'Error: Failed to retrieve services. Please try again.',
-            duration: Snackbar.LENGTH_LONG
+            duration: Snackbar.LENGTH_SHORT
         })
         
       }
@@ -116,6 +119,36 @@ interface Device {
         
       }
     };
+
+    useEffect(() => {
+        const handleDisconnectedPeripheral = (data: any) => {
+            const { peripheral, reason } = data;
+          if (peripheral === device.id) {
+            Snackbar.show({
+              text: 'Disconnected from device: ${reason}',
+              duration: Snackbar.LENGTH_LONG
+            });
+            BleManager.connect(device.id)
+              .then(() => {
+                Snackbar.show({
+                  text: 'Reconnected to device.',
+                  duration: Snackbar.LENGTH_SHORT
+                });
+                fetchUUIDs();
+              })
+              .catch((error) => {
+                console.error('Failed to reconnect:', error);
+              });
+          }
+        };
+
+        bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
+
+    
+          return () => {
+            bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral');
+          };
+        }, [device.id]);
     return (
         <View style={styles.container}>
             <View style={styles.topTextContainer}>
@@ -129,7 +162,7 @@ interface Device {
                 <TextInput
                     placeholder='WIFI Name'
                     placeholderTextColor={'#a9a9a9'}
-                    style={styles.inputBox}
+                    style={styles.inputText}
                     value={ssid}
                     onChangeText={setSsid}
                 />
@@ -139,14 +172,14 @@ interface Device {
                 <TextInput
                     placeholder='WIFI Password'
                     placeholderTextColor={'#a9a9a9'}
-                    style={styles.inputBox}
+                    style={styles.inputText}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
                 />
             </View>
             <View style={[styles.buttonContainer, styles.elevatedLogo]}>
-                <TouchableOpacity >
+                <TouchableOpacity onPress={sendCredentials} >
                     <Text style={[styles.buttonText, styles.elevatedText]}>Send</Text>
                 </TouchableOpacity>
                 <Icon style={[styles.elevatedText, styles.sendIcon]} name="cloud-upload" />
@@ -205,10 +238,11 @@ const styles = StyleSheet.create({
         alignItems:'center',
         paddingHorizontal: width * 0.05,
     },
-    inputBox: {
+    inputText: {
         marginLeft: width * 0.02,
         fontSize: width * 0.04,
         flex: 1,
+        color:'#003C43'
     },
     icon: {
         fontSize: width * 0.06,
@@ -278,3 +312,7 @@ const styles = StyleSheet.create({
 });
 
 export default SendCredentials
+
+function fetchUUIDs() {
+    throw new Error('Function not implemented.');
+}
