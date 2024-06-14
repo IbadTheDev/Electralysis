@@ -1,14 +1,12 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Alert, Image, NativeModules, NativeEventEmitter } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Image, NativeModules, NativeEventEmitter } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BleManager, { PeripheralInfo } from 'react-native-ble-manager';
 import { Buffer } from 'buffer';
-import { useNavigation, RouteProp } from '@react-navigation/native';
 import { SendCredentialsRouteProp, HomeScreenNavigationProp } from '../src/types/navigation';
-import {AppStackParamList} from '../src/types/navigation'
 import { Context } from '../src/appwrite/Context';
-import HomeScreen from '../Screens/HomeScreen';
 import Snackbar from 'react-native-snackbar';
+
 
 
 
@@ -44,7 +42,7 @@ interface Device {
     const [characteristicUUID, setCharacteristicUUID] = useState('');
     const { appwrite, setIsInitialSetupComplete } = useContext(Context);
 
-    useEffect(() => {
+
         const fetchUUIDs = async () => {
             try {
               const peripheralInfo: PeripheralInfo = await BleManager.retrieveServices(device.id);
@@ -57,28 +55,53 @@ interface Device {
                     setServiceUUID(service.uuid);
                     setCharacteristicUUID(service.characteristics[0].uuid);
                     break;
-                  }}}
-        if (!serviceUUID || !characteristicUUID) {
-            Snackbar.show({
-                text: 'Error: No suitable service found on device',
-                duration: Snackbar.LENGTH_LONG
-            })
-          
-        }
-        //error araha hai yahan
-      } catch (error) {
-        console.error('Error retrieving services:', error);
-        Snackbar.show({
-            text: 'Error: Failed to retrieve services. Please try again.',
-            duration: Snackbar.LENGTH_SHORT
-        })
-        
-      }
-    };
+                  }
+                }
+            
+                } else {
+                    Snackbar.show({
+                        text: 'Error: No services found on device',
+                        duration: Snackbar.LENGTH_LONG
+                    });
+                }
+            } catch (error) {
+                console.error('Error retrieving services:', error);
+                Snackbar.show({
+                    text: 'Error: Failed to retrieve services. Please try again.',
+                    duration: Snackbar.LENGTH_SHORT
+                });
+            }
+        };
 
-    fetchUUIDs();
-  }, [device.id, serviceUUID, characteristicUUID]);
+        useEffect(() => {
+            const handleDisconnectedPeripheral = (data: any) => {
+                const { peripheral, reason } = data;
+              if (peripheral === device.id) {
+                Snackbar.show({
+                  text: `Disconnected from device: ${reason}`,
+                  duration: Snackbar.LENGTH_LONG
+                });
+                BleManager.connect(device.id)
+                  .then(() => {
+                    Snackbar.show({
+                      text: 'Reconnected to device.',
+                      duration: Snackbar.LENGTH_SHORT
+                    });
+                    fetchUUIDs();
+                  })
+                  .catch((error) => {
+                    console.error('Failed to reconnect:', error);
+                  });
+              }
+            };
+    
+            bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
+              return () => {
+                bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral');
+              };
+            }, [device.id]);
         
+    
   const sendCredentials = async () => {
     if (!ssid || !password) {
         Snackbar.show({
@@ -120,35 +143,7 @@ interface Device {
       }
     };
 
-    useEffect(() => {
-        const handleDisconnectedPeripheral = (data: any) => {
-            const { peripheral, reason } = data;
-          if (peripheral === device.id) {
-            Snackbar.show({
-              text: `Disconnected from device: ${reason}`,
-              duration: Snackbar.LENGTH_LONG
-            });
-            BleManager.connect(device.id)
-              .then(() => {
-                Snackbar.show({
-                  text: 'Reconnected to device.',
-                  duration: Snackbar.LENGTH_SHORT
-                });
-                fetchUUIDs();
-              })
-              .catch((error) => {
-                console.error('Failed to reconnect:', error);
-              });
-          }
-        };
-
-        bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
-
-    
-          return () => {
-            bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral');
-          };
-        }, [device.id]);
+   
     return (
         <View style={styles.container}>
             <View style={styles.topTextContainer}>
@@ -313,6 +308,3 @@ const styles = StyleSheet.create({
 
 export default SendCredentials
 
-function fetchUUIDs() {
-    throw new Error('Function not implemented.');
-}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import Graph from '../Components/Graph';
@@ -6,14 +6,23 @@ import { GraphData } from '../Components/types';
 import FooterNav from '../Components/FooterNav';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
+import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon3 from 'react-native-vector-icons/Ionicons';
 import PeriodSelector from '../Components/PeriodSelector';
 import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, MonthlyData,getUnitsByDateTimeRange,UnitData } from '../Apis/getUnits';
 import moment from 'moment';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {AppStackParamList} from '../src/routes/AppStack'
 
 const { width, height } = Dimensions.get('window');
+const transparent = 'rgba(0, 0, 0, 0.5)';
 
-const GraphScreen = () => {
-  const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily' | 'custom'>('daily');
+type GraphProps = NativeStackScreenProps<AppStackParamList, 'GraphScreen'>
+
+export default function GraphScreen({navigation}: GraphProps) {
+  const [openModal, setopenModal] = useState(false);
+  const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily'>('daily');
   const [selectedChartType, setSelectedChartType] = useState<'line' | 'bar'>('line');
   const [dailyData, setDailyData] = useState<DailyData[]>([]);
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
@@ -62,8 +71,6 @@ const GraphScreen = () => {
   const handleWeeklyPress = () => setSelectedDataType('weekly');
   const handleDailyPress = () => setSelectedDataType('daily');
   const handleCustomPress = async (startDateTime: string, endDateTime: string) => {
-    // Set selected data type to custom
-    setSelectedDataType('custom');
     // Fetch data based on custom time range
     await fetchData('custom', startDateTime, endDateTime);
   };
@@ -109,9 +116,7 @@ const getMonthlyLabels = (monthlyData: MonthlyData[]): string[] => {
   });
 };
 
-const getCustomLabels = (customData: UnitData[]): string[] => {
-  return customData.map(data => moment(data.dateTime).format('DD/MM/YYYY'));
-};
+
 
   const formatData = (data: number[]): number[] => data.map(value => parseFloat(value.toFixed(1)));
 
@@ -123,15 +128,41 @@ const getCustomLabels = (customData: UnitData[]): string[] => {
         return { labels: getWeeklyLabels(weeklyData.length).reverse(), datasets: [{ data: formatData(weeklyData.map(data => data.unitsUsed)) }] };
       case 'monthly':
         return { labels: getMonthlyLabels(monthlyData), datasets: [{ data: formatData(monthlyData.map(data => data.unitsUsed)) }] };
-        case 'custom':
-          return { labels: getCustomLabels(customData), datasets: [{ data: formatData(customData.map(data => data.unitsUsed)) }] };  
       default:
         return { labels: [], datasets: [] };
     }
   };
 
+  //modal for custom data
+  const renderModal = () => {
+    return (
+      <Modal
+        visible={openModal}
+        animationType='fade'
+        transparent={true}
+        onRequestClose={() => setopenModal(false)}
+      >
+        <View style={styles.modalContainer}>
+            {/* <View style={styles.infoContainer}> */}
+            <View style={[styles.predictionContainer, styles.elevatedLogo]}>
+                <Text style={styles.units}> Units: </Text>
+                
+            </View>
+            <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
+              <Text style={styles.doneButtonText}>Seen</Text>
+              <Icon2 name="check-circle-outline" style={[styles.iconDoneButton]} />
+            </TouchableOpacity>
+
+            {/* </View> */}
+          </View>
+      </Modal>
+    );
+  };
+  
+
   return (
-    <>
+    
+     <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.container}>
     <Header/>
 
@@ -170,14 +201,15 @@ const getCustomLabels = (customData: UnitData[]): string[] => {
     </View>
 
     <View style={styles.footerContainer}>
-      <FooterNav/>
+      <FooterNav navigation={navigation} />
     </View>
-    </View>  
-    </>
+    </View> 
+    {renderModal()} 
+    </SafeAreaView>
+    
+
   )
 }
-
-export default GraphScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -242,6 +274,71 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 3
   },
+
+  //Modal
+ modalContainer:{
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: transparent,
+},
+infoContainer:{
+  backgroundColor: 'white',
+  padding: '1%',
+  height: height * 0.42,
+  width: width * 0.96,
+  borderRadius: 8,
+  alignItems: 'center',
+},
+predictionContainer:{
+  backgroundColor: 'rgba(255, 255, 255, 1)',
+  height: height * 0.3,
+  paddingTop: '5%',
+  alignItems: 'center',
+  borderRadius: 10,
+  width: width * 0.92,
+  margin: '2%',
+},
+units:{
+  fontSize:height*0.03,
+  color:'#003C43',
+  fontWeight:'600',
+  marginBottom:height*0.08
+},
+bill:{
+  fontSize:height*0.03,
+  color:'#003C43',
+  fontWeight:'600',
+  marginBottom:height*0.05
+},
+
+doneButton:{
+  backgroundColor: '#77B0AA',
+  height: height * 0.062,
+  width: '50%',
+  borderRadius: 10,
+  alignSelf: 'center',
+  justifyContent: 'center',
+  marginTop: height * 0.01,
+  flexDirection: 'row',
+},
+doneButtonText:{
+  color: '#003C43',
+  fontSize: 22,
+  fontWeight: '800',
+  textAlign: 'center',
+  padding: 4,
+  justifyContent: 'center',
+  textAlignVertical: 'center'
+},
+iconDoneButton:{
+  fontSize: 38,
+  color: 'white',
+  textAlign: 'center',
+  justifyContent: 'center',
+  alignSelf: 'center',
+},
+
 
   elevatedLogo: {
       shadowColor: 'black',
