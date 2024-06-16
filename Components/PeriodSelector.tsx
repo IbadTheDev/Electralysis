@@ -10,7 +10,7 @@ const { width, height } = Dimensions.get('window');
 const transparent = 'rgba(0, 0, 0, 0.5)';
 
 interface PeriodSelectorProps {
-  onDateRangeSelected: (startDateTime: string, endDateTime: string) => void;
+  onDateRangeSelected: (startDateTime: string, endDateTime: string, unitsData: string) => void;
 }
 
 const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) => {
@@ -23,6 +23,8 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
   const [selectedEndDate, setselectedEndDate] = useState('Select Date');
   const [selectedStartTime, setselectedStartTime] = useState('Select Time');
   const [selectedEndTime, setselectedEndTime] = useState('Select Time');
+  // const [startDateTime, setStartDateTime] = useState('');
+  // const [endDateTime, setEndDateTime] = useState('');
 
   const [currentPicker, setCurrentPicker] = useState<any>(null);
 
@@ -109,7 +111,9 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
 
       // Call backend API with 24-hour format times
       const unitsData = await getUnitsByDateTimeRange(startDateTime, endDateTime);
-      onDateRangeSelected(startDateTime, endDateTime);
+      //setStartDateTime(startDateTime);
+      //setEndDateTime(endDateTime);
+      onDateRangeSelected(startDateTime, endDateTime,unitsData.toString());
       console.log('Units Data:', unitsData);
     } catch (error) {
       console.error('Error fetching units data:', error);

@@ -27,9 +27,11 @@ export default function GraphScreen({navigation}: GraphProps) {
   const [dailyData, setDailyData] = useState<DailyData[]>([]);
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
-  const [customData, setCustomData] = useState<UnitData[]>([]);
+  const [customData, setCustomData] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  // const [startDateTime, setStartDateTime] = useState('');
+  // const [endDateTime, setEndDateTime] = useState('');
 
   const fetchData = async (type: 'daily' | 'weekly' | 'monthly' | 'custom', startDateTime?: string, endDateTime?: string) => {
     setLoading(true);
@@ -50,11 +52,11 @@ export default function GraphScreen({navigation}: GraphProps) {
           setMonthlyData(data);
           break;
         case 'custom':
-          if (startDateTime && endDateTime) {
-            data = await getUnitsByDateTimeRange(startDateTime, endDateTime);
-            setCustomData(data);
-          }
-          break;
+          // if (startDateTime && endDateTime) {
+          //   data = await getUnitsByDateTimeRange(startDateTime, endDateTime);
+          //   setCustomData(data.unitsSum);
+          // }
+           break;
       }
     } catch (error) {
       setError('Failed to fetch data');
@@ -70,9 +72,12 @@ export default function GraphScreen({navigation}: GraphProps) {
   const handleMonthlyPress = () => setSelectedDataType('monthly');
   const handleWeeklyPress = () => setSelectedDataType('weekly');
   const handleDailyPress = () => setSelectedDataType('daily');
-  const handleCustomPress = async (startDateTime: string, endDateTime: string) => {
-    // Fetch data based on custom time range
-    await fetchData('custom', startDateTime, endDateTime);
+  const handleCustomPress = async (startDateTime: string, endDateTime: string,unitsData: string) => {
+    // setStartDateTime(startDateTime);
+    // setEndDateTime(endDateTime);
+    setCustomData(unitsData);
+    
+    setopenModal(true);
   };
   const handleLineChartPress = () => setSelectedChartType('line');
   const handleBarChartPress = () => setSelectedChartType('bar');
@@ -145,7 +150,7 @@ const getMonthlyLabels = (monthlyData: MonthlyData[]): string[] => {
         <View style={styles.modalContainer}>
             {/* <View style={styles.infoContainer}> */}
             <View style={[styles.predictionContainer, styles.elevatedLogo]}>
-                <Text style={styles.units}> Units: </Text>
+                <Text style={styles.units}>Your electricity usage in the selected time period is:{"\n\n"}{parseFloat(customData).toFixed(1)} units </Text>
                 
             </View>
             <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>

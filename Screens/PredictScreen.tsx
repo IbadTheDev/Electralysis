@@ -67,7 +67,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
       const predictData = async () => {
         try {
             console.log('Attempting to send request...');
-            const apiUrl = 'https://5deb-35-247-24-105.ngrok-free.app/';
+            const apiUrl = 'https://d6a9-34-44-16-52.ngrok-free.app/predict';
     
             console.log('Sending request to:', apiUrl);
             console.log('Request data:', data);
@@ -110,7 +110,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             <View style={styles.modalContainer}>
                 {/* <View style={styles.infoContainer}> */}
                 <View style={[styles.predictionContainer, styles.elevatedLogo]}>
-                    <Text style={styles.units}> Prediction for {nextMonthName}: {formattedPrediction} units </Text>
+                    <Text style={styles.units}>Prediction for {nextMonthName}: {"\n\n"}{formattedPrediction} units </Text>
                 </View>
                 <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
                   <Text style={styles.doneButtonText}>Seen</Text>
