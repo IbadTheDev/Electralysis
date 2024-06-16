@@ -225,12 +225,10 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
         placeholder='example: 3474769188' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText= {
-          createHandleChange("mobile", handleChange("mobile"), [
-              setError,
-              setMobile,
-            ])
-          }
+        onChangeText={createHandleChange("mobile", handleChange("mobile"), [
+                      setError,
+                      setMobile,
+        ])}
         onBlur={handleBlur('mobile')}
         value={values.mobile}
         />
