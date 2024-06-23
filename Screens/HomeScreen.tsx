@@ -7,7 +7,7 @@ import Icon4 from 'react-native-vector-icons/Octicons';
 import Header from '../Components/Header';
 import FooterNav from '../Components/FooterNav';
 import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, MonthlyData } from '../Apis/getUnits';
-// import { getLatestUnit } from '../Apis/getLatestUnit';'
+import { getLatestUnit } from '../Apis/getLatestUnit';
 import { v4 as uuidv4 } from 'uuid';
 import Snackbar from 'react-native-snackbar';
 import { useNavigation } from '@react-navigation/native'; 
@@ -100,18 +100,18 @@ export default function HomeScreen({navigation}: HomeProps) {
         scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
       }, [selectedDataType]);
       
-    // useEffect(() => {
-    //     const fetchUnit = async () => {
-    //         const latestUnit = await getLatestUnit();
-    //         setUnit(latestUnit);
-    //         setLoading(false);
-    //     };
+    useEffect(() => {
+        const fetchUnit = async () => {
+            const latestUnit = await getLatestUnit();
+            setUnit(latestUnit);
+            setLoading(false);
+        };
 
-    //     fetchUnit();
-    //     const interval = setInterval(fetchUnit, 5000); // Fetch every 5 seconds
+        fetchUnit();
+        const interval = setInterval(fetchUnit, 5000); // Fetch every 5 seconds
 
-    //     return () => clearInterval(interval); // Cleanup on unmount
-    // }, []);
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
 
     const [isPeakHours, setIsPeakHours] = useState(false);
     useEffect(() => {
@@ -237,7 +237,7 @@ export default function HomeScreen({navigation}: HomeProps) {
                 ))}
             </ScrollView>
             <View style={styles.bottomButtonContainer}>
-                <TouchableOpacity activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
+                <TouchableOpacity  onPress={() => navigation.navigate('PredictScreen')} activeOpacity={0.8}  style={[styles.bottomButton, styles.elevatedMidLayer]}>
                 <Icon4 name="graph" style={[styles.iconGraph, styles.elevatedText]} />
                     <Text style={styles.bottomButtonText}>Unit Estimate</Text>
                 </TouchableOpacity>

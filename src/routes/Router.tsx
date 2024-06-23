@@ -6,7 +6,8 @@ import { AppStack } from '../routes/AppStack';
 
 
 
-export const Router = () => {
+
+export const Router : React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const {appwrite, isLoggedIn, setIsLoggedIn, setIsInitialSetupComplete } = useContext(Context)
 
@@ -31,11 +32,11 @@ export const Router = () => {
 
         checkUserStatus();
     }, [appwrite, setIsLoggedIn, setIsInitialSetupComplete]);
-    
     if(isLoading) {
         return <Loading/>
     }
   return isLoggedIn? <AppStack/> : <AuthStack/>
-  
 };
+
+
 

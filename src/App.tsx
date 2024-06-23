@@ -4,21 +4,19 @@ import { createNativeStackNavigator} from '@react-navigation/native-stack'
 import SplashScreen from '../Screens/SplashScreen'
 import { Router } from './routes/Router';
 import {AppwriteProvider} from '../src/appwrite/Context'
-import PredictScreen from '../Screens/PredictScreen';
-import GraphScreen from '../Screens/GraphScreen';
+
 
 
 export type RootStackParamList = {
   SplashScreen: undefined;
   Router: undefined;
-  GraphScreen: undefined;
 };
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
-    const App: React.FC = () => (
+ const App: React.FC = () => (
    
       <AppwriteProvider>
         <NavigationContainer>

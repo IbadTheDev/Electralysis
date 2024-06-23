@@ -81,6 +81,18 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                       duration: Snackbar.LENGTH_SHORT
                     });
                 }
+                try {
+                  // Sending data to your backend
+                  const respone = await signUpUser({
+                    email: userData.email,
+                    password: userData.password,
+                    mobile: userData.mobile,
+                  });
+          
+                  console.log('Backend sign up successful:', respone);
+                } catch (error) {
+                  console.error('Error signing up with backend:', error);
+                }
               })
               
               .catch((error) => {

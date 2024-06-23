@@ -7,6 +7,7 @@ import Header from '../Components/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {AppStackParamList} from '../src/routes/AppStack'
 import FooterNav from '../Components/FooterNav';
+import axios from 'axios';
 
 
 const { width, height } = Dimensions.get('window');
@@ -17,6 +18,7 @@ type PredictScreenProps = NativeStackScreenProps<AppStackParamList, 'PredictScre
 
 const PredictScreen = ({navigation}: PredictScreenProps) => {
     const [openModal, setopenModal] = useState(false);
+    const [prediction, setPrediction] = useState<number[][]>([]);
 
     const [inp1, setInp1] = useState('');
     const [inp2, setInp2] = useState('');
@@ -44,7 +46,60 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
     const et11 = useRef<TextInput>(null);
     const et12 = useRef<TextInput>(null);
 
+    const data = {
+        month: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        units: [
+          parseInt(inp1),
+          parseInt(inp2),
+          parseInt(inp3),
+          parseInt(inp4),
+          parseInt(inp5),
+          parseInt(inp6),
+          parseInt(inp7),
+          parseInt(inp8),
+          parseInt(inp9),
+          parseInt(inp10),
+          parseInt(inp11),
+          parseInt(inp12),
+        ],
+      };
+
+      const predictData = async () => {
+        try {
+            console.log('Attempting to send request...');
+            const apiUrl = 'https://d6a9-34-44-16-52.ngrok-free.app/predict';
+    
+            console.log('Sending request to:', apiUrl);
+            console.log('Request data:', data);
+    
+            const response = await axios.post(apiUrl, data);
+    
+            console.log('Prediction response:', response.data);
+            setPrediction(response.data.prediction); 
+            setopenModal(true); 
+        } catch (error) {
+            console.error('Prediction error:', error);
+        
+        }
+    };
+    
+
     const renderModal = () => {
+        
+
+    // Determine current month and next month index
+    const currentMonth = new Date().getMonth();
+    const nextMonthIndex = (currentMonth + 1) % 12;
+
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+  
+      // Format prediction to one decimal place
+      const formattedPrediction = prediction.length > 0 ? prediction[nextMonthIndex][0].toFixed(1) : '';
+      const nextMonthName = months[nextMonthIndex];
+
         return (
           <Modal
             visible={openModal}
@@ -55,8 +110,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             <View style={styles.modalContainer}>
                 {/* <View style={styles.infoContainer}> */}
                 <View style={[styles.predictionContainer, styles.elevatedLogo]}>
-                    <Text style={styles.units}> Units: </Text>
-                    <Text style={styles.bill}>Bill: </Text>
+                    <Text style={styles.units}>Prediction for {nextMonthName}: {"\n\n"}{formattedPrediction} units </Text>
                 </View>
                 <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
                   <Text style={styles.doneButtonText}>Seen</Text>
@@ -343,10 +397,10 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
                 </View>
 
         <View>
-            <TouchableOpacity onPress={() => setopenModal(true)} activeOpacity={0.8} style={[styles.buttonContainer, styles.elevatedLogo]} >
-                <Icon style={styles.icon} name="magic" />
-                <Text style={[styles.buttonText, styles.elevatedText]}>Electralysis</Text>
-            </TouchableOpacity>
+            <TouchableOpacity onPress={predictData} activeOpacity={0.8} style={[styles.buttonContainer, styles.elevatedLogo]}>
+                                <Icon style={styles.icon} name="magic" />
+                                <Text style={[styles.buttonText, styles.elevatedText]}>Electralysis</Text>
+                            </TouchableOpacity>
              <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} activeOpacity={0.8} style={[styles.backButton]} >
                 <Icon3 style={styles.backIcon} name="chevron-back" />
                 <Text style={[styles.backButtonText, styles.elevatedText]}></Text>

@@ -32,7 +32,7 @@ export const AppStack: React.FC = () => {
         <Stack.Screen name="GraphScreen" component={GraphScreen} />
         <Stack.Screen name="PredictScreen" component={PredictScreen} />
 
-     {/* {!isInitialSetupComplete ? (
+     {!isInitialSetupComplete ? (
       <>
         <Stack.Screen name="AddDevice" component={AddDevice} />
         <Stack.Screen name="ConnectDevice" component={ConnectDevice} />
@@ -44,7 +44,7 @@ export const AppStack: React.FC = () => {
           <Stack.Screen name="GraphScreen" component={GraphScreen} />
           <Stack.Screen name="PredictScreen" component={PredictScreen} />
         </>
-      )} */}
+      )}
     </Stack.Navigator>
   );
 };
