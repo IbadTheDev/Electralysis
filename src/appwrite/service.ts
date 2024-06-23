@@ -10,7 +10,7 @@ const APPWRITE_PROJECT_ID:string = Config.APPWRITE_PROJECT_ID!;
 type CreateUserAccount = {
     email: string;
     password: string;
-    mobile: string;
+    phone: string;
 }
 
 type LoginUserAccount = {
@@ -34,14 +34,14 @@ class AppwriteService {
 
     //create a new record of user on appwrite
 
-    async createAccount({ email, password, mobile}:
+    async createAccount({ email, password, phone}:
         CreateUserAccount){
             try{
                 const userAccount = await this.account.create(
                     ID.unique(),
                     email,
                     password,
-                    mobile,
+                    phone,
                 )
                 if (userAccount){
                     // create login

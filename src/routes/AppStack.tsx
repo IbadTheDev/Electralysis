@@ -28,10 +28,6 @@ export const AppStack: React.FC = () => {
 
   <Stack.Navigator screenOptions={{ headerShown: false }}>
 
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        <Stack.Screen name="GraphScreen" component={GraphScreen} />
-        <Stack.Screen name="PredictScreen" component={PredictScreen} />
-
      {!isInitialSetupComplete ? (
       <>
         <Stack.Screen name="AddDevice" component={AddDevice} />

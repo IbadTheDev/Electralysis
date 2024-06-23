@@ -264,10 +264,10 @@ const styles = StyleSheet.create({
         marginTop: height*0.030,
         justifyContent: 'center',
         alignSelf: 'center',
-        height: '40%',
-        width: '80%',
-        borderRadius: 300,
-        borderWidth: 18,
+        height: height*0.36,
+        width: width*0.74,
+        borderRadius: width*0.5,
+        borderWidth: width*0.026,
         borderColor: '#135D66'
     },
     peakMainCard: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     },
     peakHoursContainer: {
         alignContent:'center',
-        marginBottom:'5%',  
+        marginBottom:'8%',  
     },
     peakHoursTextOn: { 
         color: '#EF4B4B',
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     bottomButtonText: {
         color: '#003C43',
         fontSize: 18,
-        fontWeight: '800',
+        fontWeight: '500',
         textAlign: 'center', 
         margin: 2
     },

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Dimensions, Image, NativeModules, NativeEventEmitter } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BleManager, { PeripheralInfo } from 'react-native-ble-manager';
 import { Buffer } from 'buffer';
@@ -7,16 +7,14 @@ import { SendCredentialsRouteProp, HomeScreenNavigationProp } from '../src/types
 import { Context } from '../src/appwrite/Context';
 import Snackbar from 'react-native-snackbar';
 
-
-
-
 const { width, height } = Dimensions.get('window');
 
 
-interface Device {
-    id: string;
-    name: string;
-  }
+// interface Device {
+//     id: string;
+//     name: string;
+//   }
+
   interface Service {
     uuid: string;
     characteristics: Characteristic[];
@@ -41,6 +39,7 @@ interface Device {
     const [serviceUUID, setServiceUUID] = useState('');
     const [characteristicUUID, setCharacteristicUUID] = useState('');
     const { appwrite, setIsInitialSetupComplete } = useContext(Context);
+    const keepAliveInterval = useRef<NodeJS.Timeout | null>(null);
 
 
         const fetchUUIDs = async () => {
@@ -98,9 +97,25 @@ interface Device {
             bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
               return () => {
                 bleManagerEmitter.removeAllListeners('BleManagerDisconnectPeripheral');
-              };
+                clearInterval(keepAliveInterval.current!);
+                };
             }, [device.id]);
-        
+
+            useEffect(() => {
+                if (serviceUUID && characteristicUUID) {
+                  keepAliveInterval.current = setInterval(async () => {
+                    try {
+                      const keepAliveData = Array.from(Buffer.from('keepalive', 'utf-8'));
+                      await BleManager.write(device.id, serviceUUID, characteristicUUID, keepAliveData);
+                    } catch (error) {
+                      console.error('Error sending keep-alive:', error);
+                    }
+                  }, 3000); // Send keep-alive every 5 seconds
+                }
+                return () => {
+                  clearInterval(keepAliveInterval.current!);
+                };
+              }, [serviceUUID, characteristicUUID]); 
     
   const sendCredentials = async () => {
     if (!ssid || !password) {

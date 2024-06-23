@@ -56,7 +56,7 @@ const SignIn: React.FC<LoginScreenProps> = ({ navigation }) => {
         )
         .catch(e=> {
             console.log(e)
-            setError('Incoorect email or password')
+            setError('Incorrect email or password')
         })
 
         try {

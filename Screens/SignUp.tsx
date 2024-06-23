@@ -14,13 +14,9 @@ import { FormikHandlers } from 'formik';
 //Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
 import {AuthStackParamList} from '../src/types/navigation'
 //appwrite Session
 import { Context } from '../src/appwrite/Context';
-
-
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,7 +24,7 @@ export interface FormValues {
     email: string;
     password: string;
     confirmPassword: string;
-    mobile: string;
+    phone: string;
     agreeToTerms: boolean;
   }
 
@@ -41,9 +37,9 @@ const SignupSchema = Yup.object().shape({
     confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
     .required('Confirm Password is required'),
-    mobile: Yup.string()
-    .required('Mobile No. is required')
-    .test('is-11-digits', 'Invalid Mobile Number', val => val?.length === 10),
+    phone: Yup.string()
+    .matches(/^03\d{9}$/, 'Invalid Mobile Number. It should be 034XXXXXXXX.')
+    .required('Mobile No. is required'),
 });
 
 type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'> & {
@@ -82,19 +78,19 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
 
     // const handleSignUp = () => {
     //   if (
-    //     name.length < 1 ||
+    //     email.length < 1 ||
     //     password.length <1 ||
     //     confrimPassword.length < 1 ||
-    //     mobile.length <1 
+    //     phone.length <1 
     //     ){
     //       setError('Fill all fields');
     //     } else if (password ! == confrimPassword){
     //       setError('Passwords do not match');
     //     } else {
     //       const user = {
-    //         name,
+    //         email,
     //         password,
-    //         mobile,
+    //         phone,
     //       };
     //     appwrite
     //     .createAccount(user)
@@ -116,16 +112,15 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
 
     const handleSignUp = async (values: FormValues) => {
       try {
-        console.log(values.mobile);
-          const phoneNumber = `+92${values.mobile}`; 
-          const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-          const verificationId = confirmation.verificationId;
-          navigation.navigate('OtpScreen', { verificationId, userData: values });
+        const phoneNumber = `+92${values.phone.slice(1)}`; 
+        const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+        const verificationId = confirmation.verificationId;
+        navigation.navigate('OtpScreen', { verificationId, userData: values });
       } catch (error) {
-          console.error('Error sending verification code:', error);
-          setError('Error sending verification code');
+        console.error('Error sending verification code:', error);
+        setError('Error sending verification code');
       }
-  };
+    };
   
 
     // const sendVerificationCode = (phoneNumber: string,values: FormValues) => {
@@ -153,7 +148,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
         email: '',
         password: '', 
         confirmPassword: '', 
-        mobile: '', 
+        phone: '', 
         agreeToTerms: false
      }}
     validationSchema={SignupSchema}
@@ -223,18 +218,15 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     <View style={styles.inputContainer}>
         <Icon2 style={styles.icon} name="mobile-alt"></Icon2>
         <TextInput 
-        placeholder='example: 3474769188' 
+        placeholder='example: 03474769188' 
         placeholderTextColor={'#a9a9a9'} 
         style={styles.inputBox}
-        onChangeText={createHandleChange("mobile", handleChange("mobile"), [
-                      setError,
-                      setMobile,
-        ])}
-        onBlur={handleBlur('mobile')}
-        value={values.mobile}
+        onChangeText={createHandleChange("phone", handleChange("phone"), [setError,])}
+        onBlur={handleBlur('phone')}
+        value={values.phone}
         />
     </View>
-    {errors.mobile && touched.mobile ? (<Text style={styles.error}>{errors.mobile}</Text>) : null}
+    {errors.phone && touched.phone ? (<Text style={styles.error}>{errors.phone}</Text>) : null}
 
     <View style={styles.checkBoxContainer}>
     <CheckBox
