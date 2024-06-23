@@ -5,11 +5,13 @@ import SplashScreen from '../Screens/SplashScreen'
 import { Router } from './routes/Router';
 import {AppwriteProvider} from '../src/appwrite/Context'
 import PredictScreen from '../Screens/PredictScreen';
+import GraphScreen from '../Screens/GraphScreen';
 
 
 export type RootStackParamList = {
   SplashScreen: undefined;
   Router: undefined;
+  GraphScreen: undefined;
 };
 
 

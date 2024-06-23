@@ -43,7 +43,7 @@ const SignupSchema = Yup.object().shape({
     .required('Confirm Password is required'),
     mobile: Yup.string()
     .required('Mobile No. is required')
-    .test('is-11-digits', 'Invalid Mobile Number', val => val?.length === 11),
+    .test('is-11-digits', 'Invalid Mobile Number', val => val?.length === 10),
 });
 
 type SignupScreenProps = NativeStackScreenProps<AuthStackParamList, 'SignUp'> & {
@@ -116,6 +116,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
 
     const handleSignUp = async (values: FormValues) => {
       try {
+        console.log(values.mobile);
           const phoneNumber = `+92${values.mobile}`; 
           const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
           const verificationId = confirmation.verificationId;
