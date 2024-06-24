@@ -10,18 +10,13 @@ import Snackbar from 'react-native-snackbar';
 const { width, height } = Dimensions.get('window');
 
 
-// interface Device {
-//     id: string;
-//     name: string;
-//   }
+interface Service {
+  uuid: string;
+  characteristics?: {
+    uuid: string;
+  }[];
+}
 
-  interface Service {
-    uuid: string;
-    characteristics: Characteristic[];
-  }
-  interface Characteristic {
-    uuid: string;
-  }
 
   type SendCredentialsProps = {
     route: SendCredentialsRouteProp;
@@ -36,28 +31,43 @@ const { width, height } = Dimensions.get('window');
     const [ssid, setSsid] = useState('');
     const [password, setPassword] = useState('');
     const [isSending, setIsSending] = useState(false);
-    const [serviceUUID, setServiceUUID] = useState('');
-    const [characteristicUUID, setCharacteristicUUID] = useState('');
+    const [serviceUUID, setServiceUUID] = useState<string | null>(null);
+    const [characteristicUUID, setCharacteristicUUID] = useState<string | null>(null);    
     const { appwrite, setIsInitialSetupComplete } = useContext(Context);
     const keepAliveInterval = useRef<NodeJS.Timeout | null>(null);
 
 
-        const fetchUUIDs = async () => {
-            try {
-              const peripheralInfo: PeripheralInfo = await BleManager.retrieveServices(device.id);
-              console.log('Peripheral Info:', peripheralInfo); // Log peripheral info
+        const fetchUUIDs = async (device: { id: string }) => {
+          try {
+            const peripheralInfo: PeripheralInfo = await BleManager.retrieveServices(device.id);
+            console.log('Peripheral Info:', peripheralInfo);
 
               if (peripheralInfo.services) {
-                const services = peripheralInfo.services as unknown as { uuid: string, characteristics: { uuid: string }[] }[];
+                const services: Service[] = peripheralInfo.services.map(service => ({
+                  uuid: service.uuid,
+                  characteristics: peripheralInfo.characteristics?.filter(char => char.service === service.uuid)
+                    .map(char => ({
+                      uuid: char.characteristic
+                    }))
+                }));
+
+
+                let foundCharacteristic = false;
+
                 for (const service of services) {
-                  if (service.characteristics.length > 0) {
-                    console.log("ServiceUUid: ", service.uuid);
+                  if (service.characteristics && service.characteristics.length > 0) {
                     setServiceUUID(service.uuid);
                     setCharacteristicUUID(service.characteristics[0].uuid);
-                    return;
+                    foundCharacteristic = true;
+                    break;
                   }
                 }
-            
+                if (!foundCharacteristic) {
+                  Snackbar.show({
+                    text: 'Error: No suitable characteristics found on device',
+                    duration: Snackbar.LENGTH_LONG
+                  });
+                }
                 } else {
                     Snackbar.show({
                         text: 'Error: No services found on device',
@@ -74,7 +84,7 @@ const { width, height } = Dimensions.get('window');
         };
 
         useEffect(() => {
-          fetchUUIDs(); // Ensure fetchUUIDs is called when the component mounts
+          fetchUUIDs(device); // Ensure fetchUUIDs is called when the component mounts
         }, []);
 
         useEffect(() => {
@@ -91,7 +101,7 @@ const { width, height } = Dimensions.get('window');
                       text: 'Reconnected to device.',
                       duration: Snackbar.LENGTH_SHORT
                     });
-                    fetchUUIDs();
+                    fetchUUIDs(device);
                   })
                   .catch((error) => {
                     console.error('Failed to reconnect:', error);
