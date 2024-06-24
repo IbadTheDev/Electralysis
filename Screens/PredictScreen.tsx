@@ -67,7 +67,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
       const predictData = async () => {
         try {
             console.log('Attempting to send request...');
-            const apiUrl = 'https://d6a9-34-44-16-52.ngrok-free.app/predict';
+            const apiUrl = 'https://2105-35-231-228-99.ngrok-free.app/predict';
     
             console.log('Sending request to:', apiUrl);
             console.log('Request data:', data);

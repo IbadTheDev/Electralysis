@@ -56,7 +56,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                     const response = await appwrite.createAccount({
                       email: userData.email,
                       password: userData.password,
-                      mobile: userData.mobile,
+                      phone: userData.mobile,
                     });
                     if (response) {
                       setIsLoggedIn(true);

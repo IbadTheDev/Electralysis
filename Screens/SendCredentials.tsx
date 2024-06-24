@@ -51,6 +51,7 @@ const { width, height } = Dimensions.get('window');
                 const services: Service[] = peripheralInfo.services as Service[];
                 for (const service of services) {
                   if (service.characteristics.length > 0) {
+                    console.log("ServiceUUid: ", service.uuid);
                     setServiceUUID(service.uuid);
                     setCharacteristicUUID(service.characteristics[0].uuid);
                     return;
@@ -133,7 +134,7 @@ const { width, height } = Dimensions.get('window');
         const data = JSON.stringify({ ssid, password });
         const encodedData: number[] = Array.from(Buffer.from(data, 'utf-8'));
 
-        if (!serviceUUID || !characteristicUUID) {
+        if (!serviceUUID) {
             Snackbar.show({
                 text: 'Error: No suitable service found on device',
                 duration: Snackbar.LENGTH_LONG
