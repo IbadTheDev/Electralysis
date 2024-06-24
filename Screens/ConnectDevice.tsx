@@ -33,8 +33,8 @@ const ConnectDevice = ({ route, navigation }: ConnectDeviceProps) => {
         BleManager.start({ showAlert: false });
     //add esp ka name yahan par
         const handleDiscoverPeripheral = (peripheral: Device)=> {
-          console.log('Discovered peripheral:', peripheral);
-          if (peripheral.name === 'ESP32_BLE') {
+          if (peripheral.name === 'ESP32_WiFi_Setup') {
+            console.log('Discovered peripheral:', peripheral);
             connectToDevice(peripheral);
           }
         };

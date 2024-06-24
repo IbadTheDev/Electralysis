@@ -1,8 +1,7 @@
 import { StyleSheet, Text, TextInput, Dimensions, View, TouchableOpacity, ScrollView, Image, Modal, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useRef, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 import Header from '../Components/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {AppStackParamList} from '../src/routes/AppStack'
@@ -402,7 +401,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
                                 <Text style={[styles.buttonText, styles.elevatedText]}>Electralysis</Text>
                             </TouchableOpacity>
              <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} activeOpacity={0.8} style={[styles.backButton]} >
-                <Icon3 style={styles.backIcon} name="chevron-back" />
+                <Icon2 style={styles.backIcon} name="chevron-back" />
                 <Text style={[styles.backButtonText, styles.elevatedText]}></Text>
             </TouchableOpacity>
         </View>  
