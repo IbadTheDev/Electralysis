@@ -48,7 +48,7 @@ const { width, height } = Dimensions.get('window');
               console.log('Peripheral Info:', peripheralInfo); // Log peripheral info
 
               if (peripheralInfo.services) {
-                const services: Service[] = peripheralInfo.services as Service[];
+                const services = peripheralInfo.services as unknown as { uuid: string, characteristics: { uuid: string }[] }[];
                 for (const service of services) {
                   if (service.characteristics.length > 0) {
                     setServiceUUID(service.uuid);
@@ -71,6 +71,10 @@ const { width, height } = Dimensions.get('window');
                 });
             }
         };
+
+        useEffect(() => {
+          fetchUUIDs(); // Ensure fetchUUIDs is called when the component mounts
+        }, []);
 
         useEffect(() => {
             const handleDisconnectedPeripheral = (data: any) => {
