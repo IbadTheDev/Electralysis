@@ -135,7 +135,7 @@ interface Service {
                     } catch (error) {
                       console.error('Error: sending keep-alive:', error);
                     }
-                  }, 3000); // Send keep-alive every 5 seconds
+                  }, 5000); // Send keep-alive every 5 seconds
                 }
                 return () => {
                   clearInterval(keepAliveInterval.current!);
@@ -179,8 +179,8 @@ interface Service {
         
          // Mark initial setup as complete
       await appwrite.markInitialSetupComplete();
-      setIsInitialSetupComplete(true);
-      navigation.navigate('HomeScreen');
+      setIsInitialSetupComplete(false);
+      //navigation.navigate('HomeScreen');
 
       } catch (error) {
         setIsSending(false);

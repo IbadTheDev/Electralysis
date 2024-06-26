@@ -38,7 +38,7 @@ const SignupSchema = Yup.object().shape({
     .oneOf([Yup.ref('password'), undefined], 'Passwords must match')
     .required('Confirm Password is required'),
     phone: Yup.string()
-    .matches(/^03\d{9}$/, 'Invalid Mobile Number. It should be 034XXXXXXXX.')
+    .matches(/^03\d{9}$/, 'Invalid Mobile Number. It should be 03XXXXXXXXX.')
     .required('Mobile No. is required'),
 });
 

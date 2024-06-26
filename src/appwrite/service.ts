@@ -41,9 +41,11 @@ class AppwriteService {
                     ID.unique(),
                     email,
                     password,
-                    phone,
+                    email,
                 )
                 if (userAccount){
+                     //Update user preferences with phone number
+                    await this.account.updatePrefs({ phone: phone});
                     // create login
                     return this.login({email, password})
                 } else {
