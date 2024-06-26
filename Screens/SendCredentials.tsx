@@ -118,12 +118,13 @@ interface Service {
 
             useEffect(() => {
                 if (serviceUUID && characteristicUUID) {
+                  console.log("SeriveUUID:", serviceUUID, ", CharacteristicUUID: ", characteristicUUID)
                   keepAliveInterval.current = setInterval(async () => {
                     try {
                       const keepAliveData = Array.from(Buffer.from('keepalive', 'utf-8'));
                       await BleManager.write(device.id, serviceUUID, characteristicUUID, keepAliveData);
                     } catch (error) {
-                      console.error('Error sending keep-alive:', error);
+                      console.error('Error: sending keep-alive:', error);
                     }
                   }, 3000); // Send keep-alive every 5 seconds
                 }
@@ -172,7 +173,7 @@ interface Service {
 
       } catch (error) {
         setIsSending(false);
-        console.error('Error sending credentials:', error);
+        console.error('Error: sending credentials:', error);
         Snackbar.show({
             text: 'Error: Failed to send credentials. Please try again.',
             duration: Snackbar.LENGTH_LONG
