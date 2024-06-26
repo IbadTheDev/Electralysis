@@ -40,10 +40,11 @@ class AppwriteService {
                 const userAccount = await this.account.create(
                     ID.unique(),
                     email,
-                    password,
-                    phone,
+                    password
                 )
                 if (userAccount){
+                     //Update user preferences with phone number
+                    await this.account.updatePrefs({ phone: phone});
                     // create login
                     return this.login({email, password})
                 } else {
