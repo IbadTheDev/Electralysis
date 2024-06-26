@@ -122,19 +122,28 @@ interface Service {
                   text: `Disconnected from device: ${reason}`,
                   duration: Snackbar.LENGTH_LONG
                 });
-                BleManager.connect(device.id)
-                  .then(() => {
+
+                const reconnect = async (retries: number, delay: number) => {
+                  for (let i = 0; i < retries; i++) {
+                    try {
+                    await BleManager.connect(device.id);
+                      
                     Snackbar.show({
                       text: 'Reconnected to device.',
                       duration: Snackbar.LENGTH_SHORT
                     });
                     fetchUUIDs(device);
-                  })
-                  .catch((error) => {
+                    return;
+                  
+                  } catch (error) {
                     console.error('Failed to reconnect:', error);
-                  });
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                  }
               }
             };
+            reconnect(5, 2000); 
+          }
+        }
     
             bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', handleDisconnectedPeripheral);
               return () => {
@@ -151,7 +160,7 @@ interface Service {
                       const keepAliveData = Array.from(Buffer.from('keepalive', 'utf-8'));
                       await BleManager.write(device.id, serviceUUID, characteristicUUID, keepAliveData);
                     } catch (error) {
-                      console.error('Error: sending keep-alive:', error);
+                      console.log('Error: sending keep-alive:', error);
                     }
                   }, 5000); // Send keep-alive every 5 seconds
                                 // Start notification listener
@@ -162,7 +171,7 @@ interface Service {
                       'BleManagerDidUpdateValueForCharacteristic', handleNotification);
                   })
                   .catch(error => {
-                    console.error('Error: starting notification:', error);
+                    console.log('Error: starting notification:', error);
                   });
                 }
                 return () => {
