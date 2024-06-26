@@ -91,7 +91,25 @@ interface Service {
                 });
             }
         };
-
+        const handleNotification = (data: any) => {
+          const receivedData = Buffer.from(data.value).toString('utf-8');
+          console.log('message from the device: ', receivedData);
+      
+          if (receivedData === 'WiFi Connected') {
+            Snackbar.show({
+              text: 'Success: Device connected to WiFi!',
+              duration: Snackbar.LENGTH_LONG
+            });
+      
+            // Mark initial setup as complete
+            appwrite.markInitialSetupComplete();
+            setIsInitialSetupComplete(true);
+      
+            // Navigate to HomeScreen
+            navigation.navigate('HomeScreen');
+          }
+        };
+      
         useEffect(() => {
           fetchUUIDs(device); // Ensure fetchUUIDs is called when the component mounts
         }, []);
@@ -204,24 +222,7 @@ interface Service {
       }
     };
 
-    const handleNotification = (data: any) => {
-      const receivedData = Buffer.from(data.value).toString('utf-8');
-      console.log('message from the device: ', receivedData);
-  
-      if (receivedData === 'WiFi Connected') {
-        Snackbar.show({
-          text: 'Success: Device connected to WiFi!',
-          duration: Snackbar.LENGTH_LONG
-        });
-  
-        // Mark initial setup as complete
-        appwrite.markInitialSetupComplete();
-        setIsInitialSetupComplete(true);
-  
-        // Navigate to HomeScreen
-        navigation.navigate('HomeScreen');
-      }
-    };
+   
   
 
    
