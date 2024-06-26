@@ -136,9 +136,20 @@ interface Service {
                       console.error('Error: sending keep-alive:', error);
                     }
                   }, 5000); // Send keep-alive every 5 seconds
+                                // Start notification listener
+                  BleManager.startNotification(device.id, serviceUUID, characteristicUUID)
+                  .then(() => {
+                    console.log('Started notification on ', characteristicUUID);
+                    bleManagerEmitter.addListener(
+                      'BleManagerDidUpdateValueForCharacteristic', handleNotification);
+                  })
+                  .catch(error => {
+                    console.error('Error: starting notification:', error);
+                  });
                 }
                 return () => {
                   clearInterval(keepAliveInterval.current!);
+                    bleManagerEmitter.removeAllListeners('BleManagerDidUpdateValueForCharacteristic');
                 };
               }, [serviceUUID, characteristicUUID]); 
     
@@ -178,9 +189,9 @@ interface Service {
         })
         
          // Mark initial setup as complete
-      await appwrite.markInitialSetupComplete();
-      setIsInitialSetupComplete(false);
-      //navigation.navigate('HomeScreen');
+      // await appwrite.markInitialSetupComplete();
+      // setIsInitialSetupComplete(false);
+      // //navigation.navigate('HomeScreen');
 
       } catch (error) {
         setIsSending(false);
@@ -192,6 +203,26 @@ interface Service {
         
       }
     };
+
+    const handleNotification = (data: any) => {
+      const receivedData = Buffer.from(data.value).toString('utf-8');
+      console.log('message from the device: ', receivedData);
+  
+      if (receivedData === 'WiFi Connected') {
+        Snackbar.show({
+          text: 'Success: Device connected to WiFi!',
+          duration: Snackbar.LENGTH_LONG
+        });
+  
+        // Mark initial setup as complete
+        appwrite.markInitialSetupComplete();
+        setIsInitialSetupComplete(true);
+  
+        // Navigate to HomeScreen
+        navigation.navigate('HomeScreen');
+      }
+    };
+  
 
    
     return (
