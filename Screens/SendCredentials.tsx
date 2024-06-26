@@ -12,7 +12,7 @@ const { width, height } = Dimensions.get('window');
 
 interface Service {
   uuid: string;
-  characteristics?: {
+  characteristics: {
     uuid: string;
   }[];
 }
@@ -42,26 +42,35 @@ interface Service {
             const peripheralInfo: PeripheralInfo = await BleManager.retrieveServices(device.id);
             console.log('Peripheral Info:', peripheralInfo);
 
-              if (peripheralInfo.services) {
-                const services: Service[] = peripheralInfo.services.map(service => ({
-                  uuid: service.uuid,
-                  characteristics: peripheralInfo.characteristics?.filter(char => char.service === service.uuid)
-                    .map(char => ({
-                      uuid: char.characteristic
-                    }))
-                }));
+            const desiredServiceUUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+            const desiredCharacteristicUUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+
+            if (peripheralInfo.services && peripheralInfo.characteristics) {
+              const services: Service[] = peripheralInfo.services.map(service => ({
+                uuid: service.uuid,
+                characteristics: peripheralInfo.characteristics!
+                  .filter(char => char.service === service.uuid)
+                  .map(char => ({
+                    uuid: char.characteristic
+                  }))
+              }));
 
 
                 let foundCharacteristic = false;
 
                 for (const service of services) {
-                  if (service.characteristics && service.characteristics.length > 0) {
+                  if (service.uuid === desiredServiceUUID){
+                    const characteristic = service.characteristics?.find(char => char.uuid === desiredCharacteristicUUID);
+                  if (characteristic) {
                     setServiceUUID(service.uuid);
-                    setCharacteristicUUID(service.characteristics[0].uuid);
+                    setCharacteristicUUID(characteristic.uuid);
+                    console.log('Service UUID:', service.uuid);
+                    console.log('Characteristic UUID:', characteristic.uuid);
                     foundCharacteristic = true;
                     break;
                   }
                 }
+              }
                 if (!foundCharacteristic) {
                   Snackbar.show({
                     text: 'Error: No suitable characteristics found on device',
@@ -118,7 +127,7 @@ interface Service {
 
             useEffect(() => {
                 if (serviceUUID && characteristicUUID) {
-                  console.log("SeriveUUID:", serviceUUID, ", CharacteristicUUID: ", characteristicUUID)
+                  console.log("SeriveUUID: ", serviceUUID, ", CharacteristicUUID: ", characteristicUUID)
                   keepAliveInterval.current = setInterval(async () => {
                     try {
                       const keepAliveData = Array.from(Buffer.from('keepalive', 'utf-8'));
@@ -157,6 +166,8 @@ interface Service {
             setIsSending(false);
             return;
         }
+
+        console.log("Service UUID: ", serviceUUID, ", Characteristic UUID: ", characteristicUUID);
         
         await BleManager.write(device.id, serviceUUID, characteristicUUID, encodedData);
   
