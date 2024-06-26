@@ -148,7 +148,7 @@ interface Service {
         const data = JSON.stringify({ ssid, password });
         const encodedData: number[] = Array.from(Buffer.from(data, 'utf-8'));
 
-        if (!serviceUUID) {
+        if (!serviceUUID || !characteristicUUID) {
             Snackbar.show({
                 text: 'Error: No suitable service found on device',
                 duration: Snackbar.LENGTH_LONG
@@ -345,4 +345,3 @@ const styles = StyleSheet.create({
 });
 
 export default SendCredentials
-
