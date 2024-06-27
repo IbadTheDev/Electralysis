@@ -103,24 +103,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       });
     }
   };
-  const handleNotification = (data: any) => {
-    const receivedData = Buffer.from(data.value).toString('utf-8');
-    console.log('message from the device: ', receivedData);
 
-    if (receivedData === 'WiFi Connected') {
-      Snackbar.show({
-        text: 'Success: Device connected to WiFi!',
-        duration: Snackbar.LENGTH_LONG,
-      });
-
-      // Mark initial setup as complete
-      appwrite.markInitialSetupComplete();
-      setIsInitialSetupComplete(true);
-
-      // Navigate to HomeScreen
-      navigation.navigate('HomeScreen');
-    }
-  };
 
   useEffect(() => {
     fetchUUIDs(device); // Ensure fetchUUIDs is called when the component mounts
@@ -193,6 +176,27 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     };
   }, [serviceUUID, characteristicUUID]);
 
+
+  const handleNotification = (data: any) => {
+    console.log('entered handleNotification');
+    const receivedData = Buffer.from(data.value).toString('utf-8');
+    console.log('message from the device: ', receivedData);
+
+    if (receivedData === 'WiFi Connected') {
+      Snackbar.show({
+        text: 'Success: Device connected to WiFi!',
+        duration: Snackbar.LENGTH_LONG,
+      });
+
+      // Mark initial setup as complete
+      appwrite.markInitialSetupComplete();
+      setIsInitialSetupComplete(true);
+
+      // Navigate to HomeScreen
+      navigation.navigate('HomeScreen');
+    }
+  };
+  
   const startNotification = async () => {
     try {
           // Ensure the device is connected before starting the notification
@@ -202,6 +206,8 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     }
 
       await new Promise(resolve => setTimeout(resolve, 2000)); // Delay of 1 second
+
+      
       await BleManager.startNotification(
         device.id,
         serviceUUID!,
@@ -216,6 +222,8 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       console.error('Error: starting notification:', error);
     }
   };
+
+  
 
   const sendCredentials = async () => {
     if (!ssid || !password) {
@@ -274,7 +282,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       startNotification();
 
       setIsSending(false);
-      
+
     } catch (error) {
       setIsSending(false);
       console.error('Error: sending credentials:', error);
