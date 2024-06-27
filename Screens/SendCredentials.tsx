@@ -67,11 +67,11 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
         <View style={styles.modalContainer}>
           <View style={[styles.predictionContainer, styles.elevatedLogo]}>
             <Text style={styles.messageText}>Connected Successfully!</Text>
+            <Text style={styles.startText}>Lets save you some bills!</Text>
+            <Icon2 name="check-circle" style={styles.iconCheck} />
             <Text style={styles.noteText}>
               Note: you will not need to enter Wifi credentials again.
             </Text>
-            <Text style={styles.startText}>Lets save you some bills!</Text>
-            <Icon2 name="check-circle" style={styles.iconCheck} />
           </View>
         </View>
       </Modal>
@@ -217,16 +217,15 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       console.error('Error handling notification:', error);
     }
 
-    // Mark initial setup as complete
-    appwrite.markInitialSetupComplete();
-    setIsInitialSetupComplete(true);
-
     // Open modal
     setopenModal(true);
 
     // Close modal after 3 seconds and navigate to HomeScreen
     setTimeout(() => {
       setopenModal(false);
+      // Mark initial setup as complete
+    appwrite.markInitialSetupComplete();
+    setIsInitialSetupComplete(true);
       navigation.navigate('HomeScreen');
     }, 3000);
   };
@@ -278,6 +277,9 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
         return;
       }
 
+      // Start notification after sending credentials
+      startNotification();
+
       console.log(
         'Service UUID: ',
         serviceUUID,
@@ -306,8 +308,6 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
         duration: Snackbar.LENGTH_LONG,
       });
 
-      // Start notification after sending credentials
-      startNotification();
 
       setIsSending(false);
     } catch (error) {
@@ -515,7 +515,7 @@ const styles = StyleSheet.create({
   },
   predictionContainer: {
     backgroundColor: 'rgba(255, 255, 255, 1)',
-    height: height * 0.3,
+    height: height * 0.28,
     paddingTop: '5%',
     alignItems: 'center',
     borderRadius: 10,
@@ -523,29 +523,30 @@ const styles = StyleSheet.create({
     margin: '2%',
   },
   messageText: {
-    fontSize: height * 0.03,
+    fontSize: height * 0.035,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.08,
+    marginBottom: height * 0.01,
   },
   noteText: {
-    fontSize: height * 0.01,
+    fontSize: height * 0.014,
     color: '#003C43',
-    fontWeight: '600',
-    marginBottom: height * 0.08,
+    fontWeight: '400',
+    marginBottom: height * 0.04,
   },
   startText: {
-    fontSize: height * 0.01,
+    fontSize: height * 0.026,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.08,
+    marginBottom: height * 0.01,
   },
   iconCheck: {
-    fontSize: 38,
-    color: 'white',
+    fontSize: 70,
+    color: '#003C43',
     textAlign: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    marginBottom: height * 0.02,
   },
 });
 
