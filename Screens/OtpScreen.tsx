@@ -109,7 +109,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
 
   const handleResendOTP = () => {
     if (timer === 0) {
-      setTimer(5); // Reset the timer only if it's already at 0
+      setTimer(10); // Reset the timer only if it's already at 0
     }
   };
 

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../../Screens/HomeScreen';
 import GraphScreen from '../../Screens/GraphScreen';
@@ -7,6 +7,7 @@ import ConnectDevice from '../../Screens/ConnectDevice';
 import SendCredentials from '../../Screens/SendCredentials';
 import {Context} from '../appwrite/Context';
 import PredictScreen from '../../Screens/PredictScreen';
+import Loading from '../../Components/Loading';
 
 export type AppStackParamList = {
   HomeScreen: undefined;
@@ -21,10 +22,23 @@ const Stack = createNativeStackNavigator<AppStackParamList>();
 
 export const AppStack: React.FC = () => {
   const {isInitialSetupComplete} = useContext(Context);
+  const [isSetupChecked, setIsSetupChecked] = useState(false);
+
+
+  useEffect(() => {
+    if (typeof isInitialSetupComplete !== 'undefined') {
+      setIsSetupChecked(true);
+    }
+  }, [isInitialSetupComplete]);
+
+  if (!isSetupChecked) {
+    return <Loading />;
+  }
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isInitialSetupComplete ? (
+        
         <>
           <Stack.Screen name="AddDevice" component={AddDevice} />
           <Stack.Screen name="ConnectDevice" component={ConnectDevice} />

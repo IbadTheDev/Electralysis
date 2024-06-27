@@ -220,7 +220,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     // Open modal
     setopenModal(true);
 
-    // Close modal after 3 seconds and navigate to HomeScreen
+// Close modal after 3 seconds and navigate to HomeScreen
     setTimeout(() => {
       setopenModal(false);
       // Mark initial setup as complete
@@ -523,6 +523,7 @@ const styles = StyleSheet.create({
     margin: '2%',
   },
   messageText: {
+    fontSize: height * 0.035,
     fontSize: height * 0.035,
     color: '#003C43',
     fontWeight: '600',
