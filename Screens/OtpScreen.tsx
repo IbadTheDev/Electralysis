@@ -56,7 +56,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                     const response = await appwrite.createAccount({
                       email: userData.email,
                       password: userData.password,
-                      mobile: userData.mobile,
+                      phone: userData.phone,
                     });
                     if (response) {
                       setIsLoggedIn(true);
@@ -76,17 +76,14 @@ export default function OtpScreen({ route }: OtpScreenProps) {
                     
                 } catch (error) {
                     console.error('Error signing up:', error);
-                    Snackbar.show({
-                      text: String(error),
-                      duration: Snackbar.LENGTH_SHORT
-                    });
+                    
                 }
                 try {
                   // Sending data to your backend
                   const respone = await signUpUser({
                     email: userData.email,
                     password: userData.password,
-                    mobile: userData.mobile,
+                    phone: userData.phone,
                   });
           
                   console.log('Backend sign up successful:', respone);
@@ -97,10 +94,7 @@ export default function OtpScreen({ route }: OtpScreenProps) {
               
               .catch((error) => {
                 console.error('Error during sign in with credential:', error);
-                Snackbar.show({
-                  text: String(error),
-                  duration: Snackbar.LENGTH_SHORT
-                });
+                
               });
       } else {
           console.error('Verification ID is missing');

@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 interface SignUpRequest {
   email: string;
   password: string;
-  mobile: string;
+  phone: string;
 }
 
 interface SignUpResponse {

@@ -181,7 +181,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     try {
       console.log('Received data:', data); // Ensure this logs the received data
       const decodedData = Buffer.from(data.value, 'base64').toString('ascii');
-      console.log(decodedData);
+      console.log('Decoded Data from ESP: ',decodedData);
       Snackbar.show({
         text: 'Yaye: WiFi Connected!',
         duration: Snackbar.LENGTH_LONG,
@@ -205,11 +205,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     const isConnected = await BleManager.isPeripheralConnected(device.id);
     if (!isConnected) {
       throw new Error('Device is not connected');
-    }
-
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
-
-      
+    } 
       await BleManager.startNotification(
         device.id,
         serviceUUID!,
