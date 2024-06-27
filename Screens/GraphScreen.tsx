@@ -6,8 +6,6 @@ import { GraphData } from '../Components/types';
 import FooterNav from '../Components/FooterNav';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
-import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon3 from 'react-native-vector-icons/Ionicons';
 import PeriodSelector from '../Components/PeriodSelector';
 import { getDailyData, getWeeklyData, getMonthlyData, DailyData, WeeklyData, MonthlyData,getUnitsByDateTimeRange,UnitData } from '../Apis/getUnits';
 import moment from 'moment';
@@ -20,8 +18,12 @@ const transparent = 'rgba(0, 0, 0, 0.5)';
 
 type GraphProps = NativeStackScreenProps<AppStackParamList, 'GraphScreen'>
 
-export default function GraphScreen({navigation}: GraphProps) {
-  const [openModal, setopenModal] = useState(false);
+interface GraphScreenProps extends GraphProps {
+  openModalDefault?: boolean;
+}
+
+const GraphScreen: React.FC<GraphScreenProps> = ({ navigation, openModalDefault = false }) => {
+  const [openModal, setopenModal] = useState(openModalDefault);
   const [selectedDataType, setSelectedDataType] = useState<'monthly' | 'weekly' | 'daily'>('daily');
   const [selectedChartType, setSelectedChartType] = useState<'line' | 'bar'>('line');
   const [dailyData, setDailyData] = useState<DailyData[]>([]);
@@ -155,7 +157,7 @@ const getMonthlyLabels = (monthlyData: MonthlyData[]): string[] => {
             </View>
             <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
               <Text style={styles.doneButtonText}>Seen</Text>
-              <Icon2 name="check-circle-outline" style={[styles.iconDoneButton]} />
+              <Icon2 name="check" style={[styles.iconDoneButton]} />
             </TouchableOpacity>
 
             {/* </View> */}
@@ -371,3 +373,5 @@ iconDoneButton:{
     elevation: 8,
 },
 })
+
+export default GraphScreen;
