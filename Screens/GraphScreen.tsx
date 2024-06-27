@@ -155,7 +155,7 @@ const getMonthlyLabels = (monthlyData: MonthlyData[]): string[] => {
             </View>
             <TouchableOpacity onPress={ ()=> setopenModal(false)} activeOpacity={0.8} style={[styles.doneButton, styles.elevatedLogo]}>
               <Text style={styles.doneButtonText}>Seen</Text>
-              <Icon2 name="check-circle-outline" style={[styles.iconDoneButton]} />
+              <Icon2 name="check" style={[styles.iconDoneButton]} />
             </TouchableOpacity>
 
             {/* </View> */}
