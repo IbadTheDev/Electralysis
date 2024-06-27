@@ -65,7 +65,7 @@ const SignUp: React.FC<SignupScreenProps> = ({ navigation }) => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [confrimPassword, setConfirmPassword] = useState<string>('')
-    const [mobile, setMobile] = useState<string>('')
+    const [phone, setPhone] = useState<string>('')
 
     const createHandleChange = (
       fieldName: string,

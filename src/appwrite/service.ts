@@ -52,10 +52,6 @@ class AppwriteService {
                     return userAccount
                 }
             } catch(error){
-                Snackbar.show({
-                    text: String(error),
-                    duration: Snackbar.LENGTH_SHORT
-                })
                 console.log("Service :: createAccount() ::" + error)
             }
         }
@@ -68,10 +64,6 @@ class AppwriteService {
             )
             
         } catch (error) {
-            Snackbar.show({
-                text: String(error),
-                duration: Snackbar.LENGTH_SHORT
-            })
             console.log("Service :: loginAccount() ::" + error)
             
         }
