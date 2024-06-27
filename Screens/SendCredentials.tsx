@@ -178,15 +178,18 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
 
 
   const handleNotification = (data: any) => {
-    console.log('entered handleNotification');
-    const receivedData = Buffer.from(data.value).toString('utf-8');
-    console.log('message from the device: ', receivedData);
-
-    if (receivedData === 'WiFi Connected') {
+    try {
+      console.log('Received data:', data); // Ensure this logs the received data
+      const decodedData = Buffer.from(data.value, 'base64').toString('ascii');
+      console.log(decodedData);
       Snackbar.show({
-        text: 'Success: Device connected to WiFi!',
+        text: 'Yaye: WiFi Connected!',
         duration: Snackbar.LENGTH_LONG,
       });
+    } catch (error) {
+      console.error('Error handling notification:', error);
+    }
+  
 
       // Mark initial setup as complete
       appwrite.markInitialSetupComplete();
@@ -194,7 +197,6 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
 
       // Navigate to HomeScreen
       navigation.navigate('HomeScreen');
-    }
   };
   
   const startNotification = async () => {
