@@ -5,7 +5,7 @@ export interface DailyData {
   dayOfWeek: string;
   unitsUsed: number;
   cost: number;
-  time:string;
+  time: string;
 }
 
 export interface WeeklyData {
@@ -13,7 +13,7 @@ export interface WeeklyData {
   weekStart: string;
   unitsUsed: number;
   cost: number;
-  time:string;
+  time: string;
 }
 
 export interface MonthlyData {
@@ -21,7 +21,7 @@ export interface MonthlyData {
   month: string;
   unitsUsed: number;
   cost: number;
-  time:string;
+  time: string;
 }
 
 export interface UnitData {
@@ -31,26 +31,31 @@ export interface UnitData {
 }
 
 export const getDailyData = async (): Promise<DailyData[]> => {
-    const response = await axios.get('/ElectricityUsage/Daily?date=' + new Date().toISOString());
-    return response.data;
-  };
-  
-  export const getWeeklyData = async (): Promise<WeeklyData[]> => {
-    const response = await axios.get('/ElectricityUsage/Weekly');
-    return response.data;
-  };
-  
-  export const getMonthlyData = async (): Promise<MonthlyData[]> => {
-    const response = await axios.get('/ElectricityUsage/Monthly');
-    return response.data;
-  };
+  const response = await axios.get(
+    '/ElectricityUsage/Daily?date=' + new Date().toISOString(),
+  );
+  return response.data;
+};
 
-  export const getUnitsByDateTimeRange = async (startDateTime: string, endDateTime: string): Promise<UnitData[]> => {
-    const response = await axios.get('/ElectricityUsage/UnitsByDateTimeRange', {
-        params: {
-            startDateTime,
-            endDateTime
-        }
-    });
-    return response.data;
+export const getWeeklyData = async (): Promise<WeeklyData[]> => {
+  const response = await axios.get('/ElectricityUsage/Weekly');
+  return response.data;
+};
+
+export const getMonthlyData = async (): Promise<MonthlyData[]> => {
+  const response = await axios.get('/ElectricityUsage/Monthly');
+  return response.data;
+};
+
+export const getUnitsByDateTimeRange = async (
+  startDateTime: string,
+  endDateTime: string,
+): Promise<UnitData[]> => {
+  const response = await axios.get('/ElectricityUsage/UnitsByDateTimeRange', {
+    params: {
+      startDateTime,
+      endDateTime,
+    },
+  });
+  return response.data;
 };

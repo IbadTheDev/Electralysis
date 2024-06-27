@@ -104,7 +104,6 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     }
   };
 
-
   useEffect(() => {
     fetchUUIDs(device); // Ensure fetchUUIDs is called when the component mounts
   }, []);
@@ -176,12 +175,11 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     };
   }, [serviceUUID, characteristicUUID]);
 
-
-  const handleNotification = (data : any) => {
+  const handleNotification = (data: any) => {
     try {
       console.log('Received data:', data); // Ensure this logs the received data
       const decodedData = Buffer.from(data.value, 'base64').toString('ascii');
-      console.log('Decoded Data from ESP: ',decodedData);
+      console.log('Decoded Data from ESP: ', decodedData);
       Snackbar.show({
         text: 'Yaye: WiFi Connected!',
         duration: Snackbar.LENGTH_LONG,
@@ -189,23 +187,22 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     } catch (error) {
       console.error('Error handling notification:', error);
     }
-  
 
-      // Mark initial setup as complete
-      appwrite.markInitialSetupComplete();
-      setIsInitialSetupComplete(true);
+    // Mark initial setup as complete
+    appwrite.markInitialSetupComplete();
+    setIsInitialSetupComplete(true);
 
-      // Navigate to HomeScreen
-      navigation.navigate('HomeScreen');
+    // Navigate to HomeScreen
+    navigation.navigate('HomeScreen');
   };
-  
+
   const startNotification = async () => {
     try {
-          // Ensure the device is connected before starting the notification
-    const isConnected = await BleManager.isPeripheralConnected(device.id);
-    if (!isConnected) {
-      throw new Error('Device is not connected');
-    } 
+      // Ensure the device is connected before starting the notification
+      const isConnected = await BleManager.isPeripheralConnected(device.id);
+      if (!isConnected) {
+        throw new Error('Device is not connected');
+      }
       await BleManager.startNotification(
         device.id,
         serviceUUID!,
@@ -220,8 +217,6 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       console.error('Error: starting notification:', error);
     }
   };
-
-  
 
   const sendCredentials = async () => {
     if (!ssid || !password) {
@@ -280,7 +275,6 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       startNotification();
 
       setIsSending(false);
-
     } catch (error) {
       setIsSending(false);
       console.error('Error: sending credentials:', error);
