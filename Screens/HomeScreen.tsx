@@ -206,7 +206,7 @@ export default function HomeScreen({navigation}: HomeProps) {
                 snapToAlignment="start"
             >
                 {Array.isArray(selectedData) && selectedData.map(data => (
-                <View key={data.uid} style={[styles.midLayerContainer, styles.elevatedMidLayer]}>
+                <View key={uuidv4()} style={[styles.midLayerContainer, styles.elevatedMidLayer]}>
                     <View style={styles.cardMonthContainer}>
                     <Text style={[styles.monthText, styles.elevatedText]}>
                 {selectedDataType === 'monthly' ? moment((data as MonthlyData).month).format('MMMM YYYY') : selectedDataType === 'weekly' ? `Week of ${(moment((data as WeeklyData).weekStart)).format('YYYY-MM-DD')}` : (data as DailyData).dayOfWeek}
