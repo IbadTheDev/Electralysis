@@ -6,7 +6,6 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
-  Image,
   Modal,
   KeyboardAvoidingView,
   Platform,

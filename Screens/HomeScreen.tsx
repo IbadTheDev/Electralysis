@@ -262,10 +262,10 @@ export default function HomeScreen({navigation}: HomeProps) {
           {Array.isArray(selectedData) &&
             selectedData.map(data => (
               <View
-                key={data.uid}
+              key={data.uid}
                 style={[styles.midLayerContainer, styles.elevatedMidLayer]}>
-                <View style={styles.cardMonthContainer}>
-                  <Text style={[styles.monthText, styles.elevatedText]}>
+                <View key={data.uid} style={styles.cardMonthContainer}>
+                  <Text key={data.uid} style={[styles.monthText, styles.elevatedText]}>
                     {selectedDataType === 'monthly'
                       ? moment((data as MonthlyData).month).format('MMMM YYYY')
                       : selectedDataType === 'weekly'

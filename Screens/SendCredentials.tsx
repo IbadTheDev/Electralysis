@@ -3,14 +3,19 @@ import {
   Text,
   TextInput,
   View,
+  Modal,
   TouchableOpacity,
   Dimensions,
   Image,
   NativeModules,
   NativeEventEmitter,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import BleManager, {PeripheralInfo} from 'react-native-ble-manager';
 import {Buffer} from 'buffer';
 import {
@@ -21,6 +26,7 @@ import {Context} from '../src/appwrite/Context';
 import Snackbar from 'react-native-snackbar';
 
 const {width, height} = Dimensions.get('window');
+const transparent = 'rgba(0, 0, 0, 0.5)';
 
 interface Service {
   uuid: string;
@@ -41,6 +47,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   const {device} = route.params;
   const [ssid, setSsid] = useState('');
   const [password, setPassword] = useState('');
+  const [openModal, setopenModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [serviceUUID, setServiceUUID] = useState<string | null>(null);
   const [characteristicUUID, setCharacteristicUUID] = useState<string | null>(
@@ -48,6 +55,28 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   );
   const {appwrite, setIsInitialSetupComplete} = useContext(Context);
   const keepAliveInterval = useRef<NodeJS.Timeout | null>(null);
+
+  //wifi connected ka modal screen
+  const renderModal = () => {
+    return (
+      <Modal
+        visible={openModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setopenModal(false)}>
+        <View style={styles.modalContainer}>
+          <View style={[styles.predictionContainer, styles.elevatedLogo]}>
+            <Text style={styles.messageText}>Connected Successfully!</Text>
+            <Text style={styles.noteText}>
+              Note: you will not need to enter Wifi credentials again.
+            </Text>
+            <Text style={styles.startText}>Lets save you some bills!</Text>
+            <Icon2 name="check-circle" style={styles.iconCheck} />
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   const fetchUUIDs = async (device: {id: string}) => {
     try {
@@ -192,8 +221,14 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
     appwrite.markInitialSetupComplete();
     setIsInitialSetupComplete(true);
 
-    // Navigate to HomeScreen
-    navigation.navigate('HomeScreen');
+    // Open modal
+    setopenModal(true);
+
+    // Close modal after 3 seconds and navigate to HomeScreen
+    setTimeout(() => {
+      setopenModal(false);
+      navigation.navigate('HomeScreen');
+    }, 3000);
   };
 
   const startNotification = async () => {
@@ -286,53 +321,66 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topTextContainer}>
-        <Text style={styles.topText}>Connect to WIFI</Text>
-      </View>
-      <View style={styles.subTextContainer}>
-        <Text style={styles.subText}>Enter your WIFI name and Password</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <Icon style={styles.icon} name="wifi" />
-        <TextInput
-          placeholder="WIFI Name"
-          placeholderTextColor={'#a9a9a9'}
-          style={styles.inputText}
-          value={ssid}
-          onChangeText={setSsid}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Icon style={styles.icon} name="lock" />
-        <TextInput
-          placeholder="WIFI Password"
-          placeholderTextColor={'#a9a9a9'}
-          style={styles.inputText}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-      </View>
-      <View style={[styles.buttonContainer, styles.elevatedLogo]}>
-        <TouchableOpacity onPress={sendCredentials}>
-          <Text style={[styles.buttonText, styles.elevatedText]}>Send</Text>
-        </TouchableOpacity>
-        <Icon
-          style={[styles.elevatedText, styles.sendIcon]}
-          name="cloud-upload"
-        />
-      </View>
-      <View style={styles.infoTextContainer}>
-        <Text style={styles.infoText}>
-          The Electralysis Device needs internet to send the data!
-        </Text>
-        <Image
-          source={require('../Assets/wifi.png')}
-          style={styles.cardImage}
-        />
-      </View>
-    </View>
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1}}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <View style={styles.container}>
+            <View style={styles.topTextContainer}>
+              <Text style={styles.topText}>Connect to WIFI</Text>
+            </View>
+            <View style={styles.subTextContainer}>
+              <Text style={styles.subText}>
+                Enter your WIFI name and Password
+              </Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Icon style={styles.icon} name="wifi" />
+              <TextInput
+                placeholder="WIFI Name"
+                placeholderTextColor={'#a9a9a9'}
+                style={styles.inputText}
+                value={ssid}
+                onChangeText={setSsid}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Icon style={styles.icon} name="lock" />
+              <TextInput
+                placeholder="WIFI Password"
+                placeholderTextColor={'#a9a9a9'}
+                style={styles.inputText}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+            </View>
+            <View style={[styles.buttonContainer, styles.elevatedLogo]}>
+              <TouchableOpacity onPress={sendCredentials}>
+                <Text style={[styles.buttonText, styles.elevatedText]}>
+                  Send
+                </Text>
+              </TouchableOpacity>
+              <Icon
+                style={[styles.elevatedText, styles.sendIcon]}
+                name="cloud-upload"
+              />
+            </View>
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoText}>
+                The Electralysis Device needs internet to send the data!
+              </Text>
+              <Image
+                source={require('../Assets/wifi.png')}
+                style={styles.cardImage}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      {renderModal()}
+    </>
   );
 };
 
@@ -448,6 +496,56 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.85,
     shadowRadius: 6,
     elevation: 8,
+  },
+
+  //Modal
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: transparent,
+  },
+  infoContainer: {
+    backgroundColor: 'white',
+    padding: '1%',
+    height: height * 0.42,
+    width: width * 0.96,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  predictionContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    height: height * 0.3,
+    paddingTop: '5%',
+    alignItems: 'center',
+    borderRadius: 10,
+    width: width * 0.92,
+    margin: '2%',
+  },
+  messageText: {
+    fontSize: height * 0.03,
+    color: '#003C43',
+    fontWeight: '600',
+    marginBottom: height * 0.08,
+  },
+  noteText: {
+    fontSize: height * 0.01,
+    color: '#003C43',
+    fontWeight: '600',
+    marginBottom: height * 0.08,
+  },
+  startText: {
+    fontSize: height * 0.01,
+    color: '#003C43',
+    fontWeight: '600',
+    marginBottom: height * 0.08,
+  },
+  iconCheck: {
+    fontSize: 38,
+    color: 'white',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });
 
