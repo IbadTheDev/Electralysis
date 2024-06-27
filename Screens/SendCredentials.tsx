@@ -217,16 +217,17 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       console.error('Error handling notification:', error);
     }
 
-    // Mark initial setup as complete
-    appwrite.markInitialSetupComplete();
-    setIsInitialSetupComplete(true);
+   
 
     // Open modal
     setopenModal(true);
 
-    // Close modal after 3 seconds and navigate to HomeScreen
+// Close modal after 3 seconds and navigate to HomeScreen
     setTimeout(() => {
       setopenModal(false);
+       // Mark initial setup as complete
+    appwrite.markInitialSetupComplete();
+    setIsInitialSetupComplete(true);
       navigation.navigate('HomeScreen');
     }, 3000);
   };
@@ -523,19 +524,19 @@ const styles = StyleSheet.create({
     margin: '2%',
   },
   messageText: {
-    fontSize: height * 0.03,
+    fontSize: height * 0.035,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.08,
+    marginBottom: height * 0.04,
   },
   noteText: {
-    fontSize: height * 0.01,
+    fontSize: height * 0.02,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.08,
+    marginBottom: height * 0.06,
   },
   startText: {
-    fontSize: height * 0.01,
+    fontSize: height * 0.03,
     color: '#003C43',
     fontWeight: '600',
     marginBottom: height * 0.08,

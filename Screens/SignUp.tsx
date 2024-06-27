@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
   inputBox: {
     marginLeft: width * 0.025,
     fontSize: height * 0.022,
+    width: width * 0.85,
     color: '#135D66',
   },
   icon: {

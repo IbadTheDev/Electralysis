@@ -1,12 +1,9 @@
-import {Dimensions, Image, StyleSheet, Text, Alert, View} from 'react-native';
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import * as Progress from 'react-native-progress';
 import BleManager from 'react-native-ble-manager';
 import {NativeEventEmitter, NativeModules} from 'react-native';
-import SendCredentials from './SendCredentials';
-import {useNavigation, RouteProp} from '@react-navigation/native';
 import {
-  AuthStackParamList,
   ConnectDeviceNavigationProp,
   ConnectDeviceRouteProp,
 } from '../src/types/navigation';
@@ -15,7 +12,6 @@ import Snackbar from 'react-native-snackbar';
 const {width, height} = Dimensions.get('window');
 
 type ConnectDeviceProps = {
-  route: ConnectDeviceRouteProp;
   navigation: ConnectDeviceNavigationProp;
 };
 
@@ -26,14 +22,14 @@ interface Device {
   id: string;
   name: string;
 }
-
-const ConnectDevice = ({route, navigation}: ConnectDeviceProps) => {
+const ConnectDevice: React.FC<ConnectDeviceProps> = ({ navigation }) => {
   const [progress, setProgress] = useState(0);
   const [connecting, setConnecting] = useState(false);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null); // State to store the discovered device
 
   useEffect(() => {
     BleManager.start({showAlert: false});
+
     //add esp ka name yahan par
     const handleDiscoverPeripheral = (peripheral: Device) => {
       if (peripheral.name === 'ESP32_WiFi_Setup') {
@@ -44,6 +40,7 @@ const ConnectDevice = ({route, navigation}: ConnectDeviceProps) => {
 
     const handleStopScan = () => {
       console.log('Scan stopped');
+      setConnecting(false);
     };
 
     bleManagerEmitter.addListener(
