@@ -195,7 +195,13 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
 
   const startNotification = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
+          // Ensure the device is connected before starting the notification
+    const isConnected = await BleManager.isPeripheralConnected(device.id);
+    if (!isConnected) {
+      throw new Error('Device is not connected');
+    }
+
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Delay of 1 second
       await BleManager.startNotification(
         device.id,
         serviceUUID!,
@@ -268,6 +274,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       startNotification();
 
       setIsSending(false);
+      
     } catch (error) {
       setIsSending(false);
       console.error('Error: sending credentials:', error);
