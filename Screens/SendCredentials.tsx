@@ -177,7 +177,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   }, [serviceUUID, characteristicUUID]);
 
 
-  const handleNotification = (data: any) => {
+  const handleNotification = (data : any) => {
     try {
       console.log('Received data:', data); // Ensure this logs the received data
       const decodedData = Buffer.from(data.value, 'base64').toString('ascii');
@@ -207,7 +207,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
       throw new Error('Device is not connected');
     }
 
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Delay of 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
 
       
       await BleManager.startNotification(
