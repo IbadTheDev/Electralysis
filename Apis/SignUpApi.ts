@@ -1,4 +1,4 @@
-import axiosInstance from './axiosInstance'; 
+import axiosInstance from './axiosInstance';
 
 interface SignUpRequest {
   email: string;
@@ -11,10 +11,15 @@ interface SignUpResponse {
   message: string;
 }
 
-export const signUpUser = async (userData: SignUpRequest): Promise<SignUpResponse> => {
+export const signUpUser = async (
+  userData: SignUpRequest,
+): Promise<SignUpResponse> => {
   try {
     console.log('Request payload:', userData);
-    const response = await axiosInstance.post<SignUpResponse>('/Auth/SignUp', userData);
+    const response = await axiosInstance.post<SignUpResponse>(
+      '/Auth/SignUp',
+      userData,
+    );
     return response.data;
   } catch (error) {
     console.error('Error signing up', error);
