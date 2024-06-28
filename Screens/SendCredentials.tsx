@@ -24,6 +24,7 @@ import {
 } from '../src/types/navigation';
 import {Context} from '../src/appwrite/Context';
 import Snackbar from 'react-native-snackbar';
+import Loading from '../Components/Loading';
 
 const {width, height} = Dimensions.get('window');
 const transparent = 'rgba(0, 0, 0, 0.5)';
@@ -50,6 +51,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   const [openModal, setopenModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [serviceUUID, setServiceUUID] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [characteristicUUID, setCharacteristicUUID] = useState<string | null>(
     null,
   );
@@ -205,10 +207,12 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
   }, [serviceUUID, characteristicUUID]);
 
   const handleNotification = (data: any) => {
+    setIsLoading(true);
     try {
       console.log('Received data:', data); // Ensure this logs the received data
       const decodedData = Buffer.from(data.value, 'base64').toString('ascii');
       console.log('Decoded Data from ESP: ', decodedData);
+      setIsLoading(false);
       Snackbar.show({
         text: 'Yaye: WiFi Connected!',
         duration: Snackbar.LENGTH_LONG,
@@ -261,6 +265,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
 
       return;
     }
+    setIsLoading(true);
 
     setIsSending(true);
 
@@ -302,7 +307,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
         characteristicUUID,
         encodedData,
       );
-
+      setIsLoading(false);
       Snackbar.show({
         text: 'Success: Credentials sent successfully!',
         duration: Snackbar.LENGTH_LONG,
@@ -379,6 +384,7 @@ const SendCredentials = ({route, navigation}: SendCredentialsProps) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Loading visible={isLoading}/>
       {renderModal()}
     </>
   );

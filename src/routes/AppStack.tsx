@@ -23,6 +23,7 @@ const Stack = createNativeStackNavigator<AppStackParamList>();
 export const AppStack: React.FC = () => {
   const {isInitialSetupComplete} = useContext(Context);
   const [isSetupChecked, setIsSetupChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export const AppStack: React.FC = () => {
   }, [isInitialSetupComplete]);
 
   if (!isSetupChecked) {
-    return <Loading />;
+    return <Loading visible={isLoading}  />;
   }
 
   return (

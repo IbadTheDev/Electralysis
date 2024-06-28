@@ -23,6 +23,7 @@ import {FormikHandlers} from 'formik';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../src/types/navigation';
+import Loading from '../Components/Loading';
 
 
 const {width, height} = Dimensions.get('window');
@@ -66,6 +67,7 @@ type OtpScreenNavigationProp = StackNavigationProp<
 
 const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
   const [isSelected, setSelection] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
   const [error, setError] = useState<string>('');
@@ -122,8 +124,10 @@ const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
   const handleSignUp = async (values: FormValues) => {
     try {
       const phoneNumber = `+92${values.phone.slice(1)}`;
+      setIsLoading(true);
       const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
       const verificationId = confirmation.verificationId;
+      setIsLoading(false);
       navigation.navigate('OtpScreen', {verificationId, userData: values});
     } catch (error) {
       console.error('Error sending verification code:', error);
@@ -147,6 +151,7 @@ const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
   // };
 
   return (
+    <>
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
@@ -308,6 +313,8 @@ const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
         )}
       </Formik>
     </ScrollView>
+    <Loading visible ={isLoading}/>
+    </>
   );
 };
 
