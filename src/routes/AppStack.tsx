@@ -38,7 +38,6 @@ export const AppStack: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isInitialSetupComplete ? (
-        
         <>
           <Stack.Screen name="AddDevice" component={AddDevice} />
           <Stack.Screen name="ConnectDevice" component={ConnectDevice} />

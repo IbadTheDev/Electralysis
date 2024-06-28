@@ -13,11 +13,13 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {StackScreenProps} from '@react-navigation/stack';
 import {Context} from '../src/appwrite/Context';
+import AddDevice  from '../Screens/AddDevice'
 import Snackbar from 'react-native-snackbar';
 import {AuthStackParamList} from '../src/types/navigation';
 import {AppStackParamList} from '../src/routes/AppStack';
 
 type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
+
 
 export default function OtpScreen({route}: OtpScreenProps) {
   const {verificationId, userData} = route.params;
@@ -75,14 +77,13 @@ export default function OtpScreen({route}: OtpScreenProps) {
                 text: 'Sign Up Successful',
                 duration: Snackbar.LENGTH_SHORT,
               });
-              navigation.navigate('AddDevice'); // Navigate to AddDevice
             } else {
               console.error('User account creation failed');
               Snackbar.show({
                 text: 'User account creation failed',
                 duration: Snackbar.LENGTH_SHORT,
               });
-              authnavigation.navigate('SignIn');
+              authnavigation.navigate('SignUp');
             }
           } catch (error) {
             console.error('Error signing up:', error);
