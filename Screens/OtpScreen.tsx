@@ -13,7 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {StackScreenProps} from '@react-navigation/stack';
 import {Context} from '../src/appwrite/Context';
-import AddDevice  from '../Screens/AddDevice'
+import AddDevice from '../Screens/AddDevice';
 import Snackbar from 'react-native-snackbar';
 import {AuthStackParamList} from '../src/types/navigation';
 import {AppStackParamList} from '../src/routes/AppStack';
@@ -21,12 +21,10 @@ import Loading from '../Components/Loading';
 
 type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
-
 export default function OtpScreen({route}: OtpScreenProps) {
   const {verificationId, userData} = route.params;
   const {appwrite, setIsLoggedIn} = useContext(Context);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
 
   const et1 = useRef<TextInput>(null);
   const et2 = useRef<TextInput>(null);
@@ -45,9 +43,10 @@ export default function OtpScreen({route}: OtpScreenProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [timer, setTimer] = useState(5);
   const [error, setError] = useState<string>('');
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
-  const authnavigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const authnavigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
   const handleVerificationCodeInput = async () => {
     const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
@@ -67,7 +66,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
         .then(async userCredential => {
           const user = userCredential.user;
           console.log('FireBase: User signed up ', user);
-          
+
           try {
             const response = await appwrite.createAccount({
               email: userData.email,
@@ -76,6 +75,18 @@ export default function OtpScreen({route}: OtpScreenProps) {
             });
             console.log('AppWrite Response', response);
             if (response) {
+              try {
+                // Sending data to your backend
+                const respone = await signUpUser({
+                  email: userData.email,
+                  password: userData.password,
+                  phone: userData.phone,
+                });
+
+                console.log('Backend sign up successful:', respone);
+              } catch (error) {
+                console.error('Error signing up with backend:', error);
+              }
               setIsLoading(false);
               setIsLoggedIn(true);
               console.log('appwrite: Sign up successful:', response);
@@ -93,18 +104,6 @@ export default function OtpScreen({route}: OtpScreenProps) {
             }
           } catch (error) {
             console.error('Error signing up:', error);
-          }
-          try {
-            // Sending data to your backend
-            const respone = await signUpUser({
-              email: userData.email,
-              password: userData.password,
-              phone: userData.phone,
-            });
-
-            console.log('Backend sign up successful:', respone);
-          } catch (error) {
-            console.error('Error signing up with backend:', error);
           }
         })
 
@@ -156,155 +155,143 @@ export default function OtpScreen({route}: OtpScreenProps) {
 
   return (
     <>
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={[styles.titleText, styles.elevatedText]}>Sign Up</Text>
-      </View>
-      <View style={styles.subContainer}>
-        <Text style={[styles.subText, styles.elevatedText]}>
-          OTP Verfication
-        </Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>
-          Enter the 6-digit OTP sent to you Email or Mobile No.
-        </Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          ref={et1}
-          value={inp1}
-          style={[styles.inputBox, getInputBoxStyle(inp1)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp1(txt);
-            if (txt.length === 1) {
-              et2.current?.focus();
-            }
-          }}
-        />
-        <TextInput
-          ref={et2}
-          value={inp2}
-          style={[styles.inputBox, getInputBoxStyle(inp2)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp2(txt);
-            if (txt.length === 1) {
-              et3.current?.focus();
-            } else if (txt.length === 0) {
-              et1.current?.focus();
-            }
-          }}
-        />
-        <TextInput
-          ref={et3}
-          value={inp3}
-          style={[styles.inputBox, getInputBoxStyle(inp3)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp3(txt);
-            if (txt.length === 1) {
-              et4.current?.focus();
-            } else if (txt.length === 0) {
-              et2.current?.focus();
-            }
-          }}
-        />
-        <TextInput
-          ref={et4}
-          value={inp4}
-          style={[styles.inputBox, getInputBoxStyle(inp4)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp4(txt);
-            if (txt.length === 1) {
-              et5.current?.focus();
-            } else if (txt.length === 0) {
-              et3.current?.focus();
-            }
-          }}
-        />
-        <TextInput
-          ref={et5}
-          value={inp5}
-          style={[styles.inputBox, getInputBoxStyle(inp5)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp5(txt);
-            if (txt.length === 1) {
-              et6.current?.focus();
-            } else if (txt.length === 0) {
-              et4.current?.focus();
-            }
-          }}
-        />
-        <TextInput
-          ref={et6}
-          value={inp6}
-          style={[styles.inputBox, getInputBoxStyle(inp6)]}
-          keyboardType="number-pad"
-          maxLength={1}
-          onChangeText={txt => {
-            setInp6(txt);
-            if (txt.length === 0) {
-              et5.current?.focus();
-            }
-          }}
-        />
-      </View>
-      <View>
-        <View style={styles.timerContainer}>
-          <Icon name="clock-o" style={styles.icon} />
-          <Text style={styles.timerText}>
-            {timer === 0 ? 'Resend OTP now' : `Resend OTP in ${timer} seconds`}
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.titleText, styles.elevatedText]}>Sign Up</Text>
+        </View>
+        <View style={styles.subContainer}>
+          <Text style={[styles.subText, styles.elevatedText]}>
+            OTP Verfication
           </Text>
         </View>
-        <TouchableOpacity
-          activeOpacity={isButtonDisabled ? 1 : 0.7}
-          onPress={() => {
-            console.log('Verify button pressed');
-            handleVerificationCodeInput();
-          }}
-          style={[
-            styles.footerContainer,
-            styles.elevatedLogo,
-            {backgroundColor: isButtonDisabled ? 'lightgrey' : '#77B0AA'},
-          ]}>
-          <Text
-            style={[
-              styles.buttonText,
-              styles.elevatedText,
-              {color: isButtonDisabled ? 'white' : '#003C43'},
-            ]}>
-            Verify
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>
+            Enter the 6-digit OTP sent to you Email or Mobile No.
           </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.resendOtpContainer}>
-        <Icon
-          name="refresh"
-          style={[
-            styles.icon,
-            {
-              color:
-                timer === 0 ? '#003C43' : isButtonDisabled ? 'grey' : '#003C43',
-            },
-          ]}
-        />
-        <TouchableOpacity
-          onPress={handleResendOTP}
-          disabled={timer !== 0}
-          activeOpacity={isButtonDisabled ? 0.7 : 1}>
-          <Text
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            ref={et1}
+            value={inp1}
+            style={[styles.inputBox, getInputBoxStyle(inp1)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp1(txt);
+              if (txt.length === 1) {
+                et2.current?.focus();
+              }
+            }}
+          />
+          <TextInput
+            ref={et2}
+            value={inp2}
+            style={[styles.inputBox, getInputBoxStyle(inp2)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp2(txt);
+              if (txt.length === 1) {
+                et3.current?.focus();
+              } else if (txt.length === 0) {
+                et1.current?.focus();
+              }
+            }}
+          />
+          <TextInput
+            ref={et3}
+            value={inp3}
+            style={[styles.inputBox, getInputBoxStyle(inp3)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp3(txt);
+              if (txt.length === 1) {
+                et4.current?.focus();
+              } else if (txt.length === 0) {
+                et2.current?.focus();
+              }
+            }}
+          />
+          <TextInput
+            ref={et4}
+            value={inp4}
+            style={[styles.inputBox, getInputBoxStyle(inp4)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp4(txt);
+              if (txt.length === 1) {
+                et5.current?.focus();
+              } else if (txt.length === 0) {
+                et3.current?.focus();
+              }
+            }}
+          />
+          <TextInput
+            ref={et5}
+            value={inp5}
+            style={[styles.inputBox, getInputBoxStyle(inp5)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp5(txt);
+              if (txt.length === 1) {
+                et6.current?.focus();
+              } else if (txt.length === 0) {
+                et4.current?.focus();
+              }
+            }}
+          />
+          <TextInput
+            ref={et6}
+            value={inp6}
+            style={[styles.inputBox, getInputBoxStyle(inp6)]}
+            keyboardType="number-pad"
+            maxLength={1}
+            onChangeText={txt => {
+              setInp6(txt);
+              if (txt.length === 0) {
+                et5.current?.focus();
+              }
+            }}
+          />
+        </View>
+        <View>
+          <View style={styles.timerContainer}>
+            <Icon name="clock-o" style={styles.icon} />
+            <Text style={styles.timerText}>
+              {timer === 0
+                ? 'Resend OTP now'
+                : `Resend OTP in ${timer} seconds`}
+            </Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={isButtonDisabled ? 1 : 0.7}
+            onPress={() => {
+              console.log('Verify button pressed');
+              handleVerificationCodeInput();
+            }}
             style={[
-              styles.resendOtpText,
-              styles.elevatedText,
+              styles.footerContainer,
+              styles.elevatedLogo,
+              {backgroundColor: isButtonDisabled ? 'lightgrey' : '#77B0AA'},
+            ]}>
+            <Text
+              style={[
+                styles.buttonText,
+                styles.elevatedText,
+                {color: isButtonDisabled ? 'white' : '#003C43'},
+              ]}>
+              Verify
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.resendOtpContainer}>
+          <Icon
+            name="refresh"
+            style={[
+              styles.icon,
               {
                 color:
                   timer === 0
@@ -313,14 +300,31 @@ export default function OtpScreen({route}: OtpScreenProps) {
                     ? 'grey'
                     : '#003C43',
               },
-            ]}>
-            Resend OTP
-          </Text>
-        </TouchableOpacity>
+            ]}
+          />
+          <TouchableOpacity
+            onPress={handleResendOTP}
+            disabled={timer !== 0}
+            activeOpacity={isButtonDisabled ? 0.7 : 1}>
+            <Text
+              style={[
+                styles.resendOtpText,
+                styles.elevatedText,
+                {
+                  color:
+                    timer === 0
+                      ? '#003C43'
+                      : isButtonDisabled
+                      ? 'grey'
+                      : '#003C43',
+                },
+              ]}>
+              Resend OTP
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      
-    </View>
-    <Loading visible={isLoading} />
+      <Loading visible={isLoading} />
     </>
   );
 }
