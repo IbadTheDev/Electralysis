@@ -1,11 +1,15 @@
 import { ID, Account, Client} from 'appwrite'
 import Config from'react-native-config'
-import Snackbar from 'react-native-snackbar'
+
 
 const appwriteClient = new Client();
 
 const APPWRITE_ENDPOINT: string = Config.APPWRITE_ENDPOINT!;
 const APPWRITE_PROJECT_ID:string = Config.APPWRITE_PROJECT_ID!;
+
+appwriteClient
+    .setEndpoint(APPWRITE_ENDPOINT)
+    .setProject(APPWRITE_PROJECT_ID);
 
 type CreateUserAccount = {
     email: string;
@@ -45,13 +49,15 @@ class AppwriteService {
                     email,
                     password,
                     email,
+                
                 )
                 if (userAccount){
-                     //Update user preferences with phone number
-                    await this.account.updatePrefs({ phone: phone});
-                    
-                    const session = await this.login({ email, password });
+                    // Automatically log in the user after account creation
+                    const session = await this.account.createEmailPasswordSession(email, password);
+                    // Update user preferences with phone number
+                    await this.account.updatePrefs({ phone });
                     return session;
+                
                 } else {
                     return null;
                 }
@@ -79,6 +85,7 @@ class AppwriteService {
             return await this.account.get()
         } catch (error) {
             console.log("Service :: getCurrentUser() ::" + error)
+            throw error;
             
         }
     }

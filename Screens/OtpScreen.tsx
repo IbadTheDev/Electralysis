@@ -41,6 +41,8 @@ export default function OtpScreen({route}: OtpScreenProps) {
   const [timer, setTimer] = useState(5);
   const [error, setError] = useState<string>('');
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const authnavigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+
 
   const handleVerificationCodeInput = async () => {
     const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
@@ -59,6 +61,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
         .then(async userCredential => {
           const user = userCredential.user;
           console.log('FireBase: User signed up ', user);
+          
           try {
             const response = await appwrite.createAccount({
               email: userData.email,
@@ -79,6 +82,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
                 text: 'User account creation failed',
                 duration: Snackbar.LENGTH_SHORT,
               });
+              authnavigation.navigate('SignIn');
             }
           } catch (error) {
             console.error('Error signing up:', error);
