@@ -1,11 +1,15 @@
 import { ID, Account, Client} from 'appwrite'
 import Config from'react-native-config'
-import Snackbar from 'react-native-snackbar'
+
 
 const appwriteClient = new Client();
 
 const APPWRITE_ENDPOINT: string = Config.APPWRITE_ENDPOINT!;
 const APPWRITE_PROJECT_ID:string = Config.APPWRITE_PROJECT_ID!;
+
+appwriteClient
+    .setEndpoint(APPWRITE_ENDPOINT)
+    .setProject(APPWRITE_PROJECT_ID);
 
 type CreateUserAccount = {
     email: string;
@@ -16,6 +20,10 @@ type CreateUserAccount = {
 type LoginUserAccount = {
     email: string;
     password: string;
+}
+
+type otpVerify = {
+    phone: string;
 }
 
 class AppwriteService {
@@ -34,27 +42,28 @@ class AppwriteService {
 
     //create a new record of user on appwrite
 
-    async createAccount({ email, password, phone}:
-        CreateUserAccount){
+    async createAccount({ email, password, phone}: CreateUserAccount){
             try{
                 const userAccount = await this.account.create(
                     ID.unique(),
                     email,
                     password,
                     email,
+                
                 )
                 if (userAccount){
-                     //Update user preferences with phone number
-                    await this.account.updatePrefs({ phone: phone});
-                    
-                    const session = await this.login({ email, password });
+                    // Automatically log in the user after account creation
+                    const session = await this.account.createEmailPasswordSession(email, password);
+                    // Update user preferences with phone number
+                    await this.account.updatePrefs({ phone });
                     return session;
+                
                 } else {
                     return null;
                 }
             } catch(error){
                 console.error("Service :: createAccount() ::" + error)
-                throw error;
+                
             }
         }
     
@@ -77,6 +86,7 @@ class AppwriteService {
         } catch (error) {
             console.log("Service :: getCurrentUser() ::" + error)
             
+            
         }
     }
 
@@ -88,6 +98,20 @@ class AppwriteService {
             
         }
     }
+        // Generate a phone token for the provided phone number
+        async otpVerify({phone} : otpVerify){
+            try {
+                return await this.account.createPhoneToken(
+                    ID.unique(),
+                    phone
+                 )
+                 
+             } catch (error) {
+                 console.log("Service :: otpVerify ::" + error)
+                 
+             }
+            }
+
     async isInitialSetupComplete(userId: string): Promise<boolean> {
         try {
             const user = await this.account.get();

@@ -17,7 +17,7 @@ const SplashScreen: React.FC = () => {
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('Router');
-    }, 5000);
+    }, 3000);
   }, [navigation]);
 
   return (
