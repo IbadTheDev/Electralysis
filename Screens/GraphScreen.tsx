@@ -71,32 +71,31 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
       let data;
       switch (type) {
         case 'daily':
-          setIsLoading(true);
+          
     
-          setTimeout(async () => {
-            const data = await getDailyData();
-            setIsLoading(false);
+         
+            data = await getDailyData();
+            
             setDailyData(data);
-          }, 1000);
+          
     
           
           break;
         case 'weekly':
-          setIsLoading(true);
-          setTimeout(async () => {
+          
+          
           data = await getWeeklyData();
-          setIsLoading(false);
+          
           setWeeklyData(data);
-        }, 1000);
+        
           break;
         case 'monthly':
-          setIsLoading(true);
-          setIsLoading(true);
-          setTimeout(async () => {
+          
+         
           data = await getMonthlyData();
-          setIsLoading(false);
+         
           setMonthlyData(data);
-        }, 1000);
+        
           break;
         case 'custom':
           // if (startDateTime && endDateTime) {
