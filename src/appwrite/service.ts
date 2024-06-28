@@ -63,7 +63,7 @@ class AppwriteService {
                 }
             } catch(error){
                 console.error("Service :: createAccount() ::" + error)
-                throw error;
+                
             }
         }
     
@@ -85,7 +85,7 @@ class AppwriteService {
             return await this.account.get()
         } catch (error) {
             console.log("Service :: getCurrentUser() ::" + error)
-            throw error;
+            
             
         }
     }

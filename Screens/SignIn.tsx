@@ -30,6 +30,9 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
   const [isSelected, setSelection] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSecure, setisSecure] = useState(false);
+  const [redBorder, setRedBorder] = useState(false);
+
 
   const [error, setError] = useState<string>('');
   const {appwrite, setIsLoggedIn} = useContext(Context);
@@ -72,14 +75,17 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
           duration: Snackbar.LENGTH_SHORT,
         });
       } catch (error) {
-        console.error('Error signing in');
+        console.log('Error signing in');
         Snackbar.show({
           text: 'Sign in failed',
           duration: Snackbar.LENGTH_SHORT,
         });
       }
   };
-
+  const secureHandler = () => {
+    setisSecure(!isSecure);
+  }
+ 
   return (
     <>
     <ScrollView style={styles.container}>
@@ -106,7 +112,7 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
       <View style={styles.subTextContainer}>
         <Text style={styles.subText}>Login to Existing account</Text>
       </View>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, redBorder ? styles.errorInput : null]}>
         <Icon style={styles.icon} name="user" />
         <TextInput
           placeholder="Email."
@@ -114,14 +120,19 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
           style={styles.inputBox}
           value={values.email}
           onChangeText={handleChange('email')}
-          onBlur={handleBlur('email')}
+          onBlur={ () => {
+            handleBlur('email');
+
+          if (errors.email && touched.email) {
+            setRedBorder(true);
+          } else {
+            setRedBorder(false);
+          }
+        }}
         />
       </View>
-      {errors.email && touched.email ? (
-        <Text style={styles.error}>{errors.email}</Text>
-      ) : null}
 
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, redBorder ? styles.errorInput : null]}>
         <Icon style={styles.icon} name="lock" />
         <TextInput
           placeholder="Password"
@@ -129,23 +140,48 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
           style={styles.inputBox}
           value={values.password}
           onChangeText={handleChange('password')}
-          onBlur={handleBlur('password')}
-          secureTextEntry
+          onBlur={ () => {
+            handleBlur('password');
+
+          if (errors.password && touched.password) {
+            setRedBorder(true);
+          } else {
+            setRedBorder(false);
+          }
+        }}
+          secureTextEntry={isSecure}
         />
+        <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={secureHandler}>
+        {isSecure?  <Icon  name ='eye' style={styles.eyeIcon} />:<Icon  name ='eye-slash' style={styles.eyeIcon}/> }
+        </TouchableOpacity>
+        </View>
+        
+{/*       
       </View>
         {errors.password && touched.password ? (
           <Text style={styles.error}>{errors.password}</Text>
         ) : null}
-      <View>
+      <View> */}
         <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
-      </View>
+     
       <View style={[styles.buttonContainer, styles.elevatedLogo,
-        isSubmitting || Object.keys(errors).length > 0 || !values.email || !values.password ? styles.disabledButton : null,
-            
+        isSubmitting || Object.keys(errors).length > 0 || !values.email || !values.password ? styles.disabledButton  : null
       ]}>
         <TouchableOpacity 
-        onPress={() => handleSubmit()}
-        disabled={isSubmitting || Object.keys(errors).length > 0}>
+        activeOpacity={0.8}
+        onPress={() => { 
+          handleSubmit();
+          if (errors.password && touched.password) {
+            if (errors.email && touched.email) {
+              setRedBorder(true);
+            } else {
+              setRedBorder(false);
+            }
+          }
+        }}
+        >
           <Text style={[styles.buttonText, styles.elevatedText]}>Sign In</Text>
         </TouchableOpacity>
       </View>
@@ -161,7 +197,7 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
       </View>
       <View style={styles.noAccountContainer}>
         <Text style={styles.noAccountText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <TouchableOpacity activeOpacity={0.3} onPress={() => navigation.navigate('SignUp')}>
           <Text style={[styles.signUpText, styles.elevatedText]}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -180,14 +216,14 @@ const styles = StyleSheet.create({
     padding: width * 0.05,
   },
   topTextContainer: {
-    height: height * 0.2,
+    height: height * 0.15,
     justifyContent: 'center',
     alignItems: 'center',
   },
   topText: {
     color: '#135D66',
     fontWeight: '600',
-    fontSize: width * 0.12,
+    fontSize: width * 0.16,
   },
   subTextContainer: {
     height: height * 0.08,
@@ -201,7 +237,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     height: height * 0.08,
-    width: '100%',
+    width: width*0.88,
+    alignSelf:'center',
     marginVertical: height * 0.02,
     backgroundColor: '#ffff',
     borderRadius: 25,
@@ -215,8 +252,16 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     marginLeft: width * 0.02,
-    fontSize: width * 0.04,
+    fontSize: width * 0.045,
     flex: 1,
+    color: '#135D66',
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth:1,
+  },
+  eyeIcon:{
+    fontSize: width * 0.06,
     color: '#135D66',
   },
   icon: {
@@ -283,7 +328,7 @@ const styles = StyleSheet.create({
   noAccountContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
-    marginVertical: height * 0.05,
+    marginVertical: height * 0.12,
     paddingVertical: height * 0.02,
     borderTopWidth: 1,
     borderTopColor: 'grey',
@@ -304,7 +349,7 @@ const styles = StyleSheet.create({
   },
   error: {
     color: 'red',
-    marginHorizontal:width*0.1
+    marginHorizontal:width*0.12
   },
 });
 
