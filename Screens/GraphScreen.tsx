@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, isValidElement} from 'react';
 import Header from '../Components/Header';
 import Graph from '../Components/Graph';
 import {GraphData} from '../Components/types';
@@ -26,6 +26,7 @@ import moment from 'moment';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppStackParamList} from '../src/routes/AppStack';
+import Loading from '../Components/Loading';
 
 const {width, height} = Dimensions.get('window');
 const transparent = 'rgba(0, 0, 0, 0.5)';
@@ -53,6 +54,9 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
   const [customData, setCustomData] = useState('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+
   // const [startDateTime, setStartDateTime] = useState('');
   // const [endDateTime, setEndDateTime] = useState('');
 
@@ -67,16 +71,32 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
       let data;
       switch (type) {
         case 'daily':
-          data = await getDailyData();
-          setDailyData(data);
+          setIsLoading(true);
+    
+          setTimeout(async () => {
+            const data = await getDailyData();
+            setIsLoading(false);
+            setDailyData(data);
+          }, 1000);
+    
+          
           break;
         case 'weekly':
+          setIsLoading(true);
+          setTimeout(async () => {
           data = await getWeeklyData();
+          setIsLoading(false);
           setWeeklyData(data);
+        }, 1000);
           break;
         case 'monthly':
+          setIsLoading(true);
+          setIsLoading(true);
+          setTimeout(async () => {
           data = await getMonthlyData();
+          setIsLoading(false);
           setMonthlyData(data);
+        }, 1000);
           break;
         case 'custom':
           // if (startDateTime && endDateTime) {
@@ -93,6 +113,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
   };
 
   useEffect(() => {
+    
     fetchData(selectedDataType);
   }, [selectedDataType]);
 
@@ -309,6 +330,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
           <FooterNav navigation={navigation} />
         </View>
       </View>
+      <Loading visible={isLoading} />
       {renderModal()}
     </SafeAreaView>
   );

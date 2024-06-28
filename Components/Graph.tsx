@@ -54,14 +54,14 @@ const { width, height } = Dimensions.get('window');
         transform: [{ translateX: -2 }, { translateY: 10 }],
       },
       propsForVerticalLabels: {
-        fontSize: 12,
+        fontSize: 10,
         fontWeight: 'bold',
-        transform: [{ translateX: -10 }],
+        transform: [{ translateX: -20 }, { translateY:2 }],
       },
       propsForHorizontalLabels: {
         fontSize: 11,
         fontWeight: 'bold',
-        transform: [{ translateX: -2 }, { translateY:2 }],
+        transform: [{ translateX: -2 }, { translateY:4 }],
       },
     };
   };
