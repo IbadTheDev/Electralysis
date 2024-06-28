@@ -435,8 +435,8 @@ const styles = StyleSheet.create({
   },
   monthText: {
     color: '#135D66',
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '600',
   },
   cardTimeContainer: {
     flex: 1,
