@@ -446,7 +446,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
               </TouchableOpacity>
             </View>
           </View>
-          <FooterNav navigation={navigation} />
+          {/* <FooterNav navigation={navigation} /> */}
         </ScrollView>
       </KeyboardAvoidingView>
       {renderModal()}
