@@ -17,6 +17,7 @@ import AddDevice  from '../Screens/AddDevice'
 import Snackbar from 'react-native-snackbar';
 import {AuthStackParamList} from '../src/types/navigation';
 import {AppStackParamList} from '../src/routes/AppStack';
+import Loading from '../Components/Loading';
 
 type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 
@@ -24,6 +25,8 @@ type OtpScreenProps = StackScreenProps<AuthStackParamList, 'OtpScreen'>;
 export default function OtpScreen({route}: OtpScreenProps) {
   const {verificationId, userData} = route.params;
   const {appwrite, setIsLoggedIn} = useContext(Context);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
   const et1 = useRef<TextInput>(null);
   const et2 = useRef<TextInput>(null);
@@ -49,6 +52,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
   const handleVerificationCodeInput = async () => {
     const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
     console.log('Verification code entered:', code);
+    setIsLoading(true);
 
     if (verificationId) {
       console.log('Verification ID exists:', verificationId);
@@ -71,6 +75,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
               phone: userData.phone,
             });
             if (response) {
+              setIsLoading(false);
               setIsLoggedIn(true);
               console.log('appwrite: Sign up successful:', response);
               Snackbar.show({
@@ -149,6 +154,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
   }, [timer]);
 
   return (
+    <>
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={[styles.titleText, styles.elevatedText]}>Sign Up</Text>
@@ -311,7 +317,10 @@ export default function OtpScreen({route}: OtpScreenProps) {
           </Text>
         </TouchableOpacity>
       </View>
+      
     </View>
+    <Loading visible={isLoading} />
+    </>
   );
 }
 

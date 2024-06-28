@@ -12,7 +12,6 @@ import React, {useContext, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {signInUser} from '../Apis/SignInApi';
 import {Formik} from 'formik';
-import * as Yup from 'yup';
 
 //Navigation
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -37,12 +36,6 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
   const [error, setError] = useState<string>('');
   const {appwrite, setIsLoggedIn} = useContext(Context);
 
-  const SignInSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required'),
-    password: Yup.string()
-      .min(6, 'Password is too short - should be 6 chars minimum.')
-      .required('Password is required'),
-  });
 
   const handleSignIn = async (values: { email: string; password: string }) => {
     const {email, password} = values;
@@ -61,23 +54,26 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
         .catch(e => {
           console.log(e);
           setError('Incorrect email or password');
-          Snackbar.show({
-            text: 'Incorrect email or password',
-            duration: Snackbar.LENGTH_SHORT,
-          });
+          
         });
 
       try {
         const response = await signInUser(values);
         console.log('Sign in successful:', response);
+        setRedBorder(false);
         Snackbar.show({
           text: 'Sign In Successful',
           duration: Snackbar.LENGTH_SHORT,
         });
       } catch (error) {
         console.log('Error signing in');
+        if (error) {
+          setRedBorder(true);
+        } else {
+          setRedBorder(false);
+        }
         Snackbar.show({
-          text: 'Sign in failed',
+          text: 'Incorrect email or password',
           duration: Snackbar.LENGTH_SHORT,
         });
       }
@@ -91,7 +87,6 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
     <ScrollView style={styles.container}>
        <Formik
         initialValues={{email: '', password: ''}}
-        validationSchema={SignInSchema}
         onSubmit={(values, {setSubmitting}) => {
           setSubmitting(false);
           handleSignIn(values);
@@ -123,11 +118,16 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
           onBlur={ () => {
             handleBlur('email');
 
-          if (errors.email && touched.email) {
-            setRedBorder(true);
-          } else {
-            setRedBorder(false);
-          }
+            if (isSubmitting || Object.keys(errors).length > 0 || !values.email) {
+              setRedBorder(true);
+              Snackbar.show({
+                text:'Enter login information',
+                duration: Snackbar.LENGTH_LONG,
+              });
+             
+            } else {
+              setRedBorder(false);
+            }
         }}
         />
       </View>
@@ -142,12 +142,16 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
           onChangeText={handleChange('password')}
           onBlur={ () => {
             handleBlur('password');
-
-          if (errors.password && touched.password) {
-            setRedBorder(true);
-          } else {
-            setRedBorder(false);
-          }
+            if (isSubmitting || Object.keys(errors).length > 0 || !values.password) {
+              setRedBorder(true);
+              Snackbar.show({
+                text:'Enter login information',
+                duration: Snackbar.LENGTH_LONG,
+              });
+             
+            } else {
+              setRedBorder(false);
+            }
         }}
           secureTextEntry={isSecure}
         />
@@ -173,13 +177,17 @@ const SignIn: React.FC<LoginScreenProps> = ({navigation}) => {
         activeOpacity={0.8}
         onPress={() => { 
           handleSubmit();
-          if (errors.password && touched.password) {
-            if (errors.email && touched.email) {
+          if (isSubmitting || Object.keys(errors).length > 0 || !values.email || !values.password) {
               setRedBorder(true);
+              Snackbar.show({
+                text:'Enter login information',
+                duration: Snackbar.LENGTH_LONG,
+              });
+             
             } else {
               setRedBorder(false);
             }
-          }
+          
         }}
         >
           <Text style={[styles.buttonText, styles.elevatedText]}>Sign In</Text>

@@ -31,7 +31,7 @@ export const Router: React.FC = () => {
     checkUserStatus();
   }, [appwrite, setIsLoggedIn, setIsInitialSetupComplete]);
   if (isLoading) {
-    return <Loading />;
+    return <Loading visible={isLoading} />;
   }
   return isLoggedIn ? <AppStack /> : <AuthStack />;
 };
