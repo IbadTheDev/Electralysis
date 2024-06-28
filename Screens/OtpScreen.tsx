@@ -68,6 +68,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
               password: userData.password,
               phone: userData.phone,
             });
+            console.log('AppWrite Response', response);
             if (response) {
               setIsLoggedIn(true);
               console.log('appwrite: Sign up successful:', response);
