@@ -40,8 +40,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [timer, setTimer] = useState(5);
   const [error, setError] = useState<string>('');
-  const navigation =
-    useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
 
   const handleVerificationCodeInput = async () => {
     const code = inp1 + inp2 + inp3 + inp4 + inp5 + inp6;
@@ -59,7 +58,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
         .signInWithCredential(credential)
         .then(async userCredential => {
           const user = userCredential.user;
-          console.log('User signed up:', user);
+          console.log('FireBase: User signed up ', user);
           try {
             const response = await appwrite.createAccount({
               email: userData.email,
@@ -68,7 +67,7 @@ export default function OtpScreen({route}: OtpScreenProps) {
             });
             if (response) {
               setIsLoggedIn(true);
-              console.log('Sign up successful:', response);
+              console.log('appwrite: Sign up successful:', response);
               Snackbar.show({
                 text: 'Sign Up Successful',
                 duration: Snackbar.LENGTH_SHORT,

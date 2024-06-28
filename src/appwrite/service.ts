@@ -18,6 +18,10 @@ type LoginUserAccount = {
     password: string;
 }
 
+type otpVerify = {
+    phone: string;
+}
+
 class AppwriteService {
     account;
 
@@ -34,8 +38,7 @@ class AppwriteService {
 
     //create a new record of user on appwrite
 
-    async createAccount({ email, password, phone}:
-        CreateUserAccount){
+    async createAccount({ email, password, phone}: CreateUserAccount){
             try{
                 const userAccount = await this.account.create(
                     ID.unique(),
@@ -88,6 +91,20 @@ class AppwriteService {
             
         }
     }
+        // Generate a phone token for the provided phone number
+        async otpVerify({phone} : otpVerify){
+            try {
+                return await this.account.createPhoneToken(
+                    ID.unique(),
+                    phone
+                 )
+                 
+             } catch (error) {
+                 console.log("Service :: otpVerify ::" + error)
+                 
+             }
+            }
+
     async isInitialSetupComplete(userId: string): Promise<boolean> {
         try {
             const user = await this.account.get();

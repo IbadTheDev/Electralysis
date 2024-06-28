@@ -524,7 +524,6 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: height * 0.035,
-    fontSize: height * 0.035,
     color: '#003C43',
     fontWeight: '600',
     marginBottom: height * 0.01,

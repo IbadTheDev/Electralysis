@@ -8,14 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import {Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import ConfirmationResult from '@react-native-firebase/auth';
-import Snackbar from 'react-native-snackbar';
+import auth from '@react-native-firebase/auth';
+import {Context} from '../src/appwrite/Context';
+
 import {ChangeEvent} from 'react';
 import {FormikHandlers} from 'formik';
 
@@ -23,8 +23,7 @@ import {FormikHandlers} from 'formik';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AuthStackParamList} from '../src/types/navigation';
-//appwrite Session
-import {Context} from '../src/appwrite/Context';
+
 
 const {width, height} = Dimensions.get('window');
 
@@ -68,8 +67,6 @@ type OtpScreenNavigationProp = StackNavigationProp<
 const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
   const [isSelected, setSelection] = useState(false);
 
-  // appwrite session
-  const {appwrite, setIsLoggedIn} = useContext(Context);
 
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -248,7 +245,7 @@ const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
             <View style={styles.inputContainer}>
               <Icon2 style={styles.icon} name="mobile-alt"></Icon2>
               <TextInput
-                placeholder="example: 03474769188"
+                placeholder="03474769188"
                 placeholderTextColor={'#a9a9a9'}
                 style={styles.inputBox}
                 onChangeText={createHandleChange(
@@ -286,13 +283,13 @@ const SignUp: React.FC<SignupScreenProps> = ({navigation}) => {
             </View>
             <View
               style={[
-                styles.footerContainer,
+                styles.buttonContainer,
                 styles.elevatedLogo,
-                !isSelected || isSubmitting ? styles.disabledButton : null,
+                !isSelected || isSubmitting || Object.keys(errors).length > 0 ? styles.disabledButton : null,
               ]}>
               <TouchableOpacity
                 onPress={() => handleSubmit()}
-                disabled={!isSelected || isSubmitting}>
+                disabled={!isSelected || isSubmitting || Object.keys(errors).length > 0}>
                 <Text style={[styles.buttonText, styles.elevatedText]}>
                   Sign Up
                 </Text>
@@ -350,7 +347,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     height: height * 0.07,
     width: width * 0.85,
-    marginVertical: height * 0.022,
+    marginVertical: height * 0.0200,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
@@ -365,13 +362,13 @@ const styles = StyleSheet.create({
     color: '#135D66',
     textAlign: 'left',
   },
-  footerContainer: {
+  buttonContainer: {
     marginBottom: height * 0.05,
     backgroundColor: '#77B0AA',
     height: height * 0.082,
     width: width * 0.56,
     borderRadius: width * 0.14,
-    marginTop: height * 0.042,
+    marginTop: height * 0.03,
     alignSelf: 'center',
     justifyContent: 'center',
   },
@@ -401,7 +398,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
     textAlign: 'left',
-    marginTop: height * 0.012,
+    
   },
   checkBox: {
     alignSelf: 'auto',
@@ -431,7 +428,7 @@ const styles = StyleSheet.create({
     borderTopWidth: height * 0.002,
     borderTopColor: 'grey',
     paddingTop: height * 0.02,
-    marginTop: height * 0.04,
+    marginTop: height * 0.06,
     width: width * 0.79,
     justifyContent: 'center',
   },
@@ -439,12 +436,12 @@ const styles = StyleSheet.create({
     color: '#135D66',
     fontSize: height * 0.02,
     fontWeight: '800',
-    paddingTop: height * 0.006,
+    paddingTop: height * 0.003,
   },
   signInText: {
     paddingLeft: width * 0.014,
     color: '#003C43',
-    fontSize: height * 0.025,
+    fontSize: height * 0.024,
     fontWeight: '700',
   },
   error: {
