@@ -79,21 +79,22 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   };
 
   const predictData = async () => {
-    try {
-      console.log('Attempting to send request...');
-      const apiUrl = 'https://ee3f-35-192-59-125.ngrok-free.app/predict';
+    setopenModal(true);
+    // try {
+    //   console.log('Attempting to send request...');
+    //   const apiUrl = 'https://ee3f-35-192-59-125.ngrok-free.app/predict';
 
-      console.log('Sending request to:', apiUrl);
-      console.log('Request data:', data);
+    //   console.log('Sending request to:', apiUrl);
+    //   console.log('Request data:', data);
 
-      const response = await axios.post(apiUrl, data);
+    //   const response = await axios.post(apiUrl, data);
 
-      console.log('Prediction response:', response.data);
-      setPrediction(response.data.prediction);
-      setopenModal(true);
-    } catch (error) {
-      console.error('Prediction error:', error);
-    }
+    //   console.log('Prediction response:', response.data);
+    //   setPrediction(response.data.prediction);
+
+    // } catch (error) {
+    //   console.error('Prediction error:', error);
+    // }
   };
 
   const renderModal = () => {
@@ -636,11 +637,11 @@ const styles = StyleSheet.create({
   },
   mobileIcon: {
     height: height * 0.15,
-    width: width * 0.66,
+    width: width * 0.6,
     opacity: 0.98,
     borderRadius: 4,
     position: 'absolute',
-    bottom: height * 0.366,
+    bottom: height * 0.37,
     zIndex: 2,
   },
   headingBox: {
