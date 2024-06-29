@@ -56,7 +56,6 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-
   // const [startDateTime, setStartDateTime] = useState('');
   // const [endDateTime, setEndDateTime] = useState('');
 
@@ -65,37 +64,29 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
     startDateTime?: string,
     endDateTime?: string,
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     setError(null);
     try {
       let data;
+
       switch (type) {
         case 'daily':
-          
-    
-         
-            data = await getDailyData();
-            
-            setDailyData(data);
-          
-    
-          
+          data = await getDailyData();
+
+          setDailyData(data);
+
           break;
         case 'weekly':
-          
-          
           data = await getWeeklyData();
-          
+
           setWeeklyData(data);
-        
+
           break;
         case 'monthly':
-          
-         
           data = await getMonthlyData();
-         
+
           setMonthlyData(data);
-        
+
           break;
         case 'custom':
           // if (startDateTime && endDateTime) {
@@ -107,12 +98,11 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
     } catch (error) {
       setError('Failed to fetch data');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    
     fetchData(selectedDataType);
   }, [selectedDataType]);
 
