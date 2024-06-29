@@ -1,19 +1,32 @@
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native'
-import React, { useState } from 'react'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+} from 'react-native';
+import React, {useState} from 'react';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { getUnitsByDateTimeRange } from '../Apis/getUnits';
+import {getUnitsByDateTimeRange} from '../Apis/getUnits';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const transparent = 'rgba(0, 0, 0, 0.5)';
 
 interface PeriodSelectorProps {
-  onDateRangeSelected: (startDateTime: string, endDateTime: string, unitsData: string) => void;
+  onDateRangeSelected: (
+    startDateTime: string,
+    endDateTime: string,
+    unitsData: string,
+  ) => void;
 }
 
-const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) => {
+const PeriodSelector: React.FC<PeriodSelectorProps> = ({
+  onDateRangeSelected,
+}) => {
   const [openModal, setopenModal] = useState(false);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -56,7 +69,6 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
     hideDatePicker();
   };
 
-
   const showTimePicker = (pickerType: any) => {
     setCurrentPicker(pickerType);
     setTimePickerVisibility(true);
@@ -94,7 +106,6 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
     return `${hours}:${minutes}:00`;
   };
 
-
   const handleDone = async () => {
     try {
       // Convert times to 24-hour format
@@ -110,10 +121,13 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
       const endDateTime = `${endDate} ${end24Hour}`;
 
       // Call backend API with 24-hour format times
-      const unitsData = await getUnitsByDateTimeRange(startDateTime, endDateTime);
+      const unitsData = await getUnitsByDateTimeRange(
+        startDateTime,
+        endDateTime,
+      );
       //setStartDateTime(startDateTime);
       //setEndDateTime(endDateTime);
-      onDateRangeSelected(startDateTime, endDateTime,unitsData.toString());
+      onDateRangeSelected(startDateTime, endDateTime, unitsData.toString());
       console.log('Units Data:', unitsData);
     } catch (error) {
       console.error('Error fetching units data:', error);
@@ -126,43 +140,61 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
     return (
       <Modal
         visible={openModal}
-        animationType='slide'
+        animationType="slide"
         transparent={true}
-        onRequestClose={() => setopenModal(false)}
-      >
+        onRequestClose={() => setopenModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.container}>
-
             <View style={styles.containerStartEnd}>
               <Text style={styles.textStartEnd}>Start of usage</Text>
-              <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showDatePicker('startDate')}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.buttonDateTime}
+                onPress={() => showDatePicker('startDate')}>
                 <Icon name="calendar-alt" style={styles.icons} />
-                <Text style={styles.textDateTimeButton}>{selectedStartDate}</Text>
+                <Text style={styles.textDateTimeButton}>
+                  {selectedStartDate}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showTimePicker('startTime')}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.buttonDateTime}
+                onPress={() => showTimePicker('startTime')}>
                 <Icon2 name="clock-outline" style={styles.icons} />
-                <Text style={styles.textDateTimeButton}>{selectedStartTime}</Text>
+                <Text style={styles.textDateTimeButton}>
+                  {selectedStartTime}
+                </Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.containerStartEnd}>
               <Text style={styles.textStartEnd}>End of usage</Text>
-              <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showDatePicker('endDate')}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.buttonDateTime}
+                onPress={() => showDatePicker('endDate')}>
                 <Icon name="calendar-alt" style={styles.icons} />
                 <Text style={styles.textDateTimeButton}>{selectedEndDate}</Text>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.8} style={styles.buttonDateTime} onPress={() => showTimePicker('endTime')}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.buttonDateTime}
+                onPress={() => showTimePicker('endTime')}>
                 <Icon2 name="clock-outline" style={styles.icons} />
                 <Text style={styles.textDateTimeButton}>{selectedEndTime}</Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={handleDone} activeOpacity={0.8} style={styles.doneButton}>
+            <TouchableOpacity
+              onPress={handleDone}
+              activeOpacity={0.8}
+              style={styles.doneButton}>
               <Text style={styles.doneButtonText}>Done</Text>
-              <Icon2 name="check-circle-outline" style={[styles.iconDoneButton]} />
+              <Icon2
+                name="check-circle-outline"
+                style={[styles.iconDoneButton]}
+              />
             </TouchableOpacity>
-
-
           </View>
         </View>
       </Modal>
@@ -172,16 +204,20 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
   return (
     <>
       <View style={[styles.openModalContainer, styles.elevatedBox]}>
-        <Text style={[styles.openModalText, styles.elevatedText]}>Find out your Electricity Usage for a specific time?</Text>
-        <TouchableOpacity onPress={() => setopenModal(true)} style={[styles.openModalButton, styles.elevatedLogo]} activeOpacity={0.8}>
-          <Icon name="searchengin" style={[styles.iconModalBtn, styles.elevatedText]} />
+        <Text style={[styles.openModalText, styles.elevatedText]}>
+          Find out your Electricity Usage for a specific time?
+        </Text>
+        <TouchableOpacity
+          onPress={() => setopenModal(true)}
+          style={[styles.openModalButton, styles.elevatedLogo]}
+          activeOpacity={0.8}>
+          <Icon
+            name="searchengin"
+            style={[styles.iconModalBtn, styles.elevatedText]}
+          />
           <Text style={styles.openModaBtnText}>Set Time and Date</Text>
         </TouchableOpacity>
       </View>
-
-
-
-
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -197,12 +233,11 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({ onDateRangeSelected }) 
       />
 
       {renderModal()}
-
     </>
-  )
-}
+  );
+};
 
-export default PeriodSelector
+export default PeriodSelector;
 
 const styles = StyleSheet.create({
   openModalContainer: {
@@ -210,7 +245,7 @@ const styles = StyleSheet.create({
     margin: '4.2%',
     height: height * 0.178,
     padding: '4%',
-    borderRadius: 20
+    borderRadius: 20,
   },
   openModalText: {
     fontSize: 16,
@@ -224,10 +259,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center',
-    marginTop: height * 0.020,
+    marginTop: height * 0.02,
     flexDirection: 'row',
-    paddingTop: height * 0.012
-
+    paddingTop: height * 0.012,
   },
   openModaBtnText: {
     color: '#003C43',
@@ -235,13 +269,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: 'center',
     padding: 4,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   iconModalBtn: {
     fontSize: 30,
     color: '#003C43',
     textAlign: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   modalContainer: {
@@ -259,7 +293,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.4,
     alignItems: 'center',
-
   },
   containerStartEnd: {
     backgroundColor: '#77B0AA',
@@ -282,10 +315,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center',
-    marginTop: height * 0.030,
+    marginTop: height * 0.03,
     flexDirection: 'row',
-    paddingTop: height * 0.012
-
+    paddingTop: height * 0.012,
   },
   textDateTimeButton: {
     color: '#003C43',
@@ -293,7 +325,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: 'center',
     padding: 4,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   icons: {
     fontSize: 20,
@@ -313,7 +345,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: height * 0.026,
     flexDirection: 'row',
-
   },
   iconDoneButton: {
     fontSize: 38,
@@ -329,10 +360,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 4,
     justifyContent: 'center',
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
   },
-
-
 
   elevatedLogo: {
     shadowColor: 'black',
@@ -356,8 +385,7 @@ const styles = StyleSheet.create({
   },
   elevatedText: {
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 0.4, height: 0.6 },
+    textShadowOffset: {width: 0.4, height: 0.6},
     textShadowRadius: 2,
   },
-
-})
+});

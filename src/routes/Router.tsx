@@ -13,7 +13,6 @@ export const Router: React.FC = () => {
     const checkUserStatus = async () => {
       try {
         const user = await appwrite.getCurrentUser();
-        setIsLoading(false);
         if (user) {
           setIsLoggedIn(true);
           const setupComplete = await appwrite.isInitialSetupComplete(user.$id);
@@ -23,11 +22,11 @@ export const Router: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching user:', error);
-        setIsLoading(false);
         setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
       }
     };
-
     checkUserStatus();
   }, [appwrite, setIsLoggedIn, setIsInitialSetupComplete]);
   if (isLoading) {

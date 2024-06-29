@@ -27,19 +27,21 @@ export const AppStack: React.FC = () => {
 
 
   useEffect(() => {
-    if (typeof isInitialSetupComplete !== 'undefined') {
+    if (isInitialSetupComplete !== false) {
       setIsSetupChecked(true);
+      setIsLoading(false);
     }
   }, [isInitialSetupComplete]);
 
   if (!isSetupChecked) {
-    return <Loading visible={isLoading}  />;
+    return <Loading visible />;
   }
 
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isInitialSetupComplete ? (
         <>
+       
           <Stack.Screen name="AddDevice" component={AddDevice} />
           <Stack.Screen name="ConnectDevice" component={ConnectDevice} />
           <Stack.Screen name="SendCredentials" component={SendCredentials} />
@@ -52,5 +54,6 @@ export const AppStack: React.FC = () => {
         </>
       )}
     </Stack.Navigator>
+  
   );
 };
