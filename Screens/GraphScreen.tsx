@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  Image,
 } from 'react-native';
 import React, {useState, useEffect, isValidElement} from 'react';
 import Header from '../Components/Header';
@@ -13,6 +14,8 @@ import {GraphData} from '../Components/types';
 import FooterNav from '../Components/FooterNav';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
+import Icon3 from 'react-native-vector-icons/FontAwesome5';
+import Icon4 from 'react-native-vector-icons/Ionicons';
 import PeriodSelector from '../Components/PeriodSelector';
 import {
   getDailyData,
@@ -29,7 +32,7 @@ import {AppStackParamList} from '../src/routes/AppStack';
 import Loading from '../Components/Loading';
 
 const {width, height} = Dimensions.get('window');
-const transparent = 'rgba(0, 0, 0, 0.5)';
+const transparent = 'rgba(0, 0, 0, 0.7)';
 
 type GraphProps = NativeStackScreenProps<AppStackParamList, 'GraphScreen'>;
 
@@ -200,23 +203,66 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
         transparent={true}
         onRequestClose={() => setopenModal(false)}>
         <View style={styles.modalContainer}>
-          {/* <View style={styles.infoContainer}> */}
-          <View style={[styles.predictionContainer, styles.elevatedLogo]}>
-            <Text style={styles.units}>
-              Your electricity usage in the selected time period is:{'\n\n'}
-              {parseFloat(customData).toFixed(1)} units{' '}
+
+          <View style={styles.infoContainer}>
+          <Image
+          source={require('../Assets/finding.png')}
+          style={[styles.mobileIcon, styles.elevatedLogo]}
+        />
+         <View style={[styles.predictionContainer, styles.elevatedLogo]}>
+         <View style={styles.headingBox}>
+            <Text style={[styles.headerText, styles.elevatedText]}>
+              Prediction for : {'\n\n'}
+              </Text>
+              <View style={[styles.dataBox, styles.depthEffect]}>
+              <View style={styles.unitBox}>
+              {/* <Image
+          source={require('../Assets/lightning.png')}
+          style={[styles.iconUnit, styles.elevatedLogo]}
+        /> */}
+        <Icon3
+              name="house-damage"
+              style={[styles.iconUnit]}
+            />
+              <Text style={styles.units}>
+                Units: 
+              {/* {parseFloat(customData).toFixed(1)} units{' '} */}
             </Text>
-          </View>
-          <TouchableOpacity
+            </View>
+            <View style={styles.billBox}>
+            {/* <Image
+          source={require('../Assets/money.png')}
+          style={[styles.iconCash, styles.elevatedLogo]}
+        /> */}
+         <Icon2
+              name="sack-dollar"
+              style={[styles.iconCash]}
+            />
+         <Text style={styles.bill}>
+               Bill: {' '}
+            </Text>
+            </View>
+           
+            <TouchableOpacity
             onPress={() => setopenModal(false)}
             activeOpacity={0.8}
             style={[styles.doneButton, styles.elevatedLogo]}>
             <Text style={styles.doneButtonText}>Seen</Text>
-            <Icon2 name="check" style={[styles.iconDoneButton]} />
+            <Icon4
+              name="checkmark-circle-outline"
+              style={[styles.iconDoneButton]}
+            />
           </TouchableOpacity>
+            </View>
+            </View>
+            </View>
+          </View>
+          
 
-          {/* </View> */}
-        </View>
+          </View>
+         
+          
+        
       </Modal>
     );
   };
@@ -395,62 +441,138 @@ const styles = StyleSheet.create({
     backgroundColor: transparent,
   },
   infoContainer: {
-    backgroundColor: 'white',
-    padding: '1%',
+    backgroundColor: 'transparent',
     height: height * 0.42,
     width: width * 0.96,
     borderRadius: 8,
     alignItems: 'center',
+    position: 'relative',
+    alignContent:'center',
+    alignSelf:'center',
   },
   predictionContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    height: height * 0.3,
-    paddingTop: '5%',
+    backgroundColor: '#77B0AA',
+    height: height * 0.18,
     alignItems: 'center',
-    borderRadius: 10,
-    width: width * 0.92,
-    margin: '2%',
+    borderRadius: 8,
+    width: width * 0.9,
+    marginBottom: '2%',
+    top:height*0.046,
+    borderTopRightRadius:8,
+    borderTopLeftRadius:8,
+    alignSelf:'center',
+    
   },
-  units: {
-    fontSize: height * 0.03,
+  mobileIcon: {
+    height: height * 0.18,
+    width: width * 0.7,
+    left:width*0.1,
+    opacity:1,
+    borderRadius: 4,
+    position: 'absolute', 
+    bottom:height*0.353,
+    zIndex: 2,
+   
+    
+  },
+  headingBox:{
+    backgroundColor:'#77B0AA',
+    height:height*0.06,
+    width:width*0.9,
+    borderTopRightRadius:12,
+    borderTopLeftRadius:12,
+    alignSelf:'center',
+
+  },
+  headerText: {
+    fontSize: height * 0.024,
+    color: 'white',
+    fontWeight: '400',
+    paddingTop:height*0.012,
+    paddingLeft:width*0.08,
+    // marginBottom: height * 0.08,
+  },
+  dataBox:{
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    height: height * 0.22,
+    alignSelf: 'center',
+    borderRadius: 12,
+    width: width * 0.9,
+    top:height*0.001,
+    borderTopRightRadius:26,
+    borderTopLeftRadius:26,
+    padding:height*0.03,
+    
+    
+    
+  },
+  unitBox:{
+    flexDirection:'row',
+    marginBottom:'7%'
+    
+  },
+  units:{
+    fontSize: height * 0.024,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.08,
+    
   },
+  iconUnit:{
+    color:'#003C43',
+    fontSize:height*0.03,
+     marginRight:'2%'
+    // height:height*0.06,
+    // width:width*0.12,
+  },
+billBox:{
+  flexDirection:'row',
+  marginBottom:'4%',
+   
+ 
+},
   bill: {
-    fontSize: height * 0.03,
+    fontSize: height * 0.024,
     color: '#003C43',
     fontWeight: '600',
-    marginBottom: height * 0.05,
+    
+    
+  },
+
+  iconCash:{
+    color:'#003C43',
+    fontSize:height*0.034,
+    marginRight:'2%'
+    // height:height*0.06,
+    // width:width*0.12,
   },
 
   doneButton: {
     backgroundColor: '#77B0AA',
-    height: height * 0.062,
-    width: '50%',
+    height: height * 0.06,
+    width: width*0.36,
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center',
-    marginTop: height * 0.01,
     flexDirection: 'row',
+    top:height*0.008
+    
   },
   doneButtonText: {
     color: '#003C43',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
     textAlign: 'center',
-    padding: 4,
+    padding: 1,
     justifyContent: 'center',
     textAlignVertical: 'center',
   },
   iconDoneButton: {
-    fontSize: 38,
+    fontSize: 30,
     color: 'white',
     textAlign: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
   },
-
   elevatedLogo: {
     shadowColor: 'black',
     shadowOffset: {
@@ -476,6 +598,16 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 8,
   },
+  depthEffect:{
+    // shadowColor: 'black',
+    // shadowOffset: {
+    //   width: 10,
+    //   height: 10,
+    // },
+    // shadowOpacity: 0.35,
+    // shadowRadius: 8,
+    elevation: 10,
+  }
 });
 
 export default GraphScreen;

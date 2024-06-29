@@ -14,8 +14,8 @@ import {
 import React, {useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon3 from 'react-native-vector-icons/FontAwesome6';
-import Icon4 from 'react-native-vector-icons/MaterialIcons';
+import Icon3 from 'react-native-vector-icons/FontAwesome5';
+import Icon4 from 'react-native-vector-icons/FontAwesome6';
 import Header from '../Components/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppStackParamList} from '../src/routes/AppStack';
@@ -23,7 +23,7 @@ import FooterNav from '../Components/FooterNav';
 import axios from 'axios';
 
 const {width, height} = Dimensions.get('window');
-const transparent = 'rgba(0, 0, 0, 0.5)';
+const transparent = 'rgba(0, 0, 0, 0.7)';
 
 type PredictScreenProps = NativeStackScreenProps<
   AppStackParamList,
@@ -79,7 +79,6 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   };
 
   const predictData = async () => {
-    
     try {
       console.log('Attempting to send request...');
       const apiUrl = 'https://ee3f-35-192-59-125.ngrok-free.app/predict';
@@ -130,50 +129,50 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
         onRequestClose={() => setopenModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.infoContainer}>
-          <Image
-          source={require('../Assets/predict.png')}
-          style={[styles.mobileIcon, styles.elevatedLogo]}
-        />
-          <View style={[styles.predictionContainer, styles.elevatedLogo]}>
-            <View style={styles.headingBox}>
-            <Text style={[styles.headerText, styles.elevatedText]}>
-              Prediction for {nextMonthName}: {'\n\n'}
-              </Text>
-              <View style={[styles.dataBox, styles.depthEffect]}>
-              <View style={styles.unitBox}>
-              <Image
+            <Image
+              source={require('../Assets/predict.png')}
+              style={[styles.mobileIcon, styles.elevatedLogo]}
+            />
+            <View style={[styles.predictionContainer, styles.elevatedLogo]}>
+              <View style={styles.headingBox}>
+                <Text style={[styles.headerText, styles.elevatedText]}>
+                  Prediction for {nextMonthName}: {'\n\n'}
+                </Text>
+                <View style={[styles.dataBox, styles.depthEffect]}>
+                  <View style={styles.unitBox}>
+                    {/* <Image
           source={require('../Assets/lightning.png')}
           style={[styles.iconUnit, styles.elevatedLogo]}
-        />
-              <Text style={styles.units}>
-              {formattedPrediction} Units: {' '}
-            </Text>
-            </View>
-            <View style={styles.billBox}>
-            <Image
+        /> */}
+                    <Icon3 name="house-damage" style={[styles.iconUnit]} />
+                    <Text style={styles.units}>
+                      {formattedPrediction} Units:{' '}
+                    </Text>
+                  </View>
+                  <View style={styles.billBox}>
+                    {/* <Image
           source={require('../Assets/money.png')}
           style={[styles.iconCash, styles.elevatedLogo]}
-        />
-         <Text style={styles.bill}>
-              {formattedPrediction} Bill: {' '}
-            </Text>
-            </View>
-           
-            <TouchableOpacity
-            onPress={() => setopenModal(false)}
-            activeOpacity={0.8}
-            style={[styles.doneButton, styles.elevatedLogo]}>
-            <Text style={styles.doneButtonText}>Seen</Text>
-            <Icon2
-              name="checkmark-circle-outline"
-              style={[styles.iconDoneButton]}
-            />
-          </TouchableOpacity>
-            </View>
-            </View>
-          </View>
-          
+        /> */}
+                    <Icon4 name="sack-dollar" style={[styles.iconCash]} />
+                    <Text style={styles.bill}>
+                      {formattedPrediction} Bill:{' '}
+                    </Text>
+                  </View>
 
+                  <TouchableOpacity
+                    onPress={() => setopenModal(false)}
+                    activeOpacity={0.8}
+                    style={[styles.doneButton, styles.elevatedLogo]}>
+                    <Text style={styles.doneButtonText}>Seen</Text>
+                    <Icon2
+                      name="checkmark-circle-outline"
+                      style={[styles.iconDoneButton]}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </Modal>
@@ -485,8 +484,6 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   );
 };
 
-export default PredictScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -622,8 +619,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     position: 'relative',
-    alignContent:'center',
-    alignSelf:'center',
+    alignContent: 'center',
+    alignSelf: 'center',
   },
   predictionContainer: {
     backgroundColor: '#77B0AA',
@@ -632,94 +629,88 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: width * 0.9,
     marginBottom: '2%',
-    top:height*0.046,
-    borderTopRightRadius:20,
-    borderTopLeftRadius:20,
-    alignSelf:'center',
-    
+    top: height * 0.046,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    alignSelf: 'center',
   },
   mobileIcon: {
-    height: height * 0.2,
+    height: height * 0.15,
     width: width * 0.66,
-    opacity:0.98,
+    opacity: 0.98,
     borderRadius: 4,
-    position: 'absolute', 
-    bottom:height*0.35,
+    position: 'absolute',
+    bottom: height * 0.366,
     zIndex: 2,
-   
-    
   },
-  headingBox:{
-    backgroundColor:'#77B0AA',
-    height:height*0.06,
-    width:width*0.9,
-    borderTopRightRadius:12,
-    borderTopLeftRadius:12,
-    alignSelf:'center',
-
+  headingBox: {
+    backgroundColor: '#77B0AA',
+    height: height * 0.06,
+    width: width * 0.9,
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
+    alignSelf: 'center',
   },
   headerText: {
-    fontSize: height * 0.028,
+    fontSize: height * 0.024,
     color: 'white',
     fontWeight: '400',
-    textAlign:'center',
-    paddingTop:height*0.01
+    textAlign: 'center',
+    paddingTop: height * 0.012,
     // marginBottom: height * 0.08,
   },
-  dataBox:{
+  dataBox: {
     backgroundColor: 'rgba(255, 255, 255, 1)',
-    height: height * 0.26,
+    height: height * 0.22,
     alignSelf: 'center',
     borderRadius: 12,
     width: width * 0.9,
-    top:height*0.001,
-    borderTopRightRadius:26,
-    borderTopLeftRadius:26,
-    padding:height*0.03,
-    
+    top: height * 0.001,
+    borderTopRightRadius: 26,
+    borderTopLeftRadius: 26,
+    padding: height * 0.03,
   },
-  unitBox:{
-    flexDirection:'row',
-    marginBottom:'3%'
+  unitBox: {
+    flexDirection: 'row',
+    marginBottom: '7%',
   },
-  units:{
-    fontSize: height * 0.028,
+  units: {
+    fontSize: height * 0.024,
     color: '#003C43',
     fontWeight: '600',
-    
   },
-  iconUnit:{
-    
-    height:height*0.06,
-    width:width*0.12,
+  iconUnit: {
+    color: '#003C43',
+    fontSize: height * 0.03,
+    // height:height*0.06,
+    // width:width*0.12,
   },
-billBox:{
-  flexDirection:'row',
-  marginBottom:'3%',
-  marginLeft:width*0.02
-},
+  billBox: {
+    flexDirection: 'row',
+    marginBottom: '4%',
+  },
   bill: {
-    fontSize: height * 0.028,
+    fontSize: height * 0.024,
     color: '#003C43',
     fontWeight: '600',
-    
   },
 
-  iconCash:{
-    height:height*0.06,
-    width:width*0.12,
+  iconCash: {
+    color: '#003C43',
+    fontSize: height * 0.034,
+    // height:height*0.06,
+    // width:width*0.12,
   },
 
   doneButton: {
     backgroundColor: '#77B0AA',
     height: height * 0.06,
-    width: width*0.36,
+    width: width * 0.36,
     borderRadius: 10,
     alignSelf: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    top:height*0.01
-    
+    top: height * 0.008,
   },
   doneButtonText: {
     color: '#003C43',
@@ -738,7 +729,6 @@ billBox:{
     alignSelf: 'center',
   },
 
-
   //Shadows
   elevatedText: {
     textShadowColor: 'rgba(0, 0, 0, 0.35)',
@@ -755,7 +745,7 @@ billBox:{
     shadowRadius: 8,
     elevation: 4,
   },
-  depthEffect:{
+  depthEffect: {
     // shadowColor: 'black',
     // shadowOffset: {
     //   width: 10,
@@ -764,5 +754,7 @@ billBox:{
     // shadowOpacity: 0.35,
     // shadowRadius: 8,
     elevation: 10,
-  }
+  },
 });
+
+export default PredictScreen;
