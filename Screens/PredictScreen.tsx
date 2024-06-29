@@ -78,7 +78,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   const predictData = async () => {
     try {
       console.log('Attempting to send request...');
-      const apiUrl = 'https://ee3f-35-192-59-125.ngrok-free.app/predict';
+      const apiUrl = 'https://f16e-35-192-59-125.ngrok-free.app/predict';
 
       console.log('Sending request to:', apiUrl);
       console.log('Request data:', data);
@@ -138,7 +138,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             style={[styles.doneButton, styles.elevatedLogo]}>
             <Text style={styles.doneButtonText}>Seen</Text>
             <Icon2
-              name="check-circle-outline"
+              name="checkmark-circle-outline"
               style={[styles.iconDoneButton]}
             />
           </TouchableOpacity>
