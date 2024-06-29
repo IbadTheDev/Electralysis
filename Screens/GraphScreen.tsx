@@ -67,7 +67,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
     startDateTime?: string,
     endDateTime?: string,
   ) => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
     try {
       let data;
@@ -101,7 +101,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
     } catch (error) {
       setError('Failed to fetch data');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -212,7 +212,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
          <View style={[styles.predictionContainer, styles.elevatedLogo]}>
          <View style={styles.headingBox}>
             <Text style={[styles.headerText, styles.elevatedText]}>
-              Prediction for : {'\n\n'}
+              Units Consumed in selected range {'\n\n'}
               </Text>
               <View style={[styles.dataBox, styles.depthEffect]}>
               <View style={styles.unitBox}>
@@ -225,8 +225,8 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
               style={[styles.iconUnit]}
             />
               <Text style={styles.units}>
-                Units: 
-              {/* {parseFloat(customData).toFixed(1)} units{' '} */}
+                Units: {' '}
+              {parseFloat(customData).toFixed(1)} 
             </Text>
             </View>
             <View style={styles.billBox}>
@@ -234,13 +234,13 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
           source={require('../Assets/money.png')}
           style={[styles.iconCash, styles.elevatedLogo]}
         /> */}
-         <Icon2
+         {/* <Icon2
               name="sack-dollar"
               style={[styles.iconCash]}
             />
          <Text style={styles.bill}>
                Bill: {' '}
-            </Text>
+            </Text> */}
             </View>
            
             <TouchableOpacity

@@ -81,7 +81,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   const predictData = async () => {
     try {
       console.log('Attempting to send request...');
-      const apiUrl = 'https://f16e-35-192-59-125.ngrok-free.app/predict';
+      const apiUrl = 'https://c70e-35-185-97-253.ngrok-free.app/predict';
 
       console.log('Sending request to:', apiUrl);
       console.log('Request data:', data);
@@ -146,7 +146,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
         /> */}
                     <Icon3 name="house-damage" style={[styles.iconUnit]} />
                     <Text style={styles.units}>
-                      {formattedPrediction} Units:{' '}
+                       Units:{formattedPrediction}
                     </Text>
                   </View>
                   <View style={styles.billBox}>
@@ -154,10 +154,10 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
           source={require('../Assets/money.png')}
           style={[styles.iconCash, styles.elevatedLogo]}
         /> */}
-                    <Icon4 name="sack-dollar" style={[styles.iconCash]} />
+                    {/* <Icon4 name="sack-dollar" style={[styles.iconCash]} />
                     <Text style={styles.bill}>
                       {formattedPrediction} Bill:{' '}
-                    </Text>
+                    </Text> */}
                   </View>
 
                   <TouchableOpacity
@@ -189,7 +189,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
             <Header />
             <View style={[styles.logoContainer]}>
               <Text style={[styles.title, styles.elevatedText]}>
-                Bill Prediction
+                Units Prediction
               </Text>
               <Text style={styles.subText}>
                 Enter your last years monthly units to predict next month
