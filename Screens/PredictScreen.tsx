@@ -20,7 +20,7 @@ import Header from '../Components/Header';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppStackParamList} from '../src/routes/AppStack';
 import FooterNav from '../Components/FooterNav';
-import axios from 'axios';
+import axios from '../Apis/axiosInstance';
 
 const {width, height} = Dimensions.get('window');
 const transparent = 'rgba(0, 0, 0, 0.7)';
@@ -33,6 +33,8 @@ type PredictScreenProps = NativeStackScreenProps<
 const PredictScreen = ({navigation}: PredictScreenProps) => {
   const [openModal, setopenModal] = useState(false);
   const [prediction, setPrediction] = useState<number[][]>([]);
+  const [estimatedCost, setEstimatedCost] = useState<number>(0);
+  const [formattedPrediction, setFormattedPrediction] = useState<string>('');
 
   const [inp1, setInp1] = useState('');
   const [inp2, setInp2] = useState('');
@@ -78,10 +80,50 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
     ],
   };
 
+  // Determine current month and next month index
+  const currentMonth = new Date().getMonth();
+  const nextMonthIndex = (currentMonth + 1) % 12;
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  
+  const nextMonthName = months[nextMonthIndex];
+
+  const estimateCostForPredictedUnits = async (predictedUnits: string) => {
+    try {
+      console.log('predicted units: ',predictedUnits);
+      const response = await axios.post('/ElectricityUsage/EstimateCostForPredictedUnits', null, {
+        params: {
+          predictedUnits: predictedUnits
+        }
+      });
+
+        console.log('Estimated cost response:', response.data);
+        return response.data; 
+        
+    } catch (error) {
+        console.error('Estimation error:', error);
+        throw error; 
+    }
+};
+
+
   const predictData = async () => {
     try {
       console.log('Attempting to send request...');
-      const apiUrl = 'https://c70e-35-185-97-253.ngrok-free.app/predict';
+      const apiUrl = 'https://2933-146-148-38-66.ngrok-free.app/predict';
 
       console.log('Sending request to:', apiUrl);
       console.log('Request data:', data);
@@ -90,6 +132,20 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
 
       console.log('Prediction response:', response.data);
       setPrediction(response.data.prediction);
+
+      // Update formattedPrediction after state has been set
+    const formattedPrediction =
+    response.data.prediction.length > 0 ? response.data.prediction[nextMonthIndex][0].toFixed(1) : '';
+
+    setFormattedPrediction(formattedPrediction);
+
+      console.log('formattedPrediction:', formattedPrediction);
+
+      const estimatedCost = await estimateCostForPredictedUnits(formattedPrediction);
+      console.log('sending units:',formattedPrediction);
+      console.log('Estimated Cost:', estimatedCost);
+      setEstimatedCost(estimatedCost);
+      
       setopenModal(true);
     } catch (error) {
       console.error('Prediction error:', error);
@@ -97,30 +153,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
   };
 
   const renderModal = () => {
-    // Determine current month and next month index
-    const currentMonth = new Date().getMonth();
-    const nextMonthIndex = (currentMonth + 1) % 12;
-
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-
-    // Format prediction to one decimal place
-    const formattedPrediction =
-      prediction.length > 0 ? prediction[nextMonthIndex][0].toFixed(1) : '';
-    const nextMonthName = months[nextMonthIndex];
-
+    
     return (
       <Modal
         visible={openModal}
@@ -146,7 +179,7 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
         /> */}
                     <Icon3 name="house-damage" style={[styles.iconUnit]} />
                     <Text style={styles.units}>
-                       Units:{formattedPrediction}
+                    {'\t'}Units:{'\t\t'}{formattedPrediction}
                     </Text>
                   </View>
                   <View style={styles.billBox}>
@@ -154,10 +187,10 @@ const PredictScreen = ({navigation}: PredictScreenProps) => {
           source={require('../Assets/money.png')}
           style={[styles.iconCash, styles.elevatedLogo]}
         /> */}
-                    {/* <Icon4 name="sack-dollar" style={[styles.iconCash]} />
+                    <Icon4 name="sack-dollar" style={[styles.iconCash]} />
                     <Text style={styles.bill}>
-                      {formattedPrediction} Bill:{' '}
-                    </Text> */}
+                      {'\t'}Bill:{'\t\t'}{estimatedCost.toFixed(1)}
+                    </Text>
                   </View>
 
                   <TouchableOpacity
