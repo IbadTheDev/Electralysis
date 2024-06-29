@@ -30,6 +30,12 @@ export interface UnitData {
   unitsUsed: number;
 }
 
+export interface Cost {
+  uid: string;
+  dateTime: string;
+  cost: number;
+}
+
 export const getDailyData = async (): Promise<DailyData[]> => {
   const response = await axios.get(
     '/ElectricityUsage/Daily?date=' + new Date().toISOString(),
@@ -52,6 +58,19 @@ export const getUnitsByDateTimeRange = async (
   endDateTime: string,
 ): Promise<UnitData[]> => {
   const response = await axios.get('/ElectricityUsage/UnitsByDateTimeRange', {
+    params: {
+      startDateTime,
+      endDateTime,
+    },
+  });
+  return response.data;
+};
+
+export const getCostByDateTimeRange = async (
+  startDateTime: string,
+  endDateTime: string,
+): Promise<number> => {
+  const response = await axios.get('/ElectricityUsage/CostByDateTimeRange', {
     params: {
       startDateTime,
       endDateTime,

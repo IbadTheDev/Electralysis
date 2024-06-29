@@ -11,6 +11,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getUnitsByDateTimeRange} from '../Apis/getUnits';
+import { getCostByDateTimeRange,Cost } from '../Apis/getUnits';
 
 const {width, height} = Dimensions.get('window');
 
@@ -21,6 +22,7 @@ interface PeriodSelectorProps {
     startDateTime: string,
     endDateTime: string,
     unitsData: string,
+    unitCost: number
   ) => void;
 }
 
@@ -125,10 +127,14 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
         startDateTime,
         endDateTime,
       );
+
+      const unitCost = await getCostByDateTimeRange(startDateTime, endDateTime);
+
       //setStartDateTime(startDateTime);
       //setEndDateTime(endDateTime);
-      onDateRangeSelected(startDateTime, endDateTime, unitsData.toString());
+      onDateRangeSelected(startDateTime, endDateTime, unitsData.toString(),unitCost);
       console.log('Units Data:', unitsData);
+      console.log('Total cost', unitCost);
     } catch (error) {
       console.error('Error fetching units data:', error);
     }

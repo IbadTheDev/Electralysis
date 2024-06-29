@@ -55,6 +55,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [customData, setCustomData] = useState('');
+  const [cost, setCost] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -116,10 +117,12 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
     startDateTime: string,
     endDateTime: string,
     unitsData: string,
+    unitCost: number,
   ) => {
     // setStartDateTime(startDateTime);
     // setEndDateTime(endDateTime);
     setCustomData(unitsData);
+    setCost(unitCost);
 
     setopenModal(true);
   };
@@ -234,13 +237,14 @@ const GraphScreen: React.FC<GraphScreenProps> = ({
           source={require('../Assets/money.png')}
           style={[styles.iconCash, styles.elevatedLogo]}
         /> */}
-         {/* <Icon2
+         <Icon2
               name="sack-dollar"
               style={[styles.iconCash]}
             />
          <Text style={styles.bill}>
                Bill: {' '}
-            </Text> */}
+               {(cost.toFixed(1))}
+            </Text>
             </View>
            
             <TouchableOpacity
